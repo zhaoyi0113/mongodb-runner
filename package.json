@@ -23,8 +23,25 @@
       {
         "command": "extension.numberOfChars",
         "title": "Number Of Chars"
-      }
-    ]
+      },
+			{
+				"command": "nodeDependencies.refresh",
+				"title": "Refresh",
+				"icon": {
+					"light": "resources/light/refresh.svg",
+					"dark": "resources/dark/refresh.svg"
+				}
+			}
+    ],
+    "menus": {
+      "view/title": [
+        {
+					"command": "nodeDependencies.refresh",
+					"when": "view == nodeDependencies",
+					"group": "navigation"
+				}
+      ]
+    }
   },
   "scripts": {
     "postinstall": "node ./node_modules/vscode/bin/install",

@@ -29,13 +29,18 @@ class TreeExplorer {
     context
       .subscriptions
       .push(vscode.workspace.registerTextDocumentContentProvider('Data', provider));
-    this.ftpViewer = vscode
+    this.treeViewer = vscode
       .window
       .createTreeView('nodeDependencies', {treeDataProvider: provider});
     this.registerCommands();
   }
 
   registerCommands() {
+    vscode.commands.registerCommand('nodeDependencies.refresh', () => {
+      vscode
+          .window
+          .showInformationMessage('hdklaf')
+    });
     vscode
       .commands
       .registerCommand('extension.mongoRunner.getConfiguration', () => {
