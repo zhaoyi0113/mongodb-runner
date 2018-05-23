@@ -3,28 +3,19 @@
   "displayName": "Mongo Runner",
   "description": "MongoDB Plugin for VS Code",
   "version": "0.0.1",
-  "publisher": "zhaoyi",
+  "publisher": "Zhao Yi (Joey) zhaoyi0113@gmail.com",
   "engines": {
     "vscode": "^1.22.0"
   },
   "categories": ["Other"],
-  "activationEvents": ["onCommand:extension.numberOfChars"],
-  "main": "./extension",
+  "activationEvents": ["onCommand:extension.numberOfChars", "onView:nodeDependencies"],
+  "main": "./src/extension",
   "contributes": {
     "views": {
       "explorer": [
         {
           "id": "nodeDependencies",
           "name": "Node Dependencies"
-        },
-        {
-          "id": "jsonOutline",
-          "name": "Json Outline",
-          "when": "jsonOutlineEnabled"
-        },
-        {
-          "id": "ftpExplorer",
-          "name": "FTP Explorer"
         }
       ]
     },
