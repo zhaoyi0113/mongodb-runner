@@ -12,14 +12,14 @@
   ],
   "activationEvents": [
     "onCommand:extension.numberOfChars",
-    "onView:nodeDependencies"
+    "onView:mongoRunner"
   ],
   "main": "./src/extension",
   "contributes": {
     "views": {
       "explorer": [
         {
-          "id": "nodeDependencies",
+          "id": "mongoRunner",
           "name": "Mongo Runner"
         }
       ]
@@ -30,7 +30,7 @@
         "title": "Number Of Chars"
       },
       {
-        "command": "nodeDependencies.refresh",
+        "command": "mongoRunner.refresh",
         "title": "Refresh",
         "icon": {
           "light": "resources/light/refresh.svg",
@@ -41,8 +41,8 @@
     "menus": {
       "view/title": [
         {
-          "command": "nodeDependencies.refresh",
-          "when": "view == nodeDependencies",
+          "command": "mongoRunner.refresh",
+          "when": "view == mongoRunner",
           "group": "navigation"
         }
       ]

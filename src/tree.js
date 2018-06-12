@@ -44,7 +44,7 @@ class TreeExplorer {
       .push(vscode.workspace.registerTextDocumentContentProvider('Data', this.provider));
     this.treeViewer = vscode
       .window
-      .createTreeView('nodeDependencies', {treeDataProvider: this.provider});
+      .createTreeView('mongoRunner', {treeDataProvider: this.provider});
     this.registerCommands();
     this.connectMongoDB();
   }
@@ -52,7 +52,7 @@ class TreeExplorer {
   registerCommands() {
     vscode
       .commands
-      .registerCommand('nodeDependencies.refresh', () => {
+      .registerCommand('mongoRunner.refresh', () => {
         vscode
           .window
           .showInformationMessage('refresh mongo');
