@@ -60,6 +60,6 @@
     "vscode": "^1.1.6"
   },
   "dependencies": {
-    "mongodb-tree": "^0.0.4"
+    "mongodb-tree": "^0.0.6"
   }
 }

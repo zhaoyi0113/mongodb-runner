@@ -1209,9 +1209,9 @@ mongodb-core@3.1.0-beta4:
   optionalDependencies:
     saslprep "^1.0.0"
 
-mongodb-tree@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/mongodb-tree/-/mongodb-tree-0.0.4.tgz#c23a967ddb2f804e798b1d87ce9e5bc61e180b62"
+mongodb-tree@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/mongodb-tree/-/mongodb-tree-0.0.6.tgz#f9a0e4dc3525e3bde1b7b9b3ad5072bce91238d4"
   dependencies:
     lodash "^4.17.10"
     mongodb "^3.1.0-beta4"

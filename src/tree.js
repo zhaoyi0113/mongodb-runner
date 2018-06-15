@@ -1,38 +1,83 @@
 const vscode = require('vscode');
-const {TreeItemCollapsibleState} = require('vscode');
+const {TreeItemCollapsibleState, TreeDataProvider} = require('vscode');
 const mongodbTree = require('mongodb-tree');
 
 const config = require('./config');
-
+const IDS = {
+  root: 0,
+  dbs: 1,
+  users: 2,
+  roles: 3
+}
 const root = {
   label: 'MongoDB',
-  id: '0',
+  id: IDS.root,
   tooltip: 'MongoDB',
-  collapsibleState: TreeItemCollapsibleState.Collapsed
+  collapsibleState: TreeItemCollapsibleState.Collapsed,
+  // command: {   command: 'mongoRunner.refresh' }
+};
+
+const connectMongoDB = (mongoConfig) => {
+  // connect to mongodb instance
+  console.log('mongo config ', mongoConfig);
+  return mongodbTree
+    .connect(mongoConfig.url, {})
+    .then((inspector) => {
+      return inspector.inspect();
+    })
+    .catch((err) => {
+      console.error(err);
+    })
+};
+
+const convertMongoTree = (data) => {
+  const treeItems = [];
+  const dbs = data
+    .databases
+    .map((db, i) => {
+      return {
+        id: `db_${i}`,
+        label: db.name,
+        collapsibleState: db.children && db.children.length > 0
+          ? TreeItemCollapsibleState.Collapsed
+          : null
+      }
+    });
+  treeItems.push(dbs);
+  return treeItems;
 };
 
 class TreeProvider {
 
   loadTree(data) {
-    console.log('load tree', data);
+    this.treeData = data;
   }
 
   getTreeItem(element) {
+    console.log('get tree item ', element);
+    if (element.type === 'database') {
+      return {id: `db_${element.name}`, label: element.name, collapsibleState: true, command: ''}
+    }
     return element;
   }
 
   getChildren(element) {
-    return element
-      ? [
-        {
-          label: 'Parent',
-          id: '10',
-          tooltip: 'Root',
-          command: {
-            command: 'extension.mongoRunner.getConfiguration'
-          }
-        }
-      ] : [root];
+    if (!element) {
+      return [root];
+    }
+    if (element.id === IDS.root) {
+      if (!element.children) {
+        const mongoConfig = config.getMongoConfiguration();
+        return new Promise((resolve, reject) => {
+          connectMongoDB(mongoConfig).then((data) => {
+            console.log('data:', data);
+            resolve(data.databases);
+          });
+        });
+      }
+      return this.treeData;
+    }
+    return element.children;
   }
 }
 
@@ -46,7 +91,11 @@ class TreeExplorer {
       .window
       .createTreeView('mongoRunner', {treeDataProvider: this.provider});
     this.registerCommands();
-    this.connectMongoDB();
+
+    const mongoConfig = config.getMongoConfiguration();
+    if (mongoConfig.activeOnStartUp) {
+      this.loadMongoTree();
+    }
   }
 
   registerCommands() {
@@ -55,34 +104,26 @@ class TreeExplorer {
       .registerCommand('mongoRunner.refresh', () => {
         vscode
           .window
-          .showInformationMessage('refresh mongo');
+          .showInformationMessage('Refresh Mongo Connection');
+        this.loadMongoTree();
       });
     vscode
       .commands
       .registerCommand('extension.mongoRunner.getConfiguration', () => {
-        this.connectMongoDB();
+        this.loadMongoTree();
       })
   }
 
-  connectMongoDB() {
+  loadMongoTree() {
     const mongoConfig = config.getMongoConfiguration();
-    if (mongoConfig.activeOnStartUp) {
-      // connect to mongodb instance
-      console.log('mongo config ', mongoConfig);
-      mongodbTree
-        .connect(mongoConfig.url, {})
-        .then((inspector) => {
-          return inspector.inspect();
-        })
-        .then((tree) => {
-          console.log('tree:', tree);
-          this.provider.loadTree(tree);
-        })
-        .catch((err) => {
-          console.error(err);
-        })
-    }
+    connectMongoDB(mongoConfig).then((data) => {
+      console.log('tree:', data);
+      this
+        .provider
+        .loadTree(data);
+    });
   }
+
 }
 
 module.exports = {
