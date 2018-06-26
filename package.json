@@ -57,7 +57,7 @@
     "@types/node": "^7.0.43",
     "eslint": "^4.11.0",
     "typescript": "^2.6.1",
-    "vscode": "^1.1.6"
+    "vscode": "^1.1.17"
   },
   "dependencies": {
     "mongodb-tree": "^0.0.6"
