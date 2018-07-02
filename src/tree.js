@@ -1,7 +1,7 @@
 const vscode = require('vscode');
-const { TreeItemCollapsibleState, TreeDataProvider } = require('vscode');
-const EventEmitter = require('events');
+const { TreeItemCollapsibleState, EventEmitter } = require('vscode');
 const mongodbTree = require('mongodb-tree');
+const _ = require('lodash');
 
 const config = require('./config');
 const IDS = {
@@ -18,13 +18,10 @@ const root = {
   // command: {   command: 'mongoRunner.refresh' }
 };
 
-const loadMongoTree = (provider) => {
+const loadMongoTree = () => {
   const mongoConfig = config.getMongoConfiguration();
   if (mongoConfig.url) {
-    return connectMongoDB(mongoConfig).then((data) => {
-      console.log('tree:', data);
-      provider.loadTree(data);
-    });
+    return connectMongoDB(mongoConfig);
   }
   vscode
         .window
@@ -34,7 +31,6 @@ const loadMongoTree = (provider) => {
 
 const connectMongoDB = (mongoConfig) => {
   // connect to mongodb instance
-  console.log('mongo config ', mongoConfig);
   return mongodbTree
     .connect(mongoConfig.url, {})
     .then((inspector) => {
@@ -45,38 +41,39 @@ const connectMongoDB = (mongoConfig) => {
     })
 };
 
-const convertMongoTree = (data) => {
-  const treeItems = [];
-  const dbs = data
-    .databases
-    .map((db, i) => {
-      return {
-        id: `db_${i}`,
-        label: db.name,
-        collapsibleState: db.children && db.children.length > 0
-          ? TreeItemCollapsibleState.Collapsed
-          : null
-      }
-    });
-  treeItems.push(dbs);
-  return treeItems;
-};
-
 class MongoTreeProvider {
-
-  loadTree(data) {
-    this.treeData = data;
+  constructor() {
     this._onDidChangeTreeData = new EventEmitter();
     this.onDidChangeTreeData= this._onDidChangeTreeData.event;
-    this.onDidChangeTreeData.emit('');
+    this.loaded = false;
+  }
+
+  /**
+   * The data structure 
+   * @param {*} data 
+   */
+  loadTree(data) {
+    console.log('load data ', data);
+    this.treeData = this.convertToTreeData(data);
+    this._onDidChangeTreeData.fire();
+    this.loaded = true;
+  }
+
+  convertToTreeData(data) {
+    const treeData = [];
+    _.forOwn(data, (v, k) => {
+      treeData.push({name: k, type: k, children: v});
+    });
+    return treeData;
   }
 
   getTreeItem(element) {
     console.log('get tree item ', element);
-    if (element.type === 'database') {
-      return { id: `db_${element.name}`, label: element.name, collapsibleState: true, command: '' }
+    if(element.id === IDS.root) {
+      return element;
     }
-    return element;
+    const collapsibleState = element.children && element.children.length > 0 ? TreeItemCollapsibleState.Collapsed : null;
+    return { id: `${element.type}_${element.name}`, label: element.name, collapsibleState, command: '' }
   }
 
   getChildren(element) {
@@ -84,12 +81,20 @@ class MongoTreeProvider {
       return [root];
     }
     if (element.id === IDS.root) {
-      if (!element.children) {
-        return loadMongoTree(this);
+      if (!this.isLoaded()) {
+        return this.refresh();
       }
       return this.treeData;
     }
     return element.children;
+  }
+
+  refresh() {
+    loadMongoTree().then(data => this.loadTree(data));
+  }
+
+  isLoaded() {
+    return this.loaded;
   }
 }
 
@@ -106,7 +111,7 @@ class TreeExplorer {
 
     const mongoConfig = config.getMongoConfiguration();
     if (mongoConfig.activeOnStartUp) {
-      loadMongoTree(this.provider);
+      this.provider.refresh();
     }
   }
 
@@ -117,12 +122,12 @@ class TreeExplorer {
         vscode
           .window
           .showInformationMessage('Refresh Mongo Connection');
-        loadMongoTree(this.provider);
+        this.provider.refresh();
       });
     vscode
       .commands
       .registerCommand('extension.mongoRunner.getConfiguration', () => {
-        loadMongoTree(this.provider);
+        this.provider.refresh();
       })
   }
 }

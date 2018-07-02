@@ -60,6 +60,7 @@
     "vscode": "^1.1.17"
   },
   "dependencies": {
+    "lodash": "^4.17.10",
     "mongodb-tree": "^0.0.6"
   }
 }
