@@ -1,6 +1,6 @@
 const vscode = require('vscode');
 const { TreeItemCollapsibleState, EventEmitter } = require('vscode');
-const mongodbTree = require('mongodb-tree');
+const mongodbTree = require('mongodb-topology');
 const _ = require('lodash');
 
 const config = require('./config');
@@ -38,6 +38,7 @@ const connectMongoDB = (mongoConfig) => {
     })
     .catch((err) => {
       console.error(err);
+      vscode.window.showErrorMessage('Failed to connect MongoDB.');
     })
 };
 
@@ -54,6 +55,9 @@ class MongoTreeProvider {
    */
   loadTree(data) {
     console.log('load data ', data);
+    if(!data) {
+      return;
+    }
     this.treeData = this.convertToTreeData(data);
     this._onDidChangeTreeData.fire();
     this.loaded = true;

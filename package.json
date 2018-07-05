@@ -61,6 +61,6 @@
   },
   "dependencies": {
     "lodash": "^4.17.10",
-    "mongodb-tree": "^0.0.6"
+    "mongodb-topology": "^0.0.2"
   }
 }
