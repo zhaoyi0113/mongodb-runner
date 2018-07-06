@@ -1,7 +1,9 @@
 const vscode = require('vscode');
-const { TreeItemCollapsibleState, EventEmitter } = require('vscode');
+const { TreeItemCollapsibleState, EventEmitter, Uri } = require('vscode');
 const mongodbTree = require('mongodb-topology');
+const { TreeNodeTypes } = mongodbTree;
 const _ = require('lodash');
+const path = require('path');
 
 const config = require('./config');
 const IDS = {
@@ -24,8 +26,8 @@ const loadMongoTree = () => {
     return connectMongoDB(mongoConfig);
   }
   vscode
-        .window
-        .showInformationMessage('No Mongo Configuration.');
+    .window
+    .showInformationMessage('No Mongo Configuration.');
   return Promise.resolve();
 }
 
@@ -45,7 +47,7 @@ const connectMongoDB = (mongoConfig) => {
 class MongoTreeProvider {
   constructor() {
     this._onDidChangeTreeData = new EventEmitter();
-    this.onDidChangeTreeData= this._onDidChangeTreeData.event;
+    this.onDidChangeTreeData = this._onDidChangeTreeData.event;
     this.loaded = false;
   }
 
@@ -55,7 +57,7 @@ class MongoTreeProvider {
    */
   loadTree(data) {
     console.log('load data ', data);
-    if(!data) {
+    if (!data) {
       return;
     }
     this.treeData = this.convertToTreeData(data);
@@ -66,18 +68,29 @@ class MongoTreeProvider {
   convertToTreeData(data) {
     const treeData = [];
     _.forOwn(data, (v, k) => {
-      treeData.push({name: k, type: k, children: v});
+      let resource;
+      // if(k === 'databases') {
+      //   resource = Uri.parse('file:./database.png');
+      // }
+      treeData.push({ name: k, type: k, children: v, resource });
     });
     return treeData;
   }
 
   getTreeItem(element) {
     console.log('get tree item ', element);
-    if(element.id === IDS.root) {
+    if (element.id === IDS.root) {
       return element;
     }
     const collapsibleState = element.children && element.children.length > 0 ? TreeItemCollapsibleState.Collapsed : null;
-    return { id: `${element.type}_${element.name}`, label: element.name, collapsibleState, command: '' }
+    const treeItem = { id: `${element.type}_${element.name}`, label: element.name, collapsibleState, command: '' };
+    if (element.resource) {
+      treeItem.resourceUri = element.resource;
+    }
+    if (element.type === 'databases') {
+      treeItem.contextValue = element.type;
+    }
+    return treeItem;
   }
 
   getChildren(element) {

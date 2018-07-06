@@ -3,6 +3,7 @@
 const vscode = require('vscode');
 
 const {TreeExplorer} = require('./tree');
+const {registerCommands} = require("./commands");
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -29,6 +30,8 @@ function activate(context) {
         // Display a message box to the user
         vscode.window.showInformationMessage('Selected characters: ' + text.length);
     });
+
+    registerCommands();
     context.subscriptions.push(disposable);
     new TreeExplorer(context);
 }

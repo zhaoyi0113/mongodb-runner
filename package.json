@@ -2,7 +2,7 @@
   "name": "mongo-runner",
   "displayName": "Mongo Runner",
   "description": "MongoDB Plugin for VS Code",
-  "version": "0.0.3",
+  "version": "0.0.1",
   "publisher": "Zhao Yi (Joey) zhaoyi0113@gmail.com",
   "engines": {
     "vscode": "^1.22.0"
@@ -36,6 +36,18 @@
           "light": "resources/light/refresh.svg",
           "dark": "resources/dark/refresh.svg"
         }
+      },
+      {
+        "command": "mongoRunner.serverStatus",
+        "title": "Server Status",
+        "icon": {
+          "light": "resources/light/refresh.png",
+          "dark": "resources/dark/refresh.png"
+        }
+      },
+      {
+        "command": "mongoRunner.serverBuildInfo",
+        "title": "Server Build Info"
       }
     ],
     "menus": {
@@ -44,6 +56,16 @@
           "command": "mongoRunner.refresh",
           "when": "view == mongoRunner",
           "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "mongoRunner.serverBuildInfo",
+          "when": "viewItem == databases"
+        },
+        {
+          "command": "mongoRunner.serverStatus",
+          "when": "viewItem == databases"
         }
       ]
     }
@@ -61,6 +83,6 @@
   },
   "dependencies": {
     "lodash": "^4.17.10",
-    "mongodb-topology": "^0.0.2"
+    "mongodb-topology": "^0.0.4"
   }
 }

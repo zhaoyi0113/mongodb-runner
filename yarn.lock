@@ -1209,9 +1209,9 @@ mongodb-core@3.1.0-beta4:
   optionalDependencies:
     saslprep "^1.0.0"
 
-mongodb-topology@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/mongodb-topology/-/mongodb-topology-0.0.2.tgz#8ea78a772f0a1fc5d7d1c84af5b789a19ef0758d"
+mongodb-topology@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/mongodb-topology/-/mongodb-topology-0.0.4.tgz#f877435ed8537b6cbf11e22462404fefcd608f96"
   dependencies:
     lodash "^4.17.10"
     mongodb "^3.1.0-beta4"
