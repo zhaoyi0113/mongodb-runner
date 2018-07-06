@@ -42,8 +42,8 @@ const getCollectionAttributes = (e) => {
     return inspector.getCollectionAttributes(e.dbName, e.name)
         .then((fields) => {
             eventDispatcher.emit('set-collection-attributes', {dbName: e.dbName, colName: e.name, fields});
-
-        });
+        })
+        .catch(err => console.error(err));
 };
 
 const registerCommands = () => {

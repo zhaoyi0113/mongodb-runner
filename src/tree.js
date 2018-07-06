@@ -1,6 +1,6 @@
 const vscode = require('vscode');
 const { TreeItemCollapsibleState, EventEmitter, Uri } = require('vscode');
-const {TreeNodeTypes} = require('mongodb-topology');
+const { TreeNodeTypes } = require('mongodb-topology');
 const _ = require('lodash');
 
 const Connection = require('./connection');
@@ -37,7 +37,7 @@ class MongoTreeProvider {
     this._onDidChangeTreeData = new EventEmitter();
     this.onDidChangeTreeData = this._onDidChangeTreeData.event;
     this.loaded = false;
-    eventDispatch.on('set-collection-attributes', this.addCollectionAttributes);
+    eventDispatch.on('set-collection-attributes', this.addCollectionAttributes.bind(this));
   }
 
   /**
@@ -66,10 +66,11 @@ class MongoTreeProvider {
   }
 
   addCollectionAttributes(event) {
-    console.log('add addCollectionAttributes:', event);
-    const dbs = this.treeData.find(d => d.name === event.dbName);
-    const col = dbs.children.find(c => c.name === event.colName);
-
+    const dbs = this.treeData.find(d => d.type === TreeNodeTypes.DATABASES);
+    const db = dbs.children.find(c => c.name === event.dbName);
+    const col = db.collections.find(c => c.name === event.colName);
+    col.fields = event.fields;
+    this._onDidChangeTreeData.fire();
   }
 
   getTreeItem(element) {
@@ -95,12 +96,22 @@ class MongoTreeProvider {
       }
       return this.treeData;
     }
-    let children = element.children;
-    if(element.type === TreeNodeTypes.DATABASE) {
+    let children = [];
+    if (element.type === TreeNodeTypes.DATABASES) {
+      children = element.children;
+    } else if (element.type === TreeNodeTypes.DATABASE) {
       children = element.collections;
-    } else if(element.type === TreeNodeTypes.COLLECTION) {
-      const indexes = element.indexes;
-      children = [{ name: 'Indexes', children: indexes, type: TreeNodeTypes.INDEXES}];
+    } else if (element.type === TreeNodeTypes.COLLECTION) {
+      if (element.indexes && element.indexes.length > 0) {
+        children.push({ name: 'Indexes', children: element.indexes, type: TreeNodeTypes.INDEXES });
+      }
+      if (element.fields && element.fields.length > 0) {
+        children.push({ name: 'Fields', children: element.fields, type: TreeNodeTypes.FIELDS });
+      }
+    } else if (element.type === TreeNodeTypes.FIELDS) {
+      children = element.children;
+    } else if (element.type === TreeNodeTypes.INDEXES) {
+      children = element.children;
     }
     return children;
   }
