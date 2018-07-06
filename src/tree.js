@@ -70,12 +70,9 @@ class MongoTreeProvider {
       return element;
     }
     const collapsibleState = element.children && element.children.length > 0 ? TreeItemCollapsibleState.Collapsed : null;
-    const treeItem = { id: `${element.type}_${element.name}`, label: element.name, collapsibleState, command: '' };
+    const treeItem = { id: `${element.type}_${element.name}`, label: element.name, collapsibleState, contextValue: element.type };
     if (element.resource) {
       treeItem.resourceUri = element.resource;
-    }
-    if (element.type === 'databases') {
-      treeItem.contextValue = element.type;
     }
     return treeItem;
   }

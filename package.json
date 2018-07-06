@@ -48,6 +48,14 @@
       {
         "command": "mongoRunner.serverBuildInfo",
         "title": "Server Build Info"
+      },
+      {
+        "command": "mongoRunner.createCollection",
+        "title": "Create Collection"
+      },
+      {
+        "command": "mongoRunner.getCollectionAttributes",
+        "title": "Get Attributes"
       }
     ],
     "menus": {
@@ -66,6 +74,14 @@
         {
           "command": "mongoRunner.serverStatus",
           "when": "viewItem == databases"
+        },
+        {
+          "command": "mongoRunner.createCollection",
+          "when": "viewItem == database"
+        },
+        {
+          "command": "mongoRunner.getCollectionAttributes",
+          "when": "viewItem == collection"
         }
       ]
     }
@@ -83,6 +99,6 @@
   },
   "dependencies": {
     "lodash": "^4.17.10",
-    "mongodb-topology": "^0.0.5"
+    "mongodb-topology": "^0.0.7"
   }
 }
