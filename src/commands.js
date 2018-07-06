@@ -4,7 +4,10 @@ const eventDispatcher = require('./event-dispatcher');
 
 const openTextInEditor = (text, language='json') => {
     return vscode.workspace.openTextDocument({ content: text, language })
-    .then((doc) => vscode.window.showTextDocument(doc, 1, true));
+    .then((doc) => vscode.window.showTextDocument(doc, 1, true))
+    .then(() => {
+        return vscode.commands.executeCommand('editor.action.formatDocument');
+    });
 }
 
 const serverStatusHandler = () => {
@@ -12,9 +15,6 @@ const serverStatusHandler = () => {
     inspector.serverStats()
         .then(stats => {
             return openTextInEditor(JSON.stringify(stats));
-        })
-        .then(() => {
-            return vscode.commands.executeCommand('editor.action.formatDocument');
         })
         .catch(err => console.error(err));
 };
