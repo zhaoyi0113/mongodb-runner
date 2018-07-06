@@ -40,8 +40,8 @@ const getCollectionAttributes = (e) => {
     console.log('event:', e);
     const inspector = getMongoInspector();
     return inspector.getCollectionAttributes(e.dbName, e.name)
-        .then((fields) => {
-            eventDispatcher.emit('set-collection-attributes', {dbName: e.dbName, colName: e.name, fields});
+        .then((attributes) => {
+            eventDispatcher.emit('set-collection-attributes', {dbName: e.dbName, colName: e.name, attributes});
         })
         .catch(err => console.error(err));
 };

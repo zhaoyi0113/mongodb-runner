@@ -69,7 +69,7 @@ class MongoTreeProvider {
     const dbs = this.treeData.find(d => d.type === TreeNodeTypes.DATABASES);
     const db = dbs.children.find(c => c.name === event.dbName);
     const col = db.collections.find(c => c.name === event.colName);
-    col.fields = event.fields;
+    col.attributes = event.attributes;
     this._onDidChangeTreeData.fire();
   }
 
@@ -79,7 +79,7 @@ class MongoTreeProvider {
     }
     let children = this.getChildren(element);
     const collapsibleState = children && children.length > 0 ? TreeItemCollapsibleState.Collapsed : null;
-    const treeItem = { id: `${element.type}_${element.name}`, label: element.name, collapsibleState, contextValue: element.type };
+    const treeItem = {  label: element.name, collapsibleState, contextValue: element.type };
     if (element.resource) {
       treeItem.resourceUri = element.resource;
     }
@@ -105,8 +105,8 @@ class MongoTreeProvider {
       if (element.indexes && element.indexes.length > 0) {
         children.push({ name: 'Indexes', children: element.indexes, type: TreeNodeTypes.INDEXES });
       }
-      if (element.fields && element.fields.length > 0) {
-        children.push({ name: 'Fields', children: element.fields, type: TreeNodeTypes.FIELDS });
+      if (element.attributes && element.attributes.length > 0) {
+        children.push({ name: 'Attributes', children: element.attributes, type: TreeNodeTypes.FIELDS });
       }
     } else if (element.type === TreeNodeTypes.FIELDS) {
       children = element.children;
