@@ -83,6 +83,6 @@
   },
   "dependencies": {
     "lodash": "^4.17.10",
-    "mongodb-topology": "^0.0.4"
+    "mongodb-topology": "^0.0.5"
   }
 }

@@ -1,9 +1,9 @@
 const vscode = require('vscode');
 const { TreeItemCollapsibleState, EventEmitter, Uri } = require('vscode');
 const mongodbTree = require('mongodb-topology');
-const { TreeNodeTypes } = mongodbTree;
 const _ = require('lodash');
-const path = require('path');
+
+const Connection = require('./connection');
 
 const config = require('./config');
 const IDS = {
@@ -11,7 +11,8 @@ const IDS = {
   dbs: 1,
   users: 2,
   roles: 3
-}
+};
+
 const root = {
   label: 'MongoDB',
   id: IDS.root,
@@ -23,26 +24,13 @@ const root = {
 const loadMongoTree = () => {
   const mongoConfig = config.getMongoConfiguration();
   if (mongoConfig.url) {
-    return connectMongoDB(mongoConfig);
+    return Connection.connectMongoDB(mongoConfig);
   }
   vscode
     .window
     .showInformationMessage('No Mongo Configuration.');
   return Promise.resolve();
 }
-
-const connectMongoDB = (mongoConfig) => {
-  // connect to mongodb instance
-  return mongodbTree
-    .connect(mongoConfig.url, {})
-    .then((inspector) => {
-      return inspector.inspect();
-    })
-    .catch((err) => {
-      console.error(err);
-      vscode.window.showErrorMessage('Failed to connect MongoDB.');
-    })
-};
 
 class MongoTreeProvider {
   constructor() {
@@ -78,7 +66,6 @@ class MongoTreeProvider {
   }
 
   getTreeItem(element) {
-    console.log('get tree item ', element);
     if (element.id === IDS.root) {
       return element;
     }
@@ -150,5 +137,5 @@ class TreeExplorer {
 }
 
 module.exports = {
-  TreeExplorer: TreeExplorer
+  TreeExplorer
 };
