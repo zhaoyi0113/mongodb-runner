@@ -20,7 +20,6 @@ const root = {
   tooltip: 'MongoDB',
   collapsibleState: TreeItemCollapsibleState.Collapsed,
 };
-
 const loadMongoTree = () => {
   const mongoConfig = config.getMongoConfiguration();
   if (mongoConfig.url) {
@@ -57,10 +56,11 @@ class MongoTreeProvider {
     const treeData = [];
     _.forOwn(data, (v, k) => {
       let resource;
-      // if(k === 'databases') {
-      //   resource = Uri.parse('file:./database.png');
-      // }
-      treeData.push({ name: k, type: k, children: v, resource });
+      const name = k === 'databases' ? 'Databases' : k;
+      if(k === 'databases') {
+        // resource = Uri.parse(dbIcon);
+      }
+      treeData.push({ name, type: k, children: v, resource });
     });
     return treeData;
   }

@@ -13,9 +13,9 @@ const serverStatusHandler = () => {
         .then(stats => {
             return openTextInEditor(JSON.stringify(stats));
         })
-        // .then((doc) => {
-        //     vscode.commands.executeCommand('vscode.executeFormatDocumentProvider', doc.document.uri)
-        // })
+        .then(() => {
+            return vscode.commands.executeCommand('editor.action.formatDocument');
+        })
         .catch(err => console.error(err));
 };
 
