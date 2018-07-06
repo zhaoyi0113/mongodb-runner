@@ -1,9 +1,10 @@
 const vscode = require('vscode');
 const { TreeItemCollapsibleState, EventEmitter, Uri } = require('vscode');
-const mongodbTree = require('mongodb-topology');
+const {TreeNodeTypes} = require('mongodb-topology');
 const _ = require('lodash');
 
 const Connection = require('./connection');
+const eventDispatch = require('./event-dispatcher');
 
 const config = require('./config');
 const IDS = {
@@ -18,7 +19,6 @@ const root = {
   id: IDS.root,
   tooltip: 'MongoDB',
   collapsibleState: TreeItemCollapsibleState.Collapsed,
-  // command: {   command: 'mongoRunner.refresh' }
 };
 
 const loadMongoTree = () => {
@@ -37,6 +37,7 @@ class MongoTreeProvider {
     this._onDidChangeTreeData = new EventEmitter();
     this.onDidChangeTreeData = this._onDidChangeTreeData.event;
     this.loaded = false;
+    eventDispatch.on('set-collection-attributes', this.addCollectionAttributes);
   }
 
   /**
@@ -44,7 +45,6 @@ class MongoTreeProvider {
    * @param {*} data 
    */
   loadTree(data) {
-    console.log('load data ', data);
     if (!data) {
       return;
     }
@@ -65,11 +65,19 @@ class MongoTreeProvider {
     return treeData;
   }
 
+  addCollectionAttributes(event) {
+    console.log('add addCollectionAttributes:', event);
+    const dbs = this.treeData.find(d => d.name === event.dbName);
+    const col = dbs.children.find(c => c.name === event.colName);
+
+  }
+
   getTreeItem(element) {
     if (element.id === IDS.root) {
       return element;
     }
-    const collapsibleState = element.children && element.children.length > 0 ? TreeItemCollapsibleState.Collapsed : null;
+    let children = this.getChildren(element);
+    const collapsibleState = children && children.length > 0 ? TreeItemCollapsibleState.Collapsed : null;
     const treeItem = { id: `${element.type}_${element.name}`, label: element.name, collapsibleState, contextValue: element.type };
     if (element.resource) {
       treeItem.resourceUri = element.resource;
@@ -87,7 +95,14 @@ class MongoTreeProvider {
       }
       return this.treeData;
     }
-    return element.children;
+    let children = element.children;
+    if(element.type === TreeNodeTypes.DATABASE) {
+      children = element.collections;
+    } else if(element.type === TreeNodeTypes.COLLECTION) {
+      const indexes = element.indexes;
+      children = [{ name: 'Indexes', children: indexes, type: TreeNodeTypes.INDEXES}];
+    }
+    return children;
   }
 
   refresh() {

@@ -1,5 +1,6 @@
 const vscode = require('vscode');
 const { getMongoInspector } = require('./connection');
+const eventDispatcher = require('./event-dispatcher');
 
 const openTextInEditor = (text, language='json') => {
     return vscode.workspace.openTextDocument({ content: text, language })
@@ -40,7 +41,8 @@ const getCollectionAttributes = (e) => {
     const inspector = getMongoInspector();
     return inspector.getCollectionAttributes(e.dbName, e.name)
         .then((fields) => {
-            console.log(fields);
+            eventDispatcher.emit('set-collection-attributes', {dbName: e.dbName, colName: e.name, fields});
+
         });
 };
 
