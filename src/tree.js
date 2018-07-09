@@ -30,7 +30,7 @@ const loadMongoTree = () => {
     .showInformationMessage('No Mongo Configuration.');
   return Promise.resolve();
 }
-
+let context;
 class MongoTreeProvider {
   constructor() {
     this._onDidChangeTreeData = new EventEmitter();
@@ -58,7 +58,8 @@ class MongoTreeProvider {
       let resource;
       const name = k === 'databases' ? 'Databases' : k;
       if(k === 'databases') {
-        // resource = Uri.parse(dbIcon);
+
+        resource = Uri.file(context.asAbsolutePath('../resources/database.png'));
       }
       treeData.push({ name, type: k, children: v, resource });
     });
@@ -126,8 +127,9 @@ class MongoTreeProvider {
 }
 
 class TreeExplorer {
-  constructor(context) {
+  constructor(ctx) {
     this.provider = new MongoTreeProvider();
+    context=ctx;
     context
       .subscriptions
       .push(vscode.workspace.registerTextDocumentContentProvider('Data', this.provider));
