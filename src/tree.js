@@ -5,6 +5,7 @@ const _ = require('lodash');
 
 const Connection = require('./connection');
 const eventDispatch = require('./event-dispatcher');
+const TreeItem = require('./tree-item');
 
 const config = require('./config');
 const IDS = {
@@ -57,10 +58,10 @@ class MongoTreeProvider {
     _.forOwn(data, (v, k) => {
       let resource;
       const name = k === 'databases' ? 'Databases' : k;
-      if(k === 'databases') {
+      // if(k === 'databases') {
 
-        resource = Uri.file(context.asAbsolutePath('../resources/database.png'));
-      }
+      //   resource = Uri.file(context.asAbsolutePath('../resources/database.png'));
+      // }
       treeData.push({ name, type: k, children: v, resource });
     });
     return treeData;
@@ -80,9 +81,9 @@ class MongoTreeProvider {
     }
     let children = this.getChildren(element);
     const collapsibleState = children && children.length > 0 ? TreeItemCollapsibleState.Collapsed : null;
-    const treeItem = {  label: element.name, collapsibleState, contextValue: element.type };
+    // const treeItem = {  label: element.name, collapsibleState, contextValue: element.type };
+    const treeItem = new TreeItem(element, collapsibleState);
     if (element.resource) {
-      treeItem.resourceUri = element.resource;
     }
     return treeItem;
   }
