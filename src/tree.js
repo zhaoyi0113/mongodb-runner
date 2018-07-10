@@ -58,10 +58,6 @@ class MongoTreeProvider {
     _.forOwn(data, (v, k) => {
       let resource;
       const name = k === 'databases' ? 'Databases' : k;
-      // if(k === 'databases') {
-
-      //   resource = Uri.file(context.asAbsolutePath('../resources/database.png'));
-      // }
       treeData.push({ name, type: k, children: v, resource });
     });
     return treeData;
@@ -162,6 +158,4 @@ class TreeExplorer {
   }
 }
 
-module.exports = {
-  TreeExplorer
-};
+module.exports = TreeExplorer;
