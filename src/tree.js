@@ -54,10 +54,21 @@ class MongoTreeProvider {
   }
 
   convertToTreeData(data) {
+    console.log('convert tree data ', data);
     const treeData = [];
     _.forOwn(data, (v, k) => {
       let resource;
-      const name = k === 'databases' ? 'Databases' : k;
+      let name;
+      switch(k) {
+        case 'databases':
+          name = 'Databases';
+          break;
+        case 'replicaset':
+          name = 'Replica Set';
+          break;
+        default:
+          name = k;
+      }
       treeData.push({ name, type: k, children: v, resource });
     });
     return treeData;
@@ -77,7 +88,6 @@ class MongoTreeProvider {
     }
     let children = this.getChildren(element);
     const collapsibleState = children && children.length > 0 ? TreeItemCollapsibleState.Collapsed : null;
-    // const treeItem = {  label: element.name, collapsibleState, contextValue: element.type };
     const treeItem = new TreeItem(element, collapsibleState);
     if (element.resource) {
     }
@@ -109,6 +119,8 @@ class MongoTreeProvider {
     } else if (element.type === TreeNodeTypes.FIELDS) {
       children = element.children;
     } else if (element.type === TreeNodeTypes.INDEXES) {
+      children = element.children;
+    } else if (element.type === TreeNodeTypes.REPLICASET) {
       children = element.children;
     }
     return children;

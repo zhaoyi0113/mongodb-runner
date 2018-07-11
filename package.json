@@ -3,7 +3,7 @@
   "displayName": "Mongo Runner",
   "description": "MongoDB Plugin for VS Code",
   "version": "0.0.1",
-  "publisher": "Zhao Yi (Joey) zhaoyi0113@gmail.com",
+  "publisher": "Joey Zhao",
   "engines": {
     "vscode": "^1.22.0"
   },
@@ -99,6 +99,6 @@
   },
   "dependencies": {
     "lodash": "^4.17.10",
-    "mongodb-topology": "^0.0.16"
+    "mongodb-topology": "^0.0.17"
   }
 }

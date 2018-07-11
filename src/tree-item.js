@@ -1,7 +1,6 @@
 const path = require("path");
 
 const getItemIcon = type => {
-  console.log("current path ", path.join(__filename, "..", "..", "resources"));
   switch (type) {
     case "databases":
       return {
