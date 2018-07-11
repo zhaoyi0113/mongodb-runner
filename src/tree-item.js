@@ -40,8 +40,18 @@ const getItemIcon = type => {
       };
     case TreeNodeTypes.SECONDARY:
       return {
-        light: path.join(__filename, "..", "..", "resources/light/secondary.svg"),
+        light: path.join(
+          __filename,
+          "..",
+          "..",
+          "resources/light/secondary.svg"
+        ),
         dark: path.join(__filename, "..", "..", "resources/dark/secondary.svg")
+      };
+    case TreeNodeTypes.ARBITER:
+      return {
+        light: path.join(__filename, "..", "..", "resources/light/arbiter.svg"),
+        dark: path.join(__filename, "..", "..", "resources/dark/arbiter.svg")
       };
   }
 };
