@@ -1,8 +1,9 @@
 const path = require("path");
+const { TreeNodeTypes } = require("mongodb-topology");
 
 const getItemIcon = type => {
   switch (type) {
-    case "databases":
+    case TreeNodeTypes.DATABASES:
       return {
         light: path.join(
           __filename,
@@ -12,17 +13,17 @@ const getItemIcon = type => {
         ),
         dark: path.join(__filename, "..", "..", "resources/dark/database.svg")
       };
-    case "users":
+    case TreeNodeTypes.USERS:
       return {
         light: path.join(__filename, "..", "..", "resources/light/user.svg"),
         dark: path.join(__filename, "..", "..", "resources/dark/user.svg")
       };
-    case "roles":
+    case TreeNodeTypes.ROLES:
       return {
         light: path.join(__filename, "..", "..", "resources/light/role.svg"),
         dark: path.join(__filename, "..", "..", "resources/dark/role.svg")
       };
-    case "collection":
+    case TreeNodeTypes.COLLECTION:
       return {
         light: path.join(
           __filename,
@@ -31,6 +32,16 @@ const getItemIcon = type => {
           "resources/light/collection.svg"
         ),
         dark: path.join(__filename, "..", "..", "resources/dark/collection.svg")
+      };
+    case TreeNodeTypes.PRIMARY:
+      return {
+        light: path.join(__filename, "..", "..", "resources/light/primary.svg"),
+        dark: path.join(__filename, "..", "..", "resources/dark/primary.svg")
+      };
+    case TreeNodeTypes.SECONDARY:
+      return {
+        light: path.join(__filename, "..", "..", "resources/light/secondary.svg"),
+        dark: path.join(__filename, "..", "..", "resources/dark/secondary.svg")
       };
   }
 };
