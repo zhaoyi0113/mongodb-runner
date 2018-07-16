@@ -88,6 +88,12 @@ const getItemIcon = type => {
       light: path.join(__filename, "..", "..", "resources/light/index.svg"),
       dark: path.join(__filename, "..", "..", "resources/dark/index.svg")
     };
+    case TreeNodeTypes.FIELDS:
+    case TreeNodeTypes.FIELD:
+    return {
+      light: path.join(__filename, "..", "..", "resources/light/order.svg"),
+      dark: path.join(__filename, "..", "..", "resources/dark/order.svg")
+    };
   }
 };
 

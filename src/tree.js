@@ -59,6 +59,9 @@ class MongoTreeProvider {
     _.forOwn(data, (v, k) => {
       let resource;
       let name;
+      if (k === 'roles') {
+        return;
+      }
       switch(k) {
         case 'databases':
           name = 'Databases';
@@ -122,6 +125,8 @@ class MongoTreeProvider {
       } else {
         children = element.children;
       }
+    } else if (element.type === TreeNodeTypes.ROLES) {
+
     }
      else{
       children = element.children;
