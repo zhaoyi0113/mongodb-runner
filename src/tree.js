@@ -116,7 +116,14 @@ class MongoTreeProvider {
       if (element.attributes && element.attributes.length > 0) {
         children.push({ name: 'Attributes', children: element.attributes, type: TreeNodeTypes.FIELDS });
       }
-    } else{
+    } else if (element.type === TreeNodeTypes.SHARDS) {
+      if(element.shards) {
+        children = element.shards;
+      } else {
+        children = element.children;
+      }
+    }
+     else{
       children = element.children;
     }
     return children;
