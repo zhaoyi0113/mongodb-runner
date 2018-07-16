@@ -4,6 +4,7 @@ const { TreeNodeTypes } = require("mongodb-topology");
 const getItemIcon = type => {
   switch (type) {
     case TreeNodeTypes.DATABASES:
+    case TreeNodeTypes.DATABASE:
       return {
         light: path.join(
           __filename,
@@ -52,6 +53,34 @@ const getItemIcon = type => {
       return {
         light: path.join(__filename, "..", "..", "resources/light/arbiter.svg"),
         dark: path.join(__filename, "..", "..", "resources/dark/arbiter.svg")
+      };
+    case TreeNodeTypes.REPLICASET:
+      return {
+        light: path.join(
+          __filename,
+          "..",
+          "..",
+          "resources/light/replicaset.svg"
+        ),
+        dark: path.join(__filename, "..", "..", "resources/dark/replicaset.svg")
+      };
+    case TreeNodeTypes.CONFIG:
+    case TreeNodeTypes.CONFIGS:
+      return {
+        light: path.join(__filename, "..", "..", "resources/light/config.svg"),
+        dark: path.join(__filename, "..", "..", "resources/dark/config.svg")
+      };
+    case TreeNodeTypes.SHARD:
+    case TreeNodeTypes.SHARDS:
+      return {
+        light: path.join(__filename, "..", "..", "resources/light/shard.svg"),
+        dark: path.join(__filename, "..", "..", "resources/dark/shard.svg")
+      };
+    case TreeNodeTypes.MONGOS:
+    case TreeNodeTypes.ROUTERS:
+      return {
+        light: path.join(__filename, "..", "..", "resources/light/router.svg"),
+        dark: path.join(__filename, "..", "..", "resources/dark/router.svg")
       };
   }
 };

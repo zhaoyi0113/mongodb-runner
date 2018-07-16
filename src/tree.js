@@ -116,11 +116,7 @@ class MongoTreeProvider {
       if (element.attributes && element.attributes.length > 0) {
         children.push({ name: 'Attributes', children: element.attributes, type: TreeNodeTypes.FIELDS });
       }
-    } else if (element.type === TreeNodeTypes.FIELDS) {
-      children = element.children;
-    } else if (element.type === TreeNodeTypes.INDEXES) {
-      children = element.children;
-    } else if (element.type === TreeNodeTypes.REPLICASET) {
+    } else{
       children = element.children;
     }
     return children;
