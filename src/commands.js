@@ -37,7 +37,7 @@ const createCollection = () => {
 };
 
 const getCollectionAttributes = (e) => {
-    console.log('event:', e);
+    console.log(e);
     const inspector = getMongoInspector();
     return inspector.getCollectionAttributes(e.dbName, e.name)
         .then((attributes) => {
@@ -46,11 +46,32 @@ const getCollectionAttributes = (e) => {
         .catch(err => console.error(err));
 };
 
+const createIndex = (e) => {
+    console.log('create index ', e);
+    const script = `db.${e.name}.createIndex()`;
+    openTextInEditor(script, 'javascript');
+};
+
+const getIndex = (e) => {
+    getMongoInspector().getCollectionIndexes(e.dbName, e.name)
+    .then((indexes) => {
+        console.log('get indexes ', indexes);
+        openTextInEditor(JSON.stringify(indexes), 'json');
+    })
+    .catch(err => console.error(err));
+};
+
 const registerCommands = () => {
+    // server command
     vscode.commands.registerCommand('mongoRunner.serverStatus', serverStatusHandler);
     vscode.commands.registerCommand('mongoRunner.serverBuildInfo', serverBuildInfoHandler);
+
+    // database commands
     vscode.commands.registerCommand('mongoRunner.createCollection', createCollection);
+
+    //collection commands
     vscode.commands.registerCommand('mongoRunner.getCollectionAttributes', getCollectionAttributes);
+    vscode.commands.registerCommand('mongoRunner.getIndex', getIndex);
 };
 
 module.exports = {

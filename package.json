@@ -56,6 +56,10 @@
       {
         "command": "mongoRunner.getCollectionAttributes",
         "title": "Get Attributes"
+      },
+      {
+        "command": "mongoRunner.getIndex",
+        "title": "Get Index"
       }
     ],
     "menus": {
@@ -81,6 +85,10 @@
         },
         {
           "command": "mongoRunner.getCollectionAttributes",
+          "when": "viewItem == collection"
+        },
+        {
+          "command": "mongoRunner.getIndex",
           "when": "viewItem == collection"
         }
       ]
