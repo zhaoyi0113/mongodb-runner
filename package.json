@@ -60,6 +60,10 @@
       {
         "command": "mongoRunner.getIndex",
         "title": "Get Index"
+      },
+      {
+        "command": "mongoRunner.createIndex",
+        "title": "Create Index"
       }
     ],
     "menus": {
@@ -89,6 +93,10 @@
         },
         {
           "command": "mongoRunner.getIndex",
+          "when": "viewItem == collection"
+        },
+        {
+          "command": "mongoRunner.createIndex",
           "when": "viewItem == collection"
         }
       ]

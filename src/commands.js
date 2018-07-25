@@ -1,6 +1,6 @@
 const vscode = require('vscode');
 const { getMongoInspector } = require('./connection');
-const eventDispatcher = require('./event-dispatcher');
+const {eventDispatcher, EventType} = require('./event-dispatcher');
 
 const openTextInEditor = (text, language='json') => {
     return vscode.workspace.openTextDocument({ content: text, language })
@@ -41,15 +41,25 @@ const getCollectionAttributes = (e) => {
     const inspector = getMongoInspector();
     return inspector.getCollectionAttributes(e.dbName, e.name)
         .then((attributes) => {
-            eventDispatcher.emit('set-collection-attributes', {dbName: e.dbName, colName: e.name, attributes});
+            eventDispatcher.emit(EventType.FindCollectionAttributes, {dbName: e.dbName, colName: e.name, attributes});
         })
         .catch(err => console.error(err));
 };
 
 const createIndex = (e) => {
-    console.log('create index ', e);
-    const script = `db.${e.name}.createIndex()`;
-    openTextInEditor(script, 'javascript');
+    vscode.window.showInputBox({placeHolder: '{"fieldA": 1, "fieldB": -1}'})
+    .then(result => {
+        try{
+            const idxParam = (JSON.parse(result));
+            return getMongoInspector().createIndex(e.dbName, e.name, idxParam);
+        }catch(err) {
+            vscode.window.showErrorMessage(err.message);
+        }
+    })
+    .then((ret) => {
+        vscode.window.showInformationMessage("Create index: " + ret);
+        eventDispatcher.emit(EventType.Refresh);
+    });
 };
 
 const getIndex = (e) => {
@@ -72,6 +82,7 @@ const registerCommands = () => {
     //collection commands
     vscode.commands.registerCommand('mongoRunner.getCollectionAttributes', getCollectionAttributes);
     vscode.commands.registerCommand('mongoRunner.getIndex', getIndex);
+    vscode.commands.registerCommand('mongoRunner.createIndex', createIndex);
 };
 
 module.exports = {

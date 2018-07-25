@@ -4,7 +4,7 @@ const { TreeNodeTypes } = require('mongodb-topology');
 const _ = require('lodash');
 
 const Connection = require('./connection');
-const eventDispatch = require('./event-dispatcher');
+const {eventDispatcher, EventType} = require('./event-dispatcher');
 const TreeItem = require('./tree-item');
 
 const config = require('./config');
@@ -37,7 +37,8 @@ class MongoTreeProvider {
     this._onDidChangeTreeData = new EventEmitter();
     this.onDidChangeTreeData = this._onDidChangeTreeData.event;
     this.loaded = false;
-    eventDispatch.on('set-collection-attributes', this.addCollectionAttributes.bind(this));
+    eventDispatcher.on(EventType.FindCollectionAttributes, this.addCollectionAttributes.bind(this));
+    eventDispatcher.on(EventType.Refresh, this.refresh.bind(this));
   }
 
   /**
