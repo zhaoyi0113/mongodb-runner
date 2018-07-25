@@ -64,6 +64,14 @@
       {
         "command": "mongoRunner.createIndex",
         "title": "Create Index"
+      },
+      {
+        "command": "mongoRunner.simpleQuery",
+        "title": "Simple query..."
+      },
+      {
+        "command": "mongoRunner.findFirst20Docs",
+        "title": "Find First 20 Docs"
       }
     ],
     "menus": {
@@ -84,10 +92,6 @@
           "when": "viewItem == databases"
         },
         {
-          "command": "mongoRunner.createCollection",
-          "when": "viewItem == database"
-        },
-        {
           "command": "mongoRunner.getCollectionAttributes",
           "when": "viewItem == collection"
         },
@@ -97,6 +101,14 @@
         },
         {
           "command": "mongoRunner.createIndex",
+          "when": "viewItem == collection"
+        },
+        {
+          "command": "mongoRunner.simpleQuery",
+          "when": "viewItem == collection"
+        },
+        {
+          "command": "mongoRunner.findFirst20Docs",
           "when": "viewItem == collection"
         }
       ]
