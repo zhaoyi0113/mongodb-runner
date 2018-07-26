@@ -6,6 +6,7 @@ const _ = require('lodash');
 const Connection = require('./connection');
 const {eventDispatcher, EventType} = require('./event-dispatcher');
 const TreeItem = require('./tree-item');
+const { convertToTreeData } = require('./tree-data-converter');
 
 const config = require('./config');
 const IDS = {
@@ -49,33 +50,9 @@ class MongoTreeProvider {
     if (!data) {
       return;
     }
-    this.treeData = this.convertToTreeData(data);
+    this.treeData = convertToTreeData(data);
     this._onDidChangeTreeData.fire();
     this.loaded = true;
-  }
-
-  convertToTreeData(data) {
-    console.log('convert tree data ', data);
-    const treeData = [];
-    _.forOwn(data, (v, k) => {
-      let resource;
-      let name;
-      if (k === 'roles') {
-        return;
-      }
-      switch(k) {
-        case 'databases':
-          name = 'Databases';
-          break;
-        case 'replicaset':
-          name = 'Replica Set';
-          break;
-        default:
-          name = k;
-      }
-      treeData.push({ name, type: k, children: v, resource });
-    });
-    return treeData;
   }
 
   addCollectionAttributes(event) {

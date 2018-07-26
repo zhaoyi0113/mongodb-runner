@@ -72,6 +72,10 @@
       {
         "command": "mongoRunner.findFirst20Docs",
         "title": "Find First 20 Docs"
+      },
+      {
+        "command": "mongoRunner.deleteIndex",
+        "title": "Delete Index"
       }
     ],
     "menus": {
@@ -110,18 +114,24 @@
         {
           "command": "mongoRunner.findFirst20Docs",
           "when": "viewItem == collection"
+        },
+        {
+          "command": "mongoRunner.deleteIndex",
+          "when": "viewItem == index"
         }
       ]
     }
   },
   "scripts": {
     "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "node ./node_modules/vscode/bin/test"
+    "vscode:test": "node ./node_modules/vscode/bin/test",
+    "test": "jest test/unit/*test*"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.42",
     "@types/node": "^7.0.43",
     "eslint": "^4.11.0",
+    "jest": "^23.4.1",
     "typescript": "^2.6.1",
     "vscode": "^1.1.17"
   },

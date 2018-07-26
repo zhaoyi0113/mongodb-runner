@@ -117,6 +117,10 @@ const findFirst20Docs = e => {
   .catch(err => vscode.window.showErrorMessage(err));
 };
 
+const deleteIndex = e => {
+    console.log('deleteIndex:', e);
+}
+
 const registerCommands = () => {
   // server command
   vscode.commands.registerCommand(
@@ -143,6 +147,9 @@ const registerCommands = () => {
   vscode.commands.registerCommand("mongoRunner.createIndex", createIndex);
   vscode.commands.registerCommand("mongoRunner.simpleQuery", simpleQuery);
   vscode.commands.registerCommand("mongoRunner.findFirst20Docs", findFirst20Docs);
+
+  // index commands
+  vscode.commands.registerCommand("mongoRunner.deleteIndex", deleteIndex);
 };
 
 module.exports = {
