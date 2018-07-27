@@ -54,6 +54,12 @@ const createCollection = e => {
     });
 };
 
+const deleteCollection = (e) => {
+    getMongoInspector().deleteCollection(e.dbName, e.colName)
+    .then(() => eventDispatcher.emit(EventType.Refresh))
+    .catch(err => vscode.window.showErrorMessage(err));
+};
+
 const getCollectionAttributes = e => {
   console.log(e);
   const inspector = getMongoInspector();
@@ -156,6 +162,7 @@ const registerCommands = () => {
   vscode.commands.registerCommand("mongoRunner.createIndex", createIndex);
   vscode.commands.registerCommand("mongoRunner.simpleQuery", simpleQuery);
   vscode.commands.registerCommand("mongoRunner.findFirst20Docs", findFirst20Docs);
+  vscode.commands.registerCommand("mongoRunner.deleteCollection", deleteCollection);
 
   // index commands
   vscode.commands.registerCommand("mongoRunner.deleteIndex", deleteIndex);

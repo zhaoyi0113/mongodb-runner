@@ -54,6 +54,10 @@
         "title": "Delete Database"
       },
       {
+        "command": "mongoRunner.deleteCollection",
+        "title": "Delete Collection"
+      },
+      {
         "command": "mongoRunner.createCollection",
         "title": "Create Collection"
       },
@@ -102,6 +106,10 @@
         {
           "command": "mongoRunner.deleteDatabase",
           "when": "viewItem == database"
+        },
+        {
+          "command": "mongoRunner.deleteCollection",
+          "when": "viewItem == collection"
         },
         {
           "command": "mongoRunner.getCollectionAttributes",
