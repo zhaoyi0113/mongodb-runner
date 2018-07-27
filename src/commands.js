@@ -31,6 +31,12 @@ const serverBuildInfoHandler = () => {
     .catch(err => console.error(err));
 };
 
+const deleteDatabase = (e) => {
+    getMongoInspector().deleteDatabase(e.dbName)
+    .then(() => eventDispatcher.emit(EventType.Refresh))
+    .catch(err => vscode.window.showErrorMessage(err));
+};
+
 const createCollection = e => {
   vscode.window
     .showInputBox({ placeHolder: "Type Collection Name" })
@@ -137,8 +143,8 @@ const registerCommands = () => {
 
   // database commands
   vscode.commands.registerCommand(
-    "mongoRunner.createCollection",
-    createCollection
+    "mongoRunner.deleteDatabase",
+    deleteDatabase
   );
 
   //collection commands

@@ -50,6 +50,10 @@
         "title": "Server Build Info"
       },
       {
+        "command": "mongoRunner.deleteDatabase",
+        "title": "Delete Database"
+      },
+      {
         "command": "mongoRunner.createCollection",
         "title": "Create Collection"
       },
@@ -94,6 +98,10 @@
         {
           "command": "mongoRunner.serverStatus",
           "when": "viewItem == databases"
+        },
+        {
+          "command": "mongoRunner.deleteDatabase",
+          "when": "viewItem == database"
         },
         {
           "command": "mongoRunner.getCollectionAttributes",
