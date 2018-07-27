@@ -92,7 +92,7 @@ class MongoTreeProvider {
       children = element.collections;
     } else if (element.type === TreeNodeTypes.COLLECTION) {
       if (element.indexes && element.indexes.length > 0) {
-        children.push({ name: 'Indexes', children: element.indexes, type: TreeNodeTypes.INDEXES });
+        children.push({ name: 'Indexes', children: element.indexes, type: TreeNodeTypes.INDEXES, dbName: element.indexes[0].dbName, colName: element.indexes[0].colName });
       }
       if (element.attributes && element.attributes.length > 0) {
         children.push({ name: 'Attributes', children: element.attributes, type: TreeNodeTypes.FIELDS });
