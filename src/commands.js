@@ -69,7 +69,7 @@ const createIndex = e => {
     .then(result => {
       try {
         const idxParam = JSON.parse(result);
-        return getMongoInspector().createIndex(e.dbName, e.name, idxParam);
+        return getMongoInspector().createIndex(e.dbName, e.colName, idxParam);
       } catch (err) {
         vscode.window.showErrorMessage(err.message);
       }
@@ -119,6 +119,9 @@ const findFirst20Docs = e => {
 
 const deleteIndex = e => {
     console.log('deleteIndex:', e);
+    getMongoInspector().deleteIndex(e.dbName, e.colName, e.name)
+    .then(() => eventDispatcher.emit(EventType.Refresh))
+    .catch(err => vscode.window.showErrorMessage(err));
 }
 
 const registerCommands = () => {

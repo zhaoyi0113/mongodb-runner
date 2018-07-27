@@ -113,7 +113,11 @@ class MongoTreeProvider {
   }
 
   refresh() {
-    loadMongoTree().then(data => this.loadTree(data));
+    loadMongoTree().then(data => this.loadTree(data))
+    .catch(err => {
+      console.error(err);
+      vscode.window.showErrorMessage(err);
+    });
   }
 
   isLoaded() {

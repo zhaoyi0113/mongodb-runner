@@ -104,8 +104,16 @@
           "when": "viewItem == collection"
         },
         {
+          "command": "mongoRunner.deleteIndex",
+          "when": "viewItem == index"
+        },
+        {
           "command": "mongoRunner.createIndex",
           "when": "viewItem == collection"
+        },
+        {
+          "command": "mongoRunner.createIndex",
+          "when": "viewItem == indexes"
         },
         {
           "command": "mongoRunner.simpleQuery",
@@ -114,10 +122,6 @@
         {
           "command": "mongoRunner.findFirst20Docs",
           "when": "viewItem == collection"
-        },
-        {
-          "command": "mongoRunner.deleteIndex",
-          "when": "viewItem == index"
         }
       ]
     }
