@@ -9,9 +9,9 @@ Mongo Runner provides general operations about using MongoDB. It can connect to 
 
 For example below is a sceenshot of Mongo Shard Cluster Topology:
 
-![MongoDB Topology](./images/shard-ss.png)
+![MongoDB Runner](https://raw.githubusercontent.com/zhaoyi0113/mongodb-runner/master/images/demo.gif)
 
-![MongoDB Runner Demo](./images/demo.gif)
+![MongoDB Shard Cluster Topology](https://raw.githubusercontent.com/zhaoyi0113/mongodb-runner/master/images/shard-ss.png)
 
 ## Requirements
 
