@@ -3,7 +3,7 @@
   "displayName": "Mongo Runner",
   "description": "MongoDB Plugin for VS Code",
   "version": "0.0.1",
-  "publisher": "Joey Zhao",
+  "publisher": "JoeyYiZhao",
   "engines": {
     "vscode": "^1.22.0"
   },
