@@ -2653,27 +2653,12 @@ mongodb-core@3.1.0:
   optionalDependencies:
     saslprep "^1.0.0"
 
-mongodb-core@3.1.0-beta4:
-  version "3.1.0-beta4"
-  resolved "https://registry.yarnpkg.com/mongodb-core/-/mongodb-core-3.1.0-beta4.tgz#44813da6ee0a61d26f0d523207cfba8ca32e59fc"
-  dependencies:
-    bson "~1.0.4"
-    require_optional "^1.0.1"
-  optionalDependencies:
-    saslprep "^1.0.0"
-
-mongodb-topology@^0.0.17:
-  version "0.0.17"
-  resolved "https://registry.yarnpkg.com/mongodb-topology/-/mongodb-topology-0.0.17.tgz#c091d3355036e93d3a96bbb73bd75394efe10e18"
+mongodb-topology@^0.0.18:
+  version "0.0.18"
+  resolved "https://registry.yarnpkg.com/mongodb-topology/-/mongodb-topology-0.0.18.tgz#99fec279146eda7df3d846dda76d8538a33259c0"
   dependencies:
     lodash "^4.17.10"
-    mongodb "^3.1.0-beta4"
-
-mongodb@^3.1.0-beta4:
-  version "3.1.0-beta4"
-  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-3.1.0-beta4.tgz#922cb05c37d04a51ea783569743ef2a893585bfe"
-  dependencies:
-    mongodb-core "3.1.0-beta4"
+    mongodb "^3.1.1"
 
 mongodb@^3.1.1:
   version "3.1.1"

@@ -9,19 +9,15 @@ const getMongoConfiguration = () => {
       .workspace
       .getConfiguration()
       .get('mongoRunner.connection.activeOnStartUp');
-  const userName = vscode
+  const user = vscode
     .workspace
     .getConfiguration()
-    .get('mongoRunner.connection.userName');
-  const password = vscode
-    .workspace
-    .getConfiguration()
-    .get('mongoRunner.connection.password');
+    .get('mongoRunner.connection.user');
   const options = vscode
       .workspace
       .getConfiguration()
       .get('mongoRunner.connection.options');
-  return {url, userName, password, options, activeOnStartUp};
+  return {url, user, options, activeOnStartUp};
 };
 
 module.exports = {
