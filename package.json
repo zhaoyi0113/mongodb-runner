@@ -2,7 +2,7 @@
   "name": "mongo-runner",
   "displayName": "Mongo Runner",
   "description": "MongoDB Plugin for VS Code",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "JoeyYiZhao",
   "engines": {
     "vscode": "^1.22.0"
@@ -17,6 +17,7 @@
     "onCommand:extension.numberOfChars",
     "onView:mongoRunner"
   ],
+  "icon": "images/mongo-runner.png",
   "main": "./src/extension",
   "contributes": {
     "views": {
