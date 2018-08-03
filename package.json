@@ -75,7 +75,7 @@
       },
       {
         "command": "mongoRunner.createIndex",
-        "title": "Create Index"
+        "title": "Create Index..."
       },
       {
         "command": "mongoRunner.simpleQuery",
