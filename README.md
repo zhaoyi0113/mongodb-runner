@@ -11,8 +11,6 @@ For example below is a sceenshot of Mongo Shard Cluster Topology:
 
 ![MongoDB Runner](https://github.com/zhaoyi0113/mongodb-runner/blob/master/images/demo-med.gif?raw=true)
 
-(https://github.com/zhaoyi0113/mongodb-runner/blob/master/images/demo.gif?raw=true)
-
 ![MongoDB Shard Cluster Topology](https://raw.githubusercontent.com/zhaoyi0113/mongodb-runner/master/images/shard-ss.png)
 
 ## Requirements
@@ -59,6 +57,10 @@ Please submit any issues you found or any suggestions on github issues.
 ### 0.0.1
 
 Initial release.
+
+### 0.0.2
+
+Update plugin icon.
 
 ### 0.0.3
 
