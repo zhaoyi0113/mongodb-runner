@@ -6,9 +6,12 @@ const vscode = require("vscode");
 let inspector;
 
 const connect = (mongoConfig, user, password) => {
-  const options = { useNewUrlParser: true };
+  let options = { useNewUrlParser: true };
   if (user && password) {
-    options.auth = {user, password};
+    options.auth = { user, password };
+  }
+  if (mongoConfig.options) {
+    options = Object.assign(options, mongoConfig.options);
   }
   return new Promise((resolve, reject) => {
     MongoClient.connect(
@@ -26,7 +29,10 @@ const connect = (mongoConfig, user, password) => {
           .then(tree => {
             resolve(tree);
           })
-          .catch(err => reject(err));
+          .catch(err => {
+            reject(err);
+            vscode.window.showErrorMessage("Failed to connect MongoDB.");
+          });
       }
     );
   });
@@ -38,13 +44,24 @@ const connectMongoDB = mongoConfig => {
     const { user } = mongoConfig;
     if (user) {
       vscode.window
-        .showInputBox({ placeHolder: `Input password for ${user} to connect to ${mongoConfig.url}`, password: true })
+        .showInputBox({
+          placeHolder: `Input password for ${user} to connect to ${
+            mongoConfig.url
+          }`,
+          password: true
+        })
         .then(pwd => {
-          if(!pwd) {
-            vscode.window.showErrorMessage('password is not valid.');
-            reject(new Error('password is not valid.'));
+          if (!pwd) {
+            vscode.window.showErrorMessage("password is not valid.");
+            reject(new Error("password is not valid."));
           }
-          resolve(connect(mongoConfig, user, pwd));
+          resolve(
+            connect(
+              mongoConfig,
+              user,
+              pwd
+            )
+          );
         });
     } else {
       resolve(connect(mongoConfig));
