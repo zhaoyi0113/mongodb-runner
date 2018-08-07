@@ -1,3 +1,9 @@
 // Place your settings in this file to overwrite default and user settings.
 {
+  "mongoRunner": {
+    "connection": {
+        "url": "mongodb://localhost:27017",
+        "activeOnStartUp": true
+    }
+}
 }
