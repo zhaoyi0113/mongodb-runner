@@ -28,11 +28,12 @@ Setup MongoDB Connection in your workspace setting.
         "connection": {
             "url": "mongodb://localhost:27017",
             "activeOnStartUp": true,
-            "userName": "username",
-            "password": "password"
+            "user": "username",
         }
     }
 ```
+
+In order to secure user's password, we don't support put password in the configuration file as plain text. Instead, when you specify the user name in the configuration file, `MongoDB Runner` will prompt you to input the password.
 
 ## Known Issues
 
