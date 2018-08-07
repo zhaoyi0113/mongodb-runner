@@ -58,10 +58,7 @@ Please submit any issues you found or any suggestions on github issues.
 
 Initial release.
 
-### 0.0.2
-
+### 0.0.5
 Update plugin icon.
-
-### 0.0.3
-
 Support all mongodb connection options. 
+Update replicatset tree icon.
