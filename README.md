@@ -35,7 +35,7 @@ Setup MongoDB Connection in your workspace setting.
 
 In order to secure user's password, we don't support put password in the configuration file as plain text. Instead, when you specify the user name in the configuration file, `MongoDB Runner` will prompt you to input the password.
 
-For SSl connection, please use `options` configuration. 
+For SSl connection, please use `options` configuration. You can also put all other mongo connection options there.
 
 ```json
 "mongoRunner": {
