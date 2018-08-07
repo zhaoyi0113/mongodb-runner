@@ -59,3 +59,7 @@ Please submit any issues you found or any suggestions on github issues.
 ### 0.0.1
 
 Initial release.
+
+### 0.0.3
+
+Support all mongodb connection options. 
