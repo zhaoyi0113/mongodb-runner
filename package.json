@@ -78,6 +78,10 @@
         "title": "Create Index..."
       },
       {
+        "command": "mongoRunner.createIndexInEditor",
+        "title": "Create Index In Editor..."
+      },
+      {
         "command": "mongoRunner.simpleQuery",
         "title": "Simple query..."
       },
@@ -129,6 +133,10 @@
         },
         {
           "command": "mongoRunner.createIndex",
+          "when": "viewItem == collection"
+        },
+        {
+          "command": "mongoRunner.createIndexInEditor",
           "when": "viewItem == collection"
         },
         {

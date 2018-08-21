@@ -41,28 +41,38 @@ const connect = (mongoConfig, user, password) => {
 const connectMongoDB = mongoConfig => {
   // connect to mongodb instance
   return new Promise((resolve, reject) => {
-    const { user } = mongoConfig;
+    const { user, password } = mongoConfig;
     if (user) {
-      vscode.window
-        .showInputBox({
-          placeHolder: `Input password for ${user} to connect to ${
-            mongoConfig.url
-          }`,
-          password: true
-        })
-        .then(pwd => {
-          if (!pwd) {
-            vscode.window.showErrorMessage("password is not valid.");
-            reject(new Error("password is not valid."));
-          }
-          resolve(
-            connect(
-              mongoConfig,
-              user,
-              pwd
-            )
-          );
-        });
+      if (!password) {
+        vscode.window
+          .showInputBox({
+            placeHolder: `Input password for ${user} to connect to ${
+              mongoConfig.url
+            }`,
+            password: true
+          })
+          .then(pwd => {
+            if (!pwd) {
+              vscode.window.showErrorMessage("password is not valid.");
+              reject(new Error("password is not valid."));
+            }
+            resolve(
+              connect(
+                mongoConfig,
+                user,
+                pwd
+              )
+            );
+          });
+      } else {
+        resolve(
+          connect(
+            mongoConfig,
+            user,
+            password
+          )
+        );
+      }
     } else {
       resolve(connect(mongoConfig));
     }
