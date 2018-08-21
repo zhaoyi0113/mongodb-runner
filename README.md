@@ -82,3 +82,8 @@ Initial release.
 Update plugin icon.
 Support all mongodb connection options. 
 Update replicatset tree icon.
+
+### 0.0.6
+
+Enable private key connection
+Enable setting password in the configuration
