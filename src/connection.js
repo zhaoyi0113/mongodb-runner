@@ -1,9 +1,36 @@
 const { TreeInspector } = require("mongodb-topology");
 const { MongoClient } = require("mongodb");
-
+const fs = require("fs");
 const vscode = require("vscode");
 
 let inspector;
+
+const readFromFile = file => {
+  if (file) {
+    try {
+      return fs.readFileSync(file);
+    } catch (e) {
+      console.error('read file failed', e);
+      vscode.window.showErrorMessage(e.message);
+    }
+  }
+};
+
+const readSSLCert = mongoConfig => {
+  const options = {};
+  if (mongoConfig.options) {
+    const { sslCA, sslCert, sslKey, sslPass } = mongoConfig.options;
+    if (sslCert) {
+      options.sslCert = readFromFile(sslCert);
+    }
+    if (sslKey) {
+      options.sslKey = readFromFile(sslKey);
+    }
+    if(sslCA) options.sslCA = sslCA;
+    if (sslPass) options.sslPass = sslPass;
+  }
+  return options;
+};
 
 const connect = (mongoConfig, user, password) => {
   let options = { useNewUrlParser: true };
@@ -13,6 +40,8 @@ const connect = (mongoConfig, user, password) => {
   if (mongoConfig.options) {
     options = Object.assign(options, mongoConfig.options);
   }
+  const cert = readSSLCert(mongoConfig);
+  options = Object.assign(options, cert);
   return new Promise((resolve, reject) => {
     MongoClient.connect(
       mongoConfig.url,
