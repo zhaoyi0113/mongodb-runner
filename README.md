@@ -60,8 +60,8 @@ For SSl connection, please use `options` configuration. You can also put all oth
             "activeOnStartUp": true,
             "user": "username",
             "options": {
-                "sslCert": "/Users/joeyzhao/tmp/mongodb.pem",
-                "sslKey": "/Users/joeyzhao/tmp/mongodb-cert.key",
+                "sslCert": "/Users/Document/mongodb.pem",
+                "sslKey": "/Users/Document/mongodb-cert.key",
                 "ssl": true
             }
         }
