@@ -7,6 +7,7 @@
   "engines": {
     "vscode": "^1.22.0"
   },
+  "license": "MIT",
   "repository": {
     "url": "https://github.com/zhaoyi0113/mongodb-runner.git"
   },
@@ -157,8 +158,7 @@
   "scripts": {
     "postinstall": "node ./node_modules/vscode/bin/install",
     "vscode:test": "node ./node_modules/vscode/bin/test",
-    "test": "yarn test:dev test/unit/*test*",
-    "test:dev": "jest "
+    "test": "cd client && yarn test"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.42",
@@ -167,10 +167,5 @@
     "jest": "^23.4.1",
     "typescript": "^2.6.1",
     "vscode": "^1.1.17"
-  },
-  "dependencies": {
-    "lodash": "^4.17.10",
-    "mongodb": "^3.1.1",
-    "mongodb-topology": "^0.0.19"
   }
 }

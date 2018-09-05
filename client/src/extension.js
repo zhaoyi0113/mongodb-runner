@@ -1,9 +1,15 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
+const path = require('path');
+const { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } = require('vscode-languageclient');
 
 const TreeExplorer = require('./tree');
 const {registerCommands} = require("./commands");
+
+const launchLanguageServer = () => {
+    
+}
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -32,6 +38,7 @@ function activate(context) {
     });
 
     registerCommands();
+    launchLanguageServer();
     context.subscriptions.push(disposable);
     new TreeExplorer(context);
 }
