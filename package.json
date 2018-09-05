@@ -18,7 +18,7 @@
     "onView:mongoRunner"
   ],
   "icon": "images/mongo-runner.png",
-  "main": "./src/extension",
+  "main": "./client/src/extension",
   "contributes": {
     "views": {
       "explorer": [
