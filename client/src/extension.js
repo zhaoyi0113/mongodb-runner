@@ -2,13 +2,30 @@
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
 const path = require('path');
-const { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } = require('vscode-languageclient');
-
+const { LanguageClient, TransportKind } = require('vscode-languageclient');
 const TreeExplorer = require('./tree');
 const {registerCommands} = require("./commands");
 
-const launchLanguageServer = () => {
-    
+const launchLanguageServer = (context) => {
+    // The server is implemented in node
+	const serverModule = context.asAbsolutePath(path.join('server', 'src', 'server.js'));
+	// The debug options for the server
+	const debugOptions = { execArgv: ["--nolazy", "--inspect=6009"] };
+    const serverOptions = {
+		run : { module: serverModule, transport: TransportKind.ipc },
+		debug: { module: serverModule, transport: TransportKind.ipc, options: debugOptions }
+    }
+    const clientOptions = {
+		// Register the server for plain text documents
+		documentSelector: [{scheme: 'file', language: 'plaintext'}],
+		synchronize: {
+			// Notify the server about file changes to '.clientrc files contain in the workspace
+			fileEvents: vscode.workspace.createFileSystemWatcher('**/.clientrc'),
+		}
+    }
+    // Create the language client and start the client.
+	const client = new LanguageClient('mongoRunnerLanguageServer', 'MongoDB Runner Language', serverOptions, clientOptions);
+    client.start();
 }
 
 // this method is called when your extension is activated
@@ -38,7 +55,7 @@ function activate(context) {
     });
 
     registerCommands();
-    launchLanguageServer();
+    launchLanguageServer(context);
     context.subscriptions.push(disposable);
     new TreeExplorer(context);
 }
