@@ -15,8 +15,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:extension.numberOfChars",
-    "onView:mongoRunner"
+    "onView:mongoRunner",
+    "*"
   ],
   "icon": "images/mongo-runner.png",
   "main": "./client/src/extension",

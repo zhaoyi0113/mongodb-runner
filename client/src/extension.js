@@ -17,12 +17,14 @@ const launchLanguageServer = (context) => {
     }
     const clientOptions = {
 		// Register the server for plain text documents
-		documentSelector: [{scheme: 'file', language: 'plaintext'}],
+        documentSelector: [{ scheme: 'file', language: 'plaintext'},
+        { scheme: 'file', language: 'javascript'}],
 		synchronize: {
 			// Notify the server about file changes to '.clientrc files contain in the workspace
 			fileEvents: vscode.workspace.createFileSystemWatcher('**/.clientrc'),
 		}
     }
+    
     // Create the language client and start the client.
 	const client = new LanguageClient('mongoRunnerLanguageServer', 'MongoDB Runner Language', serverOptions, clientOptions);
     client.start();

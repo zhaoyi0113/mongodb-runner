@@ -9,6 +9,7 @@
   "author": "Joey Yi Zhao",
   "license": "MIT",
   "dependencies": {
+    "esprima": "^4.0.1",
     "vscode-languageserver": "^5.0.3"
   }
 }
