@@ -85,3 +85,7 @@ Update replicatset tree icon.
 
 Enable private key connection
 Enable setting password in the configuration
+
+### 0.0.7
+
+Fix configuration schema warning errors
