@@ -153,7 +153,28 @@
           "when": "viewItem == collection"
         }
       ]
-    }
+    },
+    "configuration": [
+      {
+        "type": "object",
+        "title": "MongoDB Runner Configuration",
+        "properties": {
+          "mongoRunner": {
+            "type": "object",
+            "default": {},
+            "description": "Complete connection configuration for your MongoDB.",
+            "properties": {
+              "connection": "object",
+              "properties": {
+                "url": "string",
+                "activeOnStartUp": "boolean",
+                "default": true
+              }
+            }
+          }
+        }
+      }
+    ]
   },
   "scripts": {
     "postinstall": "node ./node_modules/vscode/bin/install",
