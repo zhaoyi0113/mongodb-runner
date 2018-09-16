@@ -4,6 +4,11 @@
   "description": "MongoDB Runner is a VSCode extenion to connect MongoDB instance.",
   "version": "0.0.7",
   "publisher": "JoeyYiZhao",
+  "author": {
+    "name": "Joey Zhao",
+    "email": "zhaoyi0113@gmail.com",
+    "url": "https://mongodb-runner.visualstudio.com/_projects"
+  },
   "engines": {
     "vscode": "^1.22.0"
   },
@@ -180,7 +185,8 @@
     "postinstall": "node ./node_modules/vscode/bin/install",
     "vscode:test": "node ./node_modules/vscode/bin/test",
     "test": "cd client && yarn test",
-    "publish": "vsce publish"
+    "publish": "vsce publish",
+    "login": "vsce login JoeyYiZhao"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.42",
