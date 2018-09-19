@@ -169,11 +169,21 @@
             "default": {},
             "description": "Complete connection configuration for your MongoDB.",
             "properties": {
-              "connection": "object",
-              "properties": {
-                "url": "string",
-                "activeOnStartUp": "boolean",
-                "default": true
+              "connection": {
+                "title": "MongoDB Runner Configuration",
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "default": "mongodb://",
+                    "description": "MongoDB URI"
+                  },
+                  "activeOnStartUp": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "whether launch mongodb runner on start up"
+                  }
+                }
               }
             }
           }
