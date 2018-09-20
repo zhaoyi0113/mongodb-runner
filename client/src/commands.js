@@ -1,12 +1,12 @@
-const vscode = require("vscode");
-const { getMongoInspector } = require("./connection");
-const { eventDispatcher, EventType } = require("./event-dispatcher");
+const vscode = require('vscode');
+const { getMongoInspector } = require('./connection');
+const { eventDispatcher, EventType } = require('./event-dispatcher');
 
 const openTextDocument = (text, language) => {
   return vscode.workspace.openTextDocument({ content: text, language });
 };
 
-const openTextInEditor = (text, language = "json") => {
+const openTextInEditor = (text, language = 'json') => {
   let doc;
   return openTextDocument(text, language)
     .then(d => {
@@ -14,7 +14,7 @@ const openTextInEditor = (text, language = "json") => {
       return vscode.window.showTextDocument(doc, 1, true);
     })
     .then(editor => {
-      vscode.commands.executeCommand("editor.action.formatDocument");
+      vscode.commands.executeCommand('editor.action.formatDocument');
       return { doc, editor };
     });
 };
@@ -48,14 +48,14 @@ const deleteDatabase = e => {
 
 const createCollection = e => {
   vscode.window
-    .showInputBox({ placeHolder: "Type Collection Name" })
+    .showInputBox({ placeHolder: 'Type Collection Name' })
     .then(result => {
       if (result) {
         return getMongoInspector().createCollection(e.name, result);
       }
     })
     .then(result => {
-      console.log("create col ", result);
+      console.log('create col ', result);
       if (result) {
         vscode.window.showInformationMessage(`Created Collection ${e.name}`);
         eventDispatcher.emit(EventType.Refresh);
@@ -97,17 +97,17 @@ const createIndex = e => {
       }
     })
     .then(ret => {
-      vscode.window.showInformationMessage("Create index: " + ret);
+      vscode.window.showInformationMessage('Create index: ' + ret);
       eventDispatcher.emit(EventType.Refresh);
     });
 };
 
 const createIndexInEditor = event => {
   let e;
-  openTextInEditor("db.test.createIndex()", "javascript")
+  openTextInEditor('db.test.createIndex()', 'javascript')
     .then(({ editor }) => {
       e = editor;
-      return openTextDocument("", "json");
+      return openTextDocument('', 'json');
     })
     .then(doc => vscode.window.showTextDocument(doc, e.viewColumn + 1));
 };
@@ -116,15 +116,15 @@ const getIndex = e => {
   getMongoInspector()
     .getCollectionIndexes(e.dbName, e.name)
     .then(indexes => {
-      console.log("get indexes ", indexes);
-      openTextInEditor(JSON.stringify(indexes), "json");
+      console.log('get indexes ', indexes);
+      openTextInEditor(JSON.stringify(indexes), 'json');
     })
     .catch(err => console.error(err));
 };
 
 const simpleQuery = e => {
   vscode.window
-    .showInputBox({ placeHolder: "query json condition" })
+    .showInputBox({ placeHolder: 'query json condition' })
     .then(res => {
       try {
         if (res) {
@@ -139,19 +139,19 @@ const simpleQuery = e => {
       }
     })
     .then(docs => {
-      openTextInEditor(JSON.stringify(docs), "json");
+      openTextInEditor(JSON.stringify(docs), 'json');
     });
 };
 
 const findFirst20Docs = e => {
   return getMongoInspector()
     .simpleQuery(e.dbName, e.name)
-    .then(docs => openTextInEditor(JSON.stringify(docs), "json"))
+    .then(docs => openTextInEditor(JSON.stringify(docs), 'json'))
     .catch(err => vscode.window.showErrorMessage(err));
 };
 
 const deleteIndex = e => {
-  console.log("deleteIndex:", e);
+  console.log('deleteIndex:', e);
   getMongoInspector()
     .deleteIndex(e.dbName, e.colName, e.name)
     .then(() => eventDispatcher.emit(EventType.Refresh))
@@ -161,40 +161,40 @@ const deleteIndex = e => {
 const registerCommands = () => {
   // server command
   vscode.commands.registerCommand(
-    "mongoRunner.serverStatus",
+    'mongoRunner.serverStatus',
     serverStatusHandler
   );
   vscode.commands.registerCommand(
-    "mongoRunner.serverBuildInfo",
+    'mongoRunner.serverBuildInfo',
     serverBuildInfoHandler
   );
 
   // database commands
-  vscode.commands.registerCommand("mongoRunner.deleteDatabase", deleteDatabase);
+  vscode.commands.registerCommand('mongoRunner.deleteDatabase', deleteDatabase);
 
   //collection commands
   vscode.commands.registerCommand(
-    "mongoRunner.getCollectionAttributes",
+    'mongoRunner.getCollectionAttributes',
     getCollectionAttributes
   );
-  vscode.commands.registerCommand("mongoRunner.getIndex", getIndex);
-  vscode.commands.registerCommand("mongoRunner.createIndex", createIndex);
+  vscode.commands.registerCommand('mongoRunner.getIndex', getIndex);
+  vscode.commands.registerCommand('mongoRunner.createIndex', createIndex);
   vscode.commands.registerCommand(
-    "mongoRunner.createIndexInEditor",
+    'mongoRunner.createIndexInEditor',
     createIndexInEditor
   );
-  vscode.commands.registerCommand("mongoRunner.simpleQuery", simpleQuery);
+  vscode.commands.registerCommand('mongoRunner.simpleQuery', simpleQuery);
   vscode.commands.registerCommand(
-    "mongoRunner.findFirst20Docs",
+    'mongoRunner.findFirst20Docs',
     findFirst20Docs
   );
   vscode.commands.registerCommand(
-    "mongoRunner.deleteCollection",
+    'mongoRunner.deleteCollection',
     deleteCollection
   );
 
   // index commands
-  vscode.commands.registerCommand("mongoRunner.deleteIndex", deleteIndex);
+  vscode.commands.registerCommand('mongoRunner.deleteIndex', deleteIndex);
 };
 
 module.exports = {

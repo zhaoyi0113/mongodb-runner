@@ -65,6 +65,16 @@ For SSl connection, please use `options` configuration. You can also put all oth
         }
     }
 ```
+
+## Query
+
+### Simple Query
+
+User below format for querying `ObjectId`:
+
+```json
+{"_id": "ObjectId(5ba2bfcf6d2a0312c7ec12c6)"}
+```
             
 ## Known Issues
 
@@ -89,3 +99,6 @@ Enable setting password in the configuration
 ### 0.0.7
 
 Fix configuration schema warning errors
+
+### 0.0.8
+Add support for query ObjectID
