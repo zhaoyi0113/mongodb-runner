@@ -102,3 +102,6 @@ Fix configuration schema warning errors
 
 ### 0.0.8
 Add support for query ObjectID
+
+### 0.0.9
+Add refresh button

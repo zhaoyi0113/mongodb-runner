@@ -2,7 +2,7 @@
   "name": "mongo-runner",
   "displayName": "Mongo Runner",
   "description": "MongoDB Runner is a VSCode extenion to connect MongoDB instance.",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "publisher": "JoeyYiZhao",
   "author": {
     "name": "Joey Zhao",
@@ -84,10 +84,6 @@
         "title": "Create Index..."
       },
       {
-        "command": "mongoRunner.createIndexInEditor",
-        "title": "Create Index In Editor..."
-      },
-      {
         "command": "mongoRunner.simpleQuery",
         "title": "Simple query..."
       },
@@ -104,8 +100,7 @@
       "view/title": [
         {
           "command": "mongoRunner.refresh",
-          "when": "view == mongoRunner",
-          "group": "navigation"
+          "when": "view == mongoRunner"
         }
       ],
       "view/item/context": [
