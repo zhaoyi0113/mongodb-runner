@@ -2,6 +2,7 @@ const { TreeInspector } = require("mongodb-topology");
 const { MongoClient } = require("mongodb");
 const fs = require("fs");
 const vscode = require("vscode");
+const mongodbUri = require('mongodb-uri');
 
 let inspector;
 
@@ -53,8 +54,13 @@ const connect = (mongoConfig, user, password) => {
           return reject(err);
         }
         inspector = new TreeInspector(driver);
+        const parsedUri = mongodbUri.parse(mongoConfig.url);
+        const inspectOptions = {};
+        if (parsedUri && parsedUri.database) {
+          inspectOptions.currentDb = parsedUri.database;
+        }
         inspector
-          .inspect()
+          .inspect(inspectOptions)
           .then(tree => {
             resolve(tree);
           })
