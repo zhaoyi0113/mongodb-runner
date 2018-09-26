@@ -4,7 +4,7 @@ const { TreeNodeTypes } = require('mongodb-topology');
 const _ = require('lodash');
 
 const Connection = require('./connection');
-const {eventDispatcher, EventType} = require('./event-dispatcher');
+const { eventDispatcher, EventType } = require('./event-dispatcher');
 const TreeItem = require('./tree-item');
 const { convertToTreeData } = require('./tree-data-converter');
 
@@ -20,31 +20,32 @@ const root = {
   label: 'MongoDB',
   id: IDS.root,
   tooltip: 'MongoDB',
-  collapsibleState: TreeItemCollapsibleState.Collapsed,
+  collapsibleState: TreeItemCollapsibleState.Collapsed
 };
 const loadMongoTree = () => {
   const mongoConfig = config.getMongoConfiguration();
   if (mongoConfig.url) {
     return Connection.connectMongoDB(mongoConfig);
   }
-  vscode
-    .window
-    .showInformationMessage('No Mongo Configuration.');
+  vscode.window.showInformationMessage('No Mongo Configuration.');
   return Promise.resolve();
-}
+};
 let context;
 class MongoTreeProvider {
   constructor() {
     this._onDidChangeTreeData = new EventEmitter();
     this.onDidChangeTreeData = this._onDidChangeTreeData.event;
     this.loaded = false;
-    eventDispatcher.on(EventType.FindCollectionAttributes, this.addCollectionAttributes.bind(this));
+    eventDispatcher.on(
+      EventType.FindCollectionAttributes,
+      this.addCollectionAttributes.bind(this)
+    );
     eventDispatcher.on(EventType.Refresh, this.refresh.bind(this));
   }
 
   /**
-   * The data structure 
-   * @param {*} data 
+   * The data structure
+   * @param {*} data
    */
   loadTree(data) {
     if (!data) {
@@ -68,7 +69,10 @@ class MongoTreeProvider {
       return element;
     }
     let children = this.getChildren(element);
-    const collapsibleState = children && children.length > 0 ? TreeItemCollapsibleState.Collapsed : null;
+    const collapsibleState =
+      children && children.length > 0
+        ? TreeItemCollapsibleState.Collapsed
+        : null;
     const treeItem = new TreeItem(element, collapsibleState);
     if (element.resource) {
     }
@@ -92,32 +96,43 @@ class MongoTreeProvider {
       children = element.collections;
     } else if (element.type === TreeNodeTypes.COLLECTION) {
       if (element.indexes && element.indexes.length > 0) {
-        children.push({ name: 'Indexes', children: element.indexes, type: TreeNodeTypes.INDEXES, dbName: element.indexes[0].dbName, colName: element.indexes[0].colName });
+        children.push({
+          name: 'Indexes',
+          children: element.indexes,
+          type: TreeNodeTypes.INDEXES,
+          dbName: element.indexes[0].dbName,
+          colName: element.indexes[0].colName
+        });
       }
       if (element.attributes && element.attributes.length > 0) {
-        children.push({ name: 'Attributes', children: element.attributes, type: TreeNodeTypes.FIELDS });
+        children.push({
+          name: 'Attributes',
+          children: element.attributes,
+          type: TreeNodeTypes.FIELDS
+        });
       }
     } else if (element.type === TreeNodeTypes.SHARDS) {
-      if(element.shards) {
+      if (element.shards) {
         children = element.shards;
       } else {
         children = element.children;
       }
     } else if (element.type === TreeNodeTypes.ROLES) {
-
-    }
-     else{
+    } else {
       children = element.children;
     }
     return children;
   }
 
   refresh() {
-    loadMongoTree().then(data => this.loadTree(data))
-    .catch(err => {
-      console.error(err);
-      vscode.window.showErrorMessage(err);
-    });
+    loadMongoTree()
+      .then(data => this.loadTree(data))
+      .catch(err => {
+        if (err) {
+          console.error(err);
+          vscode.window.showErrorMessage(err);
+        }
+      });
   }
 
   isLoaded() {
@@ -128,13 +143,16 @@ class MongoTreeProvider {
 class TreeExplorer {
   constructor(ctx) {
     this.provider = new MongoTreeProvider();
-    context=ctx;
-    context
-      .subscriptions
-      .push(vscode.workspace.registerTextDocumentContentProvider('Data', this.provider));
-    this.treeViewer = vscode
-      .window
-      .createTreeView('mongoRunner', { treeDataProvider: this.provider });
+    context = ctx;
+    context.subscriptions.push(
+      vscode.workspace.registerTextDocumentContentProvider(
+        'Data',
+        this.provider
+      )
+    );
+    this.treeViewer = vscode.window.createTreeView('mongoRunner', {
+      treeDataProvider: this.provider
+    });
     this.registerCommands();
 
     const mongoConfig = config.getMongoConfiguration();
@@ -144,19 +162,16 @@ class TreeExplorer {
   }
 
   registerCommands() {
-    vscode
-      .commands
-      .registerCommand('mongoRunner.refresh', () => {
-        vscode
-          .window
-          .showInformationMessage('Refresh Mongo Connection');
+    vscode.commands.registerCommand('mongoRunner.refresh', () => {
+      vscode.window.showInformationMessage('Refresh Mongo Connection');
+      this.provider.refresh();
+    });
+    vscode.commands.registerCommand(
+      'extension.mongoRunner.getConfiguration',
+      () => {
         this.provider.refresh();
-      });
-    vscode
-      .commands
-      .registerCommand('extension.mongoRunner.getConfiguration', () => {
-        this.provider.refresh();
-      })
+      }
+    );
   }
 }
 

@@ -88,8 +88,7 @@ const connectMongoDB = mongoConfig => {
           })
           .then(pwd => {
             if (!pwd) {
-              vscode.window.showErrorMessage("password is not valid.");
-              reject(new Error("password is not valid."));
+              reject(null);
             }
             resolve(
               connect(
