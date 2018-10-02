@@ -105,3 +105,7 @@ Add support for query ObjectID
 
 ### 0.0.9
 Add refresh button
+
+### 0.0.10 - 0.0.12
+Support manually input database password
+Order menu items

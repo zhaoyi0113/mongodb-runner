@@ -2,7 +2,7 @@
   "name": "mongo-runner",
   "displayName": "Mongo Runner",
   "description": "MongoDB Runner is a VSCode extenion to connect MongoDB instance.",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "publisher": "JoeyYiZhao",
   "author": {
     "name": "Joey Zhao",
@@ -110,11 +110,13 @@
       "view/item/context": [
         {
           "command": "mongoRunner.serverBuildInfo",
-          "when": "viewItem == databases"
+          "when": "viewItem == databases",
+          "group": "dbsGroup@2"
         },
         {
           "command": "mongoRunner.serverStatus",
-          "when": "viewItem == databases"
+          "when": "viewItem == databases",
+          "group": "dbsGroup@1"
         },
         {
           "command": "mongoRunner.deleteDatabase",
@@ -122,39 +124,42 @@
         },
         {
           "command": "mongoRunner.deleteCollection",
-          "when": "viewItem == collection"
+          "when": "viewItem == collection",
+          "group": "colGropu@5"
         },
         {
           "command": "mongoRunner.getCollectionAttributes",
-          "when": "viewItem == collection"
+          "when": "viewItem == collection",
+          "group": "colGropu@1"
         },
         {
           "command": "mongoRunner.getIndex",
-          "when": "viewItem == collection"
+          "when": "viewItem == collection",
+          "group": "colGropu@3"
+        },
+        {
+          "command": "mongoRunner.createIndex",
+          "when": "viewItem == collection",
+          "group": "colGropu@4"
+        },
+        {
+          "command": "mongoRunner.findFirst20Docs",
+          "when": "viewItem == collection",
+          "group": "colGropu@2"
         },
         {
           "command": "mongoRunner.deleteIndex",
-          "when": "viewItem == index"
+          "when": "viewItem == index",
+          "group": "idxGroup@2"
         },
         {
           "command": "mongoRunner.createIndex",
-          "when": "viewItem == collection"
-        },
-        {
-          "command": "mongoRunner.createIndex",
-          "when": "viewItem == indexes"
+          "when": "viewItem == indexes",
+          "group": "idxGroup@1"
         },
         {
           "command": "mongoRunner.simpleQuery",
           "when": "viewItem == collection"
-        },
-        {
-          "command": "mongoRunner.findFirst20Docs",
-          "when": "viewItem == collection"
-        },
-        {
-          "command": "mongoRunner.testLanguageServer",
-          "when": "viewItem == databases"
         }
       ]
     },
