@@ -16,7 +16,7 @@ const connection = createConnection(ProposedFeatures.all);
 const documents = new TextDocuments();
 
 connection.onInitialize(params => {
-	
+	console.log('initialize ', params);
 });
 
 documents.onDidChangeContent((change) => {

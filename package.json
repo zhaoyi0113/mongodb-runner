@@ -94,6 +94,10 @@
       {
         "command": "mongoRunner.deleteIndex",
         "title": "Delete Index"
+      },
+      {
+        "command": "mongoRunner.testLanguageServer",
+        "title": "Launch Mongo Runner Editor"
       }
     ],
     "menus": {
@@ -147,6 +151,10 @@
         {
           "command": "mongoRunner.findFirst20Docs",
           "when": "viewItem == collection"
+        },
+        {
+          "command": "mongoRunner.testLanguageServer",
+          "when": "viewItem == databases"
         }
       ]
     },

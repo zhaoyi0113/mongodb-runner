@@ -46,23 +46,6 @@ const deleteDatabase = e => {
     .catch(err => vscode.window.showErrorMessage(err));
 };
 
-const createCollection = e => {
-  vscode.window
-    .showInputBox({ placeHolder: 'Type Collection Name' })
-    .then(result => {
-      if (result) {
-        return getMongoInspector().createCollection(e.name, result);
-      }
-    })
-    .then(result => {
-      console.log('create col ', result);
-      if (result) {
-        vscode.window.showInformationMessage(`Created Collection ${e.name}`);
-        eventDispatcher.emit(EventType.Refresh);
-      }
-    });
-};
-
 const deleteCollection = e => {
   getMongoInspector()
     .deleteCollection(e.dbName, e.colName)
@@ -102,13 +85,13 @@ const createIndex = e => {
     });
 };
 
-const createIndexInEditor = event => {
+const testLanguageServer = event => {
   let e;
   openTextInEditor('db.test.createIndex()', 'javascript')
     .then(({ editor }) => {
       e = editor;
       return openTextDocument('', 'json');
-    })
+    })  // split the view for output
     .then(doc => vscode.window.showTextDocument(doc, e.viewColumn + 1));
 };
 
@@ -179,10 +162,6 @@ const registerCommands = () => {
   );
   vscode.commands.registerCommand('mongoRunner.getIndex', getIndex);
   vscode.commands.registerCommand('mongoRunner.createIndex', createIndex);
-  vscode.commands.registerCommand(
-    'mongoRunner.createIndexInEditor',
-    createIndexInEditor
-  );
   vscode.commands.registerCommand('mongoRunner.simpleQuery', simpleQuery);
   vscode.commands.registerCommand(
     'mongoRunner.findFirst20Docs',
@@ -195,6 +174,9 @@ const registerCommands = () => {
 
   // index commands
   vscode.commands.registerCommand('mongoRunner.deleteIndex', deleteIndex);
+
+  // test launge server
+  vscode.commands.registerCommand('mongoRunner.testLanguageServer', testLanguageServer);
 };
 
 module.exports = {
