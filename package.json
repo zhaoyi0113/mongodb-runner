@@ -21,6 +21,8 @@
   ],
   "activationEvents": [
     "onView:mongoRunner",
+    "onLanguage:plaintext",
+    "onLanguage:*",
     "*"
   ],
   "icon": "images/mongo-runner.png",
@@ -160,6 +162,10 @@
         {
           "command": "mongoRunner.simpleQuery",
           "when": "viewItem == collection"
+        },
+        {
+          "command": "mongoRunner.testLanguageServer",
+          "when": "viewItem == databases"
         }
       ]
     },
