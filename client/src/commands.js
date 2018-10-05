@@ -72,16 +72,20 @@ const createIndex = e => {
   vscode.window
     .showInputBox({ placeHolder: '{"fieldA": 1, "fieldB": -1}' })
     .then(result => {
-      try {
-        const idxParam = JSON.parse(result);
-        return getMongoInspector().createIndex(e.dbName, e.colName, idxParam);
-      } catch (err) {
-        vscode.window.showErrorMessage(err.message);
+      if (result) {
+        try {
+          const idxParam = JSON.parse(result);
+          return getMongoInspector().createIndex(e.dbName, e.colName, idxParam);
+        } catch (err) {
+          vscode.window.showErrorMessage(err.message);
+        }
       }
     })
     .then(ret => {
-      vscode.window.showInformationMessage('Create index: ' + ret);
-      eventDispatcher.emit(EventType.Refresh);
+      if (ret) {
+        vscode.window.showInformationMessage('Create index: ' + ret);
+        eventDispatcher.emit(EventType.Refresh);
+      }
     });
 };
 
@@ -91,7 +95,7 @@ const testLanguageServer = event => {
     .then(({ editor }) => {
       e = editor;
       return openTextDocument('', 'json');
-    })  // split the view for output
+    }) // split the view for output
     .then(doc => vscode.window.showTextDocument(doc, e.viewColumn + 1));
 };
 
@@ -122,7 +126,9 @@ const simpleQuery = e => {
       }
     })
     .then(docs => {
-      openTextInEditor(JSON.stringify(docs), 'json');
+      if(docs) {
+        openTextInEditor(JSON.stringify(docs), 'json');
+      }
     });
 };
 
@@ -176,7 +182,10 @@ const registerCommands = () => {
   vscode.commands.registerCommand('mongoRunner.deleteIndex', deleteIndex);
 
   // test launge server
-  vscode.commands.registerCommand('mongoRunner.testLanguageServer', testLanguageServer);
+  vscode.commands.registerCommand(
+    'mongoRunner.testLanguageServer',
+    testLanguageServer
+  );
 };
 
 module.exports = {
