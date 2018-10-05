@@ -1,7 +1,7 @@
 {
   "name": "mongo-runner",
   "displayName": "Mongo Runner",
-  "description": "MongoDB Runner is a VSCode extenion to connect MongoDB instance.",
+  "description": "MongoDB Runner is a VSCode extension to connect MongoDB instance.",
   "version": "0.0.12",
   "publisher": "JoeyYiZhao",
   "author": {
