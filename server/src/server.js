@@ -17,6 +17,11 @@ const documents = new TextDocuments();
 
 connection.onInitialize(params => {
   console.log('initialize ', params);
+  return {
+    capabilities: {
+      hoverProvider: 'true'
+    }
+  };
 });
 
 documents.onDidChangeContent(change => {
@@ -31,7 +36,10 @@ documents.onDidChangeContent(change => {
     },
     message: ' this is a demo'
   };
-  connection.sendDiagnostics({uri: change.document.uri, diagnostics: [diagnostic]});
+  // connection.sendDiagnostics({
+  //   uri: change.document.uri,
+  //   diagnostics: [diagnostic]
+  // });
 });
 
 documents.listen(connection);

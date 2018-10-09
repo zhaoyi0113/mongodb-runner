@@ -5,6 +5,7 @@ const path = require('path');
 const { LanguageClient, TransportKind } = require('vscode-languageclient');
 const TreeExplorer = require('./tree');
 const { registerCommands } = require('./commands');
+const hoverProvider = require('./providers/hover-provider');
 
 const launchLanguageServer = context => {
   // The server is implemented in node
@@ -44,6 +45,10 @@ const launchLanguageServer = context => {
   client.start();
 };
 
+const registerProviders = (ctx) => {
+  vscode.languages.registerHoverProvider('javascript', hoverProvider);
+};
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 function activate(context) {
@@ -76,6 +81,7 @@ function activate(context) {
 
   registerCommands();
   launchLanguageServer(context);
+  registerProviders(context);
   context.subscriptions.push(disposable);
   new TreeExplorer(context);
 }

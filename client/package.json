@@ -10,6 +10,8 @@
   "author": "Joey Yi Zhao",
   "license": "MIT",
   "dependencies": {
+    "escodegen": "^1.11.0",
+    "esprima": "^4.0.1",
     "lodash": "^4.17.10",
     "mongodb": "^3.1.4",
     "mongodb-topology": "^0.0.22",
