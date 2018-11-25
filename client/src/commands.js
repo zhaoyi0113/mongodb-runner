@@ -25,7 +25,7 @@ const connectDatabase = config => {
     .then((data) => {
       const treeData = convertToTreeData(data);
       console.log('tree data:', treeData);
-      eventDispatcher.emit(EventType.Connect, {uuid: config.uuid, treeData});
+      eventDispatcher.emit(EventType.Connect, Object.assign(treeData, {uuid: config.uuid}));
     })
     .catch(err => {
       console.error(err);

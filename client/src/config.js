@@ -26,7 +26,8 @@ const getSingleConfiguration = config => {
     name: getConnectionName(config),
     status: ConnectStatus.CLOSED,
     uuid: uuid.v4(),
-    id: TreeType.host
+    id: TreeType.host,
+    children: []
   };
 };
 

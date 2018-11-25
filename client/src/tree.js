@@ -60,7 +60,7 @@ class MongoTreeProvider {
   }
 
   getTreeItem(element) {
-    if (element.id === TreeType.host) {
+    if (element.children.length <= 0) {
       return new TreeItem(element);
     }
     let children = this.getChildren(element);
@@ -76,13 +76,14 @@ class MongoTreeProvider {
 
   getChildren(element) {
     if (!element && this.treeData) {
-      return this.treeData.map((data) => (Object.assign(data, {
-        label: data.name,
-        id: TreeType.host,
-        tooltip: data.name,
-        collapsibleState: TreeItemCollapsibleState.Collapsed,
-        children: []
-      })));
+      return this.treeData.map(data =>
+        Object.assign(data, {
+          label: data.name,
+          id: TreeType.host,
+          tooltip: data.name,
+          collapsibleState: TreeItemCollapsibleState.Collapsed
+        })
+      );
     }
     let children = [];
     if (!element) {
@@ -128,6 +129,12 @@ class MongoTreeProvider {
 
   onConnect(conn) {
     console.log('con:', conn);
+    this.treeData.forEach(data => {
+      if (data.uuid === conn.uuid) {
+        data.children = conn.tree;
+      }
+    });
+    this._onDidChangeTreeData.fire();
   }
 
   loadData() {
