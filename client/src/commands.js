@@ -1,6 +1,7 @@
 const vscode = require('vscode');
-const { getMongoInspector } = require('./connection');
+const { getMongoInspector, connectMongoDB } = require('./connection');
 const { eventDispatcher, EventType } = require('./event-dispatcher');
+const { convertToTreeData } = require('./tree-data-converter');
 
 const openTextDocument = (text, language) => {
   return vscode.workspace.openTextDocument({ content: text, language });
@@ -19,8 +20,17 @@ const openTextInEditor = (text, language = 'json') => {
     });
 };
 
-const connectDatabase = (e) => {
-  console.log('xxx:', e);
+const connectDatabase = config => {
+  connectMongoDB(config)
+    .then((data) => {
+      const treeData = convertToTreeData(data);
+      console.log('tree data:', treeData);
+      eventDispatcher.emit(EventType.Connect, {uuid: config.uuid, treeData});
+    })
+    .catch(err => {
+      console.error(err);
+      vscode.window.showErrorMessage('Failed to connect!');
+    });
 };
 
 const serverStatusHandler = () => {
@@ -130,7 +140,7 @@ const simpleQuery = e => {
       }
     })
     .then(docs => {
-      if(docs) {
+      if (docs) {
         openTextInEditor(JSON.stringify(docs), 'json');
       }
     });
@@ -153,10 +163,7 @@ const deleteIndex = e => {
 
 const registerCommands = () => {
   // server command
-  vscode.commands.registerCommand(
-    'mongoRunner.hostConnect',
-    connectDatabase
-  );
+  vscode.commands.registerCommand('mongoRunner.hostConnect', connectDatabase);
   vscode.commands.registerCommand(
     'mongoRunner.serverStatus',
     serverStatusHandler

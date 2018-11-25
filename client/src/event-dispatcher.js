@@ -4,6 +4,7 @@ const eventDispatcher = new EventEmitter();
 const EventType = {
   FindCollectionAttributes: 'find-collection-attributes',
   Refresh: 'refresh',
+  Connect: 'connect'
 };
 
 module.exports = {eventDispatcher, EventType};

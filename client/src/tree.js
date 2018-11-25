@@ -35,6 +35,7 @@ class MongoTreeProvider {
       this.addCollectionAttributes.bind(this)
     );
     eventDispatcher.on(EventType.Refresh, this.refresh.bind(this));
+    eventDispatcher.on(EventType.Connect, this.onConnect.bind(this));
   }
 
   /**
@@ -59,8 +60,8 @@ class MongoTreeProvider {
   }
 
   getTreeItem(element) {
-    if (element.id === TreeType.root) {
-      return element;
+    if (element.id === TreeType.host) {
+      return new TreeItem(element);
     }
     let children = this.getChildren(element);
     const collapsibleState =
@@ -79,7 +80,8 @@ class MongoTreeProvider {
         label: data.name,
         id: TreeType.host,
         tooltip: data.name,
-        collapsibleState: TreeItemCollapsibleState.Collapsed
+        collapsibleState: TreeItemCollapsibleState.Collapsed,
+        children: []
       })));
     }
     let children = [];
@@ -122,6 +124,10 @@ class MongoTreeProvider {
 
   refresh() {
     this.loadData();
+  }
+
+  onConnect(conn) {
+    console.log('con:', conn);
   }
 
   loadData() {

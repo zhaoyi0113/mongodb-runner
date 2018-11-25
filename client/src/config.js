@@ -1,6 +1,7 @@
 const vscode = require('vscode');
 const mongodbUri = require('mongodb-uri');
 const { TreeNodeTypes } = require('mongodb-topology');
+const uuid = require('uuid');
 const { ConnectStatus } = require('./connection');
 
 const getConnectionName = config => {
@@ -17,13 +18,15 @@ const getConnectionName = config => {
 const getSingleConfiguration = config => {
   const { url, activeOnStartUp, user, options } = config;
   return {
-    type: `${TreeNodeTypes.HOST}:${ConnectStatus.CLOSED}`,
+    type: `host:${ConnectStatus.CLOSED}`,
     url,
     user,
     options,
     activeOnStartUp,
     name: getConnectionName(config),
-    status: ConnectStatus.CLOSED
+    status: ConnectStatus.CLOSED,
+    uuid: uuid.v4(),
+    id: TreeType.host
   };
 };
 

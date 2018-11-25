@@ -8,7 +8,7 @@ const getFilePath = (name, theme) => {
 
 const getItemIcon = type => {
   switch (type) {
-    case `${TreeNodeTypes.HOST}:${ConnectStatus.CLOSED}`:
+    case `host:${ConnectStatus.CLOSED}`:
       return {
         light: getFilePath('connect.png', 'light'),
         dark: getFilePath('connect.png', 'dark')
