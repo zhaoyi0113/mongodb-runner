@@ -1,99 +1,109 @@
-const path = require("path");
-const { TreeNodeTypes } = require("mongodb-topology");
+const path = require('path');
+const { TreeNodeTypes } = require('mongodb-topology');
+const { ConnectStatus } = require('./connection');
+
+const getFilePath = (name, theme) => {
+  return path.join(__filename, '..', '..', `resources/${theme}/${name}`);
+};
 
 const getItemIcon = type => {
   switch (type) {
+    case `${TreeNodeTypes.HOST}:${ConnectStatus.CLOSED}`:
+      return {
+        light: getFilePath('connect.png', 'light'),
+        dark: getFilePath('connect.png', 'dark')
+      };
     case TreeNodeTypes.DATABASES:
     case TreeNodeTypes.DATABASE:
       return {
         light: path.join(
           __filename,
-          "..",
-          "..",
-          "resources/light/database.svg"
+          '..',
+          '..',
+          'resources/light/database.svg'
         ),
-        dark: path.join(__filename, "..", "..", "resources/dark/database.svg")
+        dark: path.join(__filename, '..', '..', 'resources/dark/database.svg')
       };
     case TreeNodeTypes.USERS:
       return {
-        light: path.join(__filename, "..", "..", "resources/light/user.svg"),
-        dark: path.join(__filename, "..", "..", "resources/dark/user.svg")
+        light: path.join(__filename, '..', '..', 'resources/light/user.svg'),
+        dark: path.join(__filename, '..', '..', 'resources/dark/user.svg')
       };
     case TreeNodeTypes.ROLES:
       return {
-        light: path.join(__filename, "..", "..", "resources/light/role.svg"),
-        dark: path.join(__filename, "..", "..", "resources/dark/role.svg")
+        light: path.join(__filename, '..', '..', 'resources/light/role.svg'),
+        dark: path.join(__filename, '..', '..', 'resources/dark/role.svg')
       };
     case TreeNodeTypes.COLLECTION:
       return {
         light: path.join(
           __filename,
-          "..",
-          "..",
-          "resources/light/collection.svg"
+          '..',
+          '..',
+          'resources/light/collection.svg'
         ),
-        dark: path.join(__filename, "..", "..", "resources/dark/collection.svg")
+        dark: path.join(__filename, '..', '..', 'resources/dark/collection.svg')
       };
     case TreeNodeTypes.PRIMARY:
       return {
-        light: path.join(__filename, "..", "..", "resources/light/primary.svg"),
-        dark: path.join(__filename, "..", "..", "resources/dark/primary.svg")
+        light: path.join(__filename, '..', '..', 'resources/light/primary.svg'),
+        dark: path.join(__filename, '..', '..', 'resources/dark/primary.svg')
       };
     case TreeNodeTypes.SECONDARY:
       return {
         light: path.join(
           __filename,
-          "..",
-          "..",
-          "resources/light/secondary.svg"
+          '..',
+          '..',
+          'resources/light/secondary.svg'
         ),
-        dark: path.join(__filename, "..", "..", "resources/dark/secondary.svg")
+        dark: path.join(__filename, '..', '..', 'resources/dark/secondary.svg')
       };
     case TreeNodeTypes.ARBITER:
       return {
-        light: path.join(__filename, "..", "..", "resources/light/arbiter.svg"),
-        dark: path.join(__filename, "..", "..", "resources/dark/arbiter.svg")
+        light: path.join(__filename, '..', '..', 'resources/light/arbiter.svg'),
+        dark: path.join(__filename, '..', '..', 'resources/dark/arbiter.svg')
       };
     case TreeNodeTypes.REPLICASET:
       return {
         light: path.join(
           __filename,
-          "..",
-          "..",
-          "resources/light/replicaset.svg"
+          '..',
+          '..',
+          'resources/light/replicaset.svg'
         ),
-        dark: path.join(__filename, "..", "..", "resources/dark/replicaset.svg")
+        dark: path.join(__filename, '..', '..', 'resources/dark/replicaset.svg')
       };
     case TreeNodeTypes.CONFIG:
     case TreeNodeTypes.CONFIGS:
       return {
-        light: path.join(__filename, "..", "..", "resources/light/config.svg"),
-        dark: path.join(__filename, "..", "..", "resources/dark/config.svg")
+        light: path.join(__filename, '..', '..', 'resources/light/config.svg'),
+        dark: path.join(__filename, '..', '..', 'resources/dark/config.svg')
       };
     case TreeNodeTypes.SHARD:
     case TreeNodeTypes.SHARDS:
       return {
-        light: path.join(__filename, "..", "..", "resources/light/shard.svg"),
-        dark: path.join(__filename, "..", "..", "resources/dark/shard.svg")
+        light: path.join(__filename, '..', '..', 'resources/light/shard.svg'),
+        dark: path.join(__filename, '..', '..', 'resources/dark/shard.svg')
       };
     case TreeNodeTypes.MONGOS:
     case TreeNodeTypes.ROUTERS:
       return {
-        light: path.join(__filename, "..", "..", "resources/light/router.svg"),
-        dark: path.join(__filename, "..", "..", "resources/dark/router.svg")
+        light: path.join(__filename, '..', '..', 'resources/light/router.svg'),
+        dark: path.join(__filename, '..', '..', 'resources/dark/router.svg')
       };
     case TreeNodeTypes.INDEX:
     case TreeNodeTypes.INDEXES:
-    return {
-      light: path.join(__filename, "..", "..", "resources/light/index.svg"),
-      dark: path.join(__filename, "..", "..", "resources/dark/index.svg")
-    };
+      return {
+        light: path.join(__filename, '..', '..', 'resources/light/index.svg'),
+        dark: path.join(__filename, '..', '..', 'resources/dark/index.svg')
+      };
     case TreeNodeTypes.FIELDS:
     case TreeNodeTypes.FIELD:
-    return {
-      light: path.join(__filename, "..", "..", "resources/light/order.svg"),
-      dark: path.join(__filename, "..", "..", "resources/dark/order.svg")
-    };
+      return {
+        light: path.join(__filename, '..', '..', 'resources/light/order.svg'),
+        dark: path.join(__filename, '..', '..', 'resources/dark/order.svg')
+      };
   }
 };
 

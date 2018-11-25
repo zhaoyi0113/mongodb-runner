@@ -38,6 +38,26 @@
     },
     "commands": [
       {
+        "command": "mongoRunner.hostRefresh",
+        "title": "Refresh",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "mongoRunner.hostConnect",
+        "title": "Connect",
+        "icon": {
+          "light": "resources/light/connect.png",
+          "dark": "resources/dark/connect.png"
+        } 
+      },
+      {
+        "command": "mongoRunner.hostDisconnect",
+        "title": "Connect"
+      },
+      {
         "command": "extension.numberOfChars",
         "title": "Number Of Chars"
       },
@@ -110,6 +130,18 @@
         }
       ],
       "view/item/context": [
+        {
+          "command": "mongoRunner.hostRefresh",
+          "when": "viewItem == host:connected"
+        },
+        {
+          "command": "mongoRunner.hostConnect",
+          "when": "viewItem == host:closed"
+        },
+        {
+          "command": "mongoRunner.hostDisconnect",
+          "when": "viewItem == host:connected"
+        },
         {
           "command": "mongoRunner.serverBuildInfo",
           "when": "viewItem == databases",
@@ -194,7 +226,25 @@
                     "description": "whether launch mongodb runner on start up"
                   }
                 }
-              }
+              },
+              "connections": [
+                {
+                  "title": "MongoDB Runner Configuration",
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "default": "mongodb://",
+                      "description": "MongoDB URI"
+                    },
+                    "activeOnStartUp": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "whether launch mongodb runner on start up"
+                    }
+                  }
+                }
+              ]
             }
           }
         }

@@ -1,4 +1,5 @@
 const _ = require("lodash");
+const mongodbUri = require('mongodb-uri');
 
 /**
  * convert database to tree structure
@@ -55,29 +56,43 @@ const convertDatabaseChildren = dbChildren => {
   return children;
 };
 
-const convertToTreeData = data => {
-  console.log("convert tree data ", data);
+const getConnectionName = (config) => {
+  const uriObject = mongodbUri.parse(config.url);
+  if(uriObject.options && uriObject.options.replicaSet) {
+    return uriObject.options.replicaSet;
+  }
+  if(uriObject.hosts && uriObject.hosts.length > 0) {
+    return uriObject.hosts[0].host;
+  }
+  return 'MongoServer';
+}
+
+const convertToTreeData = alldata => {
+  console.log("convert tree data ", alldata);
   const treeData = [];
-  _.forOwn(data, (v, k) => {
-    let name;
-    if (k === "roles") {
-      return;
-    }
-    let children = v;
-    switch (k) {
-      case "databases":
-        name = "Databases";
-        children = convertDatabaseChildren(v);
-        break;
-      case "replicaset":
-        name = "Replica Set";
-        break;
-      default:
-        name = k;
-    }
-    treeData.push({ name, type: k, children });
+  alldata.map(({tree, mongoConfig}) => {
+    _.forOwn(tree, (v, k) => {
+      let name;
+      if (k === "roles") {
+        return;
+      }
+      let children = v;
+      switch (k) {
+        case "databases":
+          name = "Databases";
+          children = convertDatabaseChildren(v);
+          break;
+        case "replicaset":
+          name = "Replica Set";
+          break;
+        default:
+          name = k;
+      }
+      treeData.push({ name, type: k, children });
+    });
+    return {tree: treeData, name: getConnectionName(mongoConfig)};
   });
-  return treeData;
+  
 };
 
 module.exports = { convertToTreeData };

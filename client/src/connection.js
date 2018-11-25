@@ -62,7 +62,7 @@ const connect = (mongoConfig, user, password) => {
         inspector
           .inspect(inspectOptions)
           .then(tree => {
-            resolve(tree);
+            resolve({tree, mongoConfig});
           })
           .catch(err => {
             reject(err);
@@ -115,4 +115,10 @@ const connectMongoDB = mongoConfig => {
 
 const getMongoInspector = () => inspector;
 
-module.exports = { connectMongoDB, getMongoInspector };
+const ConnectStatus = {
+  CONNECTED: 'connected',
+  DISCONNECTED: 'disconnected',
+  CLOSED: 'closed'
+}
+
+module.exports = { connectMongoDB, getMongoInspector, ConnectStatus };

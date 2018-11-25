@@ -8,25 +8,18 @@ const { eventDispatcher, EventType } = require('./event-dispatcher');
 const TreeItem = require('./tree-item');
 const { convertToTreeData } = require('./tree-data-converter');
 
-const config = require('./config');
-const IDS = {
-  root: 0,
-  dbs: 1,
-  users: 2,
-  roles: 3
-};
+const { TreeType, getMongoConfiguration } = require('./config');
 
-const root = {
-  label: 'MongoDB',
-  id: IDS.root,
-  tooltip: 'MongoDB',
-  collapsibleState: TreeItemCollapsibleState.Collapsed
-};
 const loadMongoTree = () => {
-  const mongoConfig = config.getMongoConfiguration();
-  if (mongoConfig.url) {
-    return Connection.connectMongoDB(mongoConfig);
+  const mongoConfig = getMongoConfiguration();
+  if (mongoConfig && mongoConfig.length > 0) {
+    // const proms = mongoConfig.map(config => Connection.connectMongoDB(config));
+    // return Promise.all(proms);
+    return mongoConfig;
   }
+  // if (mongoConfig.url) {
+  //   return Connection.connectMongoDB(mongoConfig);
+  // }
   vscode.window.showInformationMessage('No Mongo Configuration.');
   return Promise.resolve();
 };
@@ -36,6 +29,7 @@ class MongoTreeProvider {
     this._onDidChangeTreeData = new EventEmitter();
     this.onDidChangeTreeData = this._onDidChangeTreeData.event;
     this.loaded = false;
+    this.loadData();
     eventDispatcher.on(
       EventType.FindCollectionAttributes,
       this.addCollectionAttributes.bind(this)
@@ -48,10 +42,10 @@ class MongoTreeProvider {
    * @param {*} data
    */
   loadTree(data) {
-    if (!data) {
+    if (!data || !data.length) {
       return;
     }
-    this.treeData = convertToTreeData(data);
+    this.treeData = data;
     this._onDidChangeTreeData.fire();
     this.loaded = true;
   }
@@ -65,7 +59,7 @@ class MongoTreeProvider {
   }
 
   getTreeItem(element) {
-    if (element.id === IDS.root) {
+    if (element.id === TreeType.root) {
       return element;
     }
     let children = this.getChildren(element);
@@ -80,16 +74,18 @@ class MongoTreeProvider {
   }
 
   getChildren(element) {
-    if (!element) {
-      return [root];
-    }
-    if (element.id === IDS.root) {
-      if (!this.isLoaded()) {
-        return this.refresh();
-      }
-      return this.treeData;
+    if (!element && this.treeData) {
+      return this.treeData.map((data) => (Object.assign(data, {
+        label: data.name,
+        id: TreeType.host,
+        tooltip: data.name,
+        collapsibleState: TreeItemCollapsibleState.Collapsed
+      })));
     }
     let children = [];
+    if (!element) {
+      return children;
+    }
     if (element.type === TreeNodeTypes.DATABASES) {
       children = element.children;
     } else if (element.type === TreeNodeTypes.DATABASE) {
@@ -125,14 +121,12 @@ class MongoTreeProvider {
   }
 
   refresh() {
-    loadMongoTree()
-      .then(data => this.loadTree(data))
-      .catch(err => {
-        if (err) {
-          console.error(err);
-          vscode.window.showErrorMessage(err);
-        }
-      });
+    this.loadData();
+  }
+
+  loadData() {
+    const configData = getMongoConfiguration();
+    this.loadTree(configData);
   }
 
   isLoaded() {
@@ -155,10 +149,10 @@ class TreeExplorer {
     });
     this.registerCommands();
 
-    const mongoConfig = config.getMongoConfiguration();
-    if (mongoConfig.activeOnStartUp) {
-      this.provider.refresh();
-    }
+    // const mongoConfig = config.getMongoConfiguration();
+    // if (mongoConfig.activeOnStartUp) {
+    //   this.provider.refresh();
+    // }
   }
 
   registerCommands() {

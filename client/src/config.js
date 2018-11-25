@@ -1,25 +1,54 @@
 const vscode = require('vscode');
+const mongodbUri = require('mongodb-uri');
+const { TreeNodeTypes } = require('mongodb-topology');
+const { ConnectStatus } = require('./connection');
+
+const getConnectionName = config => {
+  const uriObject = mongodbUri.parse(config.url);
+  if (uriObject.options && uriObject.options.replicaSet) {
+    return uriObject.options.replicaSet;
+  }
+  if (uriObject.hosts && uriObject.hosts.length > 0) {
+    return uriObject.hosts[0].host;
+  }
+  return 'MongoServer';
+};
+
+const getSingleConfiguration = config => {
+  const { url, activeOnStartUp, user, options } = config;
+  return {
+    type: `${TreeNodeTypes.HOST}:${ConnectStatus.CLOSED}`,
+    url,
+    user,
+    options,
+    activeOnStartUp,
+    name: getConnectionName(config),
+    status: ConnectStatus.CLOSED
+  };
+};
 
 const getMongoConfiguration = () => {
-  const url = vscode
-    .workspace
+  const connectsConfig = vscode.workspace
     .getConfiguration()
-    .get('mongoRunner.connection.url');
-    const activeOnStartUp = vscode
-      .workspace
-      .getConfiguration()
-      .get('mongoRunner.connection.activeOnStartUp');
-  const user = vscode
-    .workspace
+    .get('mongoRunner.connections');
+  const connectConfig = vscode.workspace
     .getConfiguration()
-    .get('mongoRunner.connection.user');
-  const options = vscode
-      .workspace
-      .getConfiguration()
-      .get('mongoRunner.connection.options');
-  return {url, user, options, activeOnStartUp};
+    .get('mongoRunner.connection');
+  if (Array.isArray(connectsConfig)) {
+    return connectsConfig.map(config => getSingleConfiguration(config));
+  } else if (connectConfig) {
+    return [getSingleConfiguration(connectConfig)];
+  }
+};
+
+const TreeType = {
+  host: 0,
+  dbs: 1,
+  users: 2,
+  roles: 3
 };
 
 module.exports = {
-  getMongoConfiguration
-}
+  getMongoConfiguration,
+  TreeType
+};

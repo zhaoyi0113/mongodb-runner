@@ -19,6 +19,10 @@ const openTextInEditor = (text, language = 'json') => {
     });
 };
 
+const connectDatabase = (e) => {
+  console.log('xxx:', e);
+};
+
 const serverStatusHandler = () => {
   const inspector = getMongoInspector();
   inspector
@@ -149,6 +153,10 @@ const deleteIndex = e => {
 
 const registerCommands = () => {
   // server command
+  vscode.commands.registerCommand(
+    'mongoRunner.hostConnect',
+    connectDatabase
+  );
   vscode.commands.registerCommand(
     'mongoRunner.serverStatus',
     serverStatusHandler
