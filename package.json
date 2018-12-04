@@ -47,11 +47,7 @@
       },
       {
         "command": "mongoRunner.hostConnect",
-        "title": "Connect",
-        "icon": {
-          "light": "resources/light/connect.png",
-          "dark": "resources/dark/connect.png"
-        } 
+        "title": "Connect"
       },
       {
         "command": "mongoRunner.hostDisconnect",
