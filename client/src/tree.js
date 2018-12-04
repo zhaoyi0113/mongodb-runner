@@ -22,6 +22,7 @@ class MongoTreeProvider {
     );
     eventDispatcher.on(EventType.Refresh, this.refresh.bind(this));
     eventDispatcher.on(EventType.Connect, this.onConnect.bind(this));
+    eventDispatcher.on(EventType.Disconnect, this.onDisconnect.bind(this));
   }
 
   /**
@@ -118,8 +119,20 @@ class MongoTreeProvider {
     this.treeData.forEach(data => {
       if (data.uuid === conn.uuid) {
         data.children = conn.tree;
-        data.type = `host:${ConnectStatus.CONNECTED}`
+        data.driver = conn.driver;
+        data.type = `host:${ConnectStatus.CONNECTED}`;
       }
+    });
+    this._onDidChangeTreeData.fire();
+  }
+
+  onDisconnect(uuid) {
+    this.treeData = this.treeData.map(data => {
+      if(data.uuid === uuid) {
+        data.type = `host:${ConnectStatus.CLOSED}`;
+        data.children = null;
+      }
+      return data;
     });
     this._onDidChangeTreeData.fire();
   }

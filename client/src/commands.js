@@ -22,10 +22,13 @@ const openTextInEditor = (text, language = 'json') => {
 
 const connectDatabase = config => {
   connectMongoDB(config)
-    .then((data) => {
+    .then(data => {
       const treeData = convertToTreeData(data);
       console.log('tree data:', treeData);
-      eventDispatcher.emit(EventType.Connect, Object.assign(treeData, {uuid: config.uuid}));
+      eventDispatcher.emit(
+        EventType.Connect,
+        Object.assign(treeData, { uuid: config.uuid, driver: data.driver })
+      );
     })
     .catch(err => {
       console.error(err);
@@ -33,8 +36,23 @@ const connectDatabase = config => {
     });
 };
 
-const disconnectDatabase = (db) => {
+const disconnectDatabase = db => {
   console.log('disconnect db ', db);
+  if (db && db.driver) {
+    db.driver
+      .close()
+      .then(() => {
+        vscode.window.showInformationMessage('MongoDB Connection Closed.');
+        eventDispatcher.emit(
+          EventType.Disconnect,
+          db.uuid
+        );
+      })
+      .catch(err => {
+        console.error(err);
+        vscode.window.showErrorMessage('Failed to close connection.');
+      });
+  }
 };
 
 const serverStatusHandler = () => {
@@ -168,7 +186,10 @@ const deleteIndex = e => {
 const registerCommands = () => {
   // server command
   vscode.commands.registerCommand('mongoRunner.hostConnect', connectDatabase);
-  vscode.commands.registerCommand('mongoRunner.hostDisconnect', disconnectDatabase);
+  vscode.commands.registerCommand(
+    'mongoRunner.hostDisconnect',
+    disconnectDatabase
+  );
   vscode.commands.registerCommand(
     'mongoRunner.serverStatus',
     serverStatusHandler
