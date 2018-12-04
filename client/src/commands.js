@@ -33,6 +33,10 @@ const connectDatabase = config => {
     });
 };
 
+const disconnectDatabase = (db) => {
+  console.log('disconnect db ', db);
+};
+
 const serverStatusHandler = () => {
   const inspector = getMongoInspector();
   inspector
@@ -164,6 +168,7 @@ const deleteIndex = e => {
 const registerCommands = () => {
   // server command
   vscode.commands.registerCommand('mongoRunner.hostConnect', connectDatabase);
+  vscode.commands.registerCommand('mongoRunner.hostDisconnect', disconnectDatabase);
   vscode.commands.registerCommand(
     'mongoRunner.serverStatus',
     serverStatusHandler

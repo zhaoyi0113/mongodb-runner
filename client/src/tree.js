@@ -1,9 +1,9 @@
 const vscode = require('vscode');
 const { TreeItemCollapsibleState, EventEmitter, Uri } = require('vscode');
 const { TreeNodeTypes } = require('mongodb-topology');
+const { ConnectStatus } = require('./connection');
 const _ = require('lodash');
 
-const Connection = require('./connection');
 const { eventDispatcher, EventType } = require('./event-dispatcher');
 const TreeItem = require('./tree-item');
 const { convertToTreeData } = require('./tree-data-converter');
@@ -60,7 +60,7 @@ class MongoTreeProvider {
   }
 
   getTreeItem(element) {
-    if (element.children.length <= 0) {
+    if (element.children && element.children.length <= 0) {
       return new TreeItem(element);
     }
     let children = this.getChildren(element);
@@ -132,6 +132,7 @@ class MongoTreeProvider {
     this.treeData.forEach(data => {
       if (data.uuid === conn.uuid) {
         data.children = conn.tree;
+        data.type = `host:${ConnectStatus.CONNECTED}`
       }
     });
     this._onDidChangeTreeData.fire();

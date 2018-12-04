@@ -55,7 +55,7 @@
       },
       {
         "command": "mongoRunner.hostDisconnect",
-        "title": "Connect"
+        "title": "Disconnect"
       },
       {
         "command": "extension.numberOfChars",

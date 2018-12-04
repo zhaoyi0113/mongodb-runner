@@ -1,6 +1,5 @@
 const vscode = require('vscode');
 const mongodbUri = require('mongodb-uri');
-const { TreeNodeTypes } = require('mongodb-topology');
 const uuid = require('uuid');
 const { ConnectStatus } = require('./connection');
 

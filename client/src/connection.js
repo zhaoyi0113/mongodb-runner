@@ -62,7 +62,7 @@ const connect = (mongoConfig, user, password) => {
         inspector
           .inspect(inspectOptions)
           .then(tree => {
-            resolve({tree, mongoConfig});
+            resolve({tree, mongoConfig, driver});
           })
           .catch(err => {
             reject(err);
