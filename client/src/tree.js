@@ -6,23 +6,9 @@ const _ = require('lodash');
 
 const { eventDispatcher, EventType } = require('./event-dispatcher');
 const TreeItem = require('./tree-item');
-const { convertToTreeData } = require('./tree-data-converter');
 
 const { TreeType, getMongoConfiguration } = require('./config');
 
-const loadMongoTree = () => {
-  const mongoConfig = getMongoConfiguration();
-  if (mongoConfig && mongoConfig.length > 0) {
-    // const proms = mongoConfig.map(config => Connection.connectMongoDB(config));
-    // return Promise.all(proms);
-    return mongoConfig;
-  }
-  // if (mongoConfig.url) {
-  //   return Connection.connectMongoDB(mongoConfig);
-  // }
-  vscode.window.showInformationMessage('No Mongo Configuration.');
-  return Promise.resolve();
-};
 let context;
 class MongoTreeProvider {
   constructor() {
