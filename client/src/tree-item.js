@@ -10,8 +10,13 @@ const getItemIcon = type => {
   switch (type) {
     case `host:${ConnectStatus.CLOSED}`:
       return {
-        light: getFilePath('connect.png', 'light'),
-        dark: getFilePath('connect.png', 'dark')
+        light: getFilePath('close.svg', 'light'),
+        dark: getFilePath('close.svg', 'dark')
+      };
+    case `host:${ConnectStatus.CONNECTED}`:
+      return {
+        light: getFilePath('connected.svg', 'light'),
+        dark: getFilePath('connected.svg', 'dark')
       };
     case TreeNodeTypes.DATABASES:
     case TreeNodeTypes.DATABASE:

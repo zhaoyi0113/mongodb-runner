@@ -21,7 +21,7 @@ const openTextInEditor = (text, language = 'json') => {
 };
 
 const connectDatabase = config => {
-  connectMongoDB(config)
+  return connectMongoDB(config)
     .then(data => {
       const treeData = convertToTreeData(data);
       console.log('tree data:', treeData);
@@ -90,7 +90,6 @@ const deleteCollection = e => {
 };
 
 const getCollectionAttributes = e => {
-  console.log(e);
   const inspector = getMongoInspector();
   return inspector
     .getCollectionAttributes(e.dbName, e.name)
