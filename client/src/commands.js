@@ -1,7 +1,8 @@
 const vscode = require('vscode');
-const { getMongoInspector, connectMongoDB } = require('./connection');
+const { getMongoInspector, connectMongoDB, ConnectStatus, getConnectionConfig } = require('./connection');
 const { eventDispatcher, EventType } = require('./event-dispatcher');
 const { convertToTreeData } = require('./tree-data-converter');
+const { getMongoConfiguration } = require('./config');
 
 
 const openTextDocument = (text, language) => {
@@ -121,7 +122,10 @@ const createIndex = e => {
     .then(ret => {
       if (ret) {
         vscode.window.showInformationMessage('Create index: ' + ret);
-        eventDispatcher.emit(EventType.Refresh);
+        const config = getConnectionConfig(e.uuid);
+        if(config) {
+          refreshConnection(config);
+        }
       }
     });
 };
@@ -189,7 +193,21 @@ const refreshConnection = e => {
   return connectDatabase(e);
 };
 
+const refreshAllConnections = () => {
+  const config = getMongoConfiguration();
+  const treeData = global.treeExplorer.provider.treeData;
+  console.log('config:', config, 'treeData:', treeData);
+  if (treeData) {
+    treeData.forEach((data) => {
+      if (data.status === ConnectStatus.CONNECTED) {
+        refreshConnection(data);
+      }
+    });
+  }
+};
+
 const registerCommands = () => {
+  vscode.commands.registerCommand('mongoRunner.refresh', refreshAllConnections);
   // server command
   vscode.commands.registerCommand('mongoRunner.hostConnect', connectDatabase);
   vscode.commands.registerCommand(

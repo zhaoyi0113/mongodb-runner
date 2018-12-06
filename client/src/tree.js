@@ -168,10 +168,6 @@ class TreeExplorer {
   }
 
   registerCommands() {
-    vscode.commands.registerCommand('mongoRunner.refresh', () => {
-      vscode.window.showInformationMessage('Refresh Mongo Connection');
-      this.provider.refresh();
-    });
     vscode.commands.registerCommand(
       'extension.mongoRunner.getConfiguration',
       () => {

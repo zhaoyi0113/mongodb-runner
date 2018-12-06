@@ -6,6 +6,13 @@ const mongodbUri = require('mongodb-uri');
 
 const inspectors = {};
 
+const getConnectionConfig = (uuid) => {
+  const treeData = global.treeExplorer.provider.treeData;
+  if (treeData) {
+    return treeData.find(d => d.uuid === uuid);
+  }
+};
+
 const readFromFile = file => {
   if (file) {
     try {
@@ -122,4 +129,4 @@ const ConnectStatus = {
   CLOSED: 'closed'
 }
 
-module.exports = { connectMongoDB, getMongoInspector, ConnectStatus };
+module.exports = { connectMongoDB, getMongoInspector, ConnectStatus, getConnectionConfig };

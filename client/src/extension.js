@@ -83,7 +83,7 @@ function activate(context) {
   launchLanguageServer(context);
   registerProviders(context);
   context.subscriptions.push(disposable);
-  new TreeExplorer(context);
+  global.treeExplorer = new TreeExplorer(context);
 }
 exports.activate = activate;
 
