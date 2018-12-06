@@ -161,11 +161,6 @@ class TreeExplorer {
       treeDataProvider: this.provider
     });
     this.registerCommands();
-
-    // const mongoConfig = config.getMongoConfiguration();
-    // if (mongoConfig.activeOnStartUp) {
-    //   this.provider.refresh();
-    // }
   }
 
   registerCommands() {

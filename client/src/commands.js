@@ -182,6 +182,11 @@ const deleteIndex = e => {
     .catch(err => vscode.window.showErrorMessage(err));
 };
 
+const refreshConnection = e => {
+  console.log('refresh ', e);
+  return connectDatabase(e);
+};
+
 const registerCommands = () => {
   // server command
   vscode.commands.registerCommand('mongoRunner.hostConnect', connectDatabase);
@@ -189,6 +194,7 @@ const registerCommands = () => {
     'mongoRunner.hostDisconnect',
     disconnectDatabase
   );
+  vscode.commands.registerCommand('mongoRunner.hostRefresh', refreshConnection);
   vscode.commands.registerCommand(
     'mongoRunner.serverStatus',
     serverStatusHandler
