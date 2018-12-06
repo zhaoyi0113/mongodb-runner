@@ -4,6 +4,7 @@
   "description": "MongoDB Runner is a VSCode extension to connect MongoDB instance.",
   "version": "0.0.15",
   "publisher": "JoeyYiZhao",
+  "keywords": ["MongoDB", "NoSQL"],
   "author": {
     "name": "Joey Zhao",
     "email": "zhaoyi0113@gmail.com",
@@ -22,7 +23,6 @@
   "activationEvents": [
     "onView:mongoRunner",
     "onLanguage:plaintext",
-    "onLanguage:*",
     "*"
   ],
   "icon": "images/mongo-runner.png",
