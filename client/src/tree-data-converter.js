@@ -26,14 +26,16 @@ const mongodbUri = require('mongodb-uri');
       }
   ]
  */
-const convertDatabaseChildren = dbChildren => {
+const convertDatabaseChildren = (dbChildren, uuid) => {
   const children = dbChildren.map(db => {
     db.dbName = db.name;
+    db.uuid = uuid;
     if (db.collections && db.collections.length > 0) {
       // loop collections
       db.collections = db.collections.map(col => {
         col.dbName = db.dbName;
         col.colName = col.name;
+        col.uuid = uuid;
         // loop indexes
         if (col.indexes && col.indexes.length > 0) {
           col.indexes = col.indexes.map(index => {
@@ -47,6 +49,7 @@ const convertDatabaseChildren = dbChildren => {
       if (db.users && db.users) {
         db.users = db.users.map(user => {
           user.dbName = db.name;
+          user.uuid = uuid;
           return user;
         });
       }
@@ -70,6 +73,7 @@ const getConnectionName = config => {
 const convertToTreeData = alldata => {
   console.log('convert tree data ', alldata);
   const treeData = [];
+  const {uuid} = alldata.mongoConfig;
   _.forOwn(alldata.tree, (v, k) => {
     let name;
     if (k === 'roles') {
@@ -79,7 +83,7 @@ const convertToTreeData = alldata => {
     switch (k) {
       case 'databases':
         name = 'Databases';
-        children = convertDatabaseChildren(v);
+        children = convertDatabaseChildren(v, uuid);
         break;
       case 'replicaset':
         name = 'Replica Set';
@@ -87,7 +91,7 @@ const convertToTreeData = alldata => {
       default:
         name = k;
     }
-    treeData.push({ name, type: k, children });
+    treeData.push({ name, type: k, children, uuid });
   });
   return { tree: treeData, name: getConnectionName(alldata.mongoConfig) };
 };

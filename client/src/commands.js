@@ -3,6 +3,7 @@ const { getMongoInspector, connectMongoDB } = require('./connection');
 const { eventDispatcher, EventType } = require('./event-dispatcher');
 const { convertToTreeData } = require('./tree-data-converter');
 
+
 const openTextDocument = (text, language) => {
   return vscode.workspace.openTextDocument({ content: text, language });
 };
@@ -55,8 +56,8 @@ const disconnectDatabase = db => {
   }
 };
 
-const serverStatusHandler = () => {
-  const inspector = getMongoInspector();
+const serverStatusHandler = (e) => {
+  const inspector = getMongoInspector(e.uuid);
   inspector
     .serverStats()
     .then(stats => {
@@ -65,8 +66,8 @@ const serverStatusHandler = () => {
     .catch(err => console.error(err));
 };
 
-const serverBuildInfoHandler = () => {
-  const inspector = getMongoInspector();
+const serverBuildInfoHandler = (e) => {
+  const inspector = getMongoInspector(e.uuid);
   inspector
     .buildInfo()
     .then(stats => {
@@ -76,28 +77,29 @@ const serverBuildInfoHandler = () => {
 };
 
 const deleteDatabase = e => {
-  getMongoInspector()
+  getMongoInspector(e.uuid)
     .deleteDatabase(e.dbName)
     .then(() => eventDispatcher.emit(EventType.Refresh))
     .catch(err => vscode.window.showErrorMessage(err));
 };
 
 const deleteCollection = e => {
-  getMongoInspector()
+  getMongoInspector(e.uuid)
     .deleteCollection(e.dbName, e.colName)
     .then(() => eventDispatcher.emit(EventType.Refresh))
     .catch(err => vscode.window.showErrorMessage(err));
 };
 
 const getCollectionAttributes = e => {
-  const inspector = getMongoInspector();
+  const inspector = getMongoInspector(e.uuid);
   return inspector
     .getCollectionAttributes(e.dbName, e.name)
     .then(attributes => {
       eventDispatcher.emit(EventType.FindCollectionAttributes, {
         dbName: e.dbName,
         colName: e.name,
-        attributes
+        attributes,
+        uuid: e.uuid
       });
     })
     .catch(err => console.error(err));
@@ -110,7 +112,7 @@ const createIndex = e => {
       if (result) {
         try {
           const idxParam = JSON.parse(result);
-          return getMongoInspector().createIndex(e.dbName, e.colName, idxParam);
+          return getMongoInspector(e.uuid).createIndex(e.dbName, e.colName, idxParam);
         } catch (err) {
           vscode.window.showErrorMessage(err.message);
         }
@@ -135,7 +137,7 @@ const testLanguageServer = event => {
 };
 
 const getIndex = e => {
-  getMongoInspector()
+  getMongoInspector(e.uuid)
     .getCollectionIndexes(e.dbName, e.name)
     .then(indexes => {
       console.log('get indexes ', indexes);
@@ -150,7 +152,7 @@ const simpleQuery = e => {
     .then(res => {
       try {
         if (res) {
-          return getMongoInspector().simpleQuery(
+          return getMongoInspector(e.uuid).simpleQuery(
             e.dbName,
             e.name,
             JSON.parse(res)
@@ -168,7 +170,7 @@ const simpleQuery = e => {
 };
 
 const findFirst20Docs = e => {
-  return getMongoInspector()
+  return getMongoInspector(e.uuid)
     .simpleQuery(e.dbName, e.name)
     .then(docs => openTextInEditor(JSON.stringify(docs), 'json'))
     .catch(err => vscode.window.showErrorMessage(err));
@@ -176,7 +178,7 @@ const findFirst20Docs = e => {
 
 const deleteIndex = e => {
   console.log('deleteIndex:', e);
-  getMongoInspector()
+  getMongoInspector(e.uuid)
     .deleteIndex(e.dbName, e.colName, e.name)
     .then(() => eventDispatcher.emit(EventType.Refresh))
     .catch(err => vscode.window.showErrorMessage(err));

@@ -4,7 +4,7 @@ const fs = require("fs");
 const vscode = require("vscode");
 const mongodbUri = require('mongodb-uri');
 
-let inspector;
+const inspectors = {};
 
 const readFromFile = file => {
   if (file) {
@@ -53,7 +53,8 @@ const connect = (mongoConfig, user, password) => {
           vscode.window.showErrorMessage("Failed to connect MongoDB.");
           return reject(err);
         }
-        inspector = new TreeInspector(driver);
+        const inspector = new TreeInspector(driver);
+        inspectors[mongoConfig.uuid] = inspector;
         const parsedUri = mongodbUri.parse(mongoConfig.url);
         const inspectOptions = {};
         if (parsedUri && parsedUri.database) {
@@ -113,7 +114,7 @@ const connectMongoDB = mongoConfig => {
   });
 };
 
-const getMongoInspector = () => inspector;
+const getMongoInspector = (uuid) => inspectors[uuid];
 
 const ConnectStatus = {
   CONNECTED: 'connected',

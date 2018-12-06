@@ -39,7 +39,11 @@ class MongoTreeProvider {
   }
 
   addCollectionAttributes(event) {
-    const dbs = this.treeData.find(d => d.type === TreeNodeTypes.DATABASES);
+    const treeData = this.treeData.find(d => d.uuid === event.uuid);
+    if (!treeData) {
+      return;
+    }
+    const dbs = treeData.children.find(d => d.type === TreeNodeTypes.DATABASES);
     const db = dbs.children.find(c => c.name === event.dbName);
     const col = db.collections.find(c => c.name === event.colName);
     col.attributes = event.attributes;

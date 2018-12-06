@@ -1,5 +1,4 @@
 const assert = require("assert");
-require('jest');
 const { singleServerData } = require("../data/mongo-tree-sample-data");
 const { convertToTreeData } = require("../../src/tree-data-converter");
 
@@ -8,6 +7,6 @@ const expectedData = {"tree":[{"name":"Databases","type":"databases","children":
 describe("tree data converter test", () => {
   test("test data convert on single server", () => {
     const treeData = convertToTreeData(singleServerData);
-    assert.deepEqual(treeData, expectedData);
+    assert.deepEqual(JSON.stringify(treeData), JSON.stringify(expectedData));
   });
 });
