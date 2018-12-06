@@ -113,6 +113,6 @@ Add refresh button
 Support manually input database password
 Order menu items
 
-### 0.0.15
+### 0.0.16
 
 Support loading mutiple MongoDB connections
