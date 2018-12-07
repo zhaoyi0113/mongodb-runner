@@ -80,7 +80,7 @@ function activate(context) {
   );
 
   registerCommands();
-  launchLanguageServer(context);
+  // launchLanguageServer(context);
   registerProviders(context);
   context.subscriptions.push(disposable);
   global.treeExplorer = new TreeExplorer(context);
