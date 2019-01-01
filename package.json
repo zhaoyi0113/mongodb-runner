@@ -4,7 +4,10 @@
   "description": "MongoDB Runner is a VSCode extension to connect MongoDB instance.",
   "version": "0.0.17",
   "publisher": "JoeyYiZhao",
-  "keywords": ["MongoDB", "NoSQL"],
+  "keywords": [
+    "MongoDB",
+    "NoSQL"
+  ],
   "author": {
     "name": "Joey Zhao",
     "email": "zhaoyi0113@gmail.com",
@@ -53,6 +56,20 @@
           "meta.import string.quoted": "other",
           "variable.other.jsdoc": "other"
         }
+      },
+      {
+        "path": "./server/lang/mongodbDriver.injection.json",
+        "scopeName": "source.injection",
+        "injectTo": [
+          "source.mr"
+        ]
+      }
+    ],
+    "themes": [
+      {
+        "label": "mongodbRunnerTheme",
+        "uiTheme": "vs-dark",
+        "path": "./server/themes/mr-color-theme.json"
       }
     ],
     "views": {

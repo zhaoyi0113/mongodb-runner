@@ -1,0 +1,12 @@
+{
+	"tokenColors": "./theme",
+	"colors": {
+		"editor.background": "#31333D",
+		"editorCursor.foreground": "#F8F8F0",
+		"editor.foreground": "#BBCF54",
+		"editorWhitespace.foreground": "#31333D",
+		"editor.lineHighlightBackground": "#3F4152",
+		"editor.selectionBackground": "#535566"
+	},
+	"name": "mongodbRunnerTheme"
+}
