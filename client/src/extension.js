@@ -25,9 +25,10 @@ const launchLanguageServer = context => {
   const clientOptions = {
     // Register the server for plain text documents
     documentSelector: [
-      { scheme: 'file', language: 'plaintext' },
-      { scheme: 'file', language: 'javascript' },
-      { scheme: 'untitled', language: 'javascript' },
+      // { scheme: 'file', language: 'plaintext' },
+      // { scheme: 'file', language: 'javascript' },
+      // { scheme: 'untitled', language: 'javascript' },
+      { scheme: 'untitled', language: 'mongodbRunner' },
     ],
     synchronize: {
       // Notify the server about file changes to '.clientrc files contain in the workspace
@@ -80,7 +81,7 @@ function activate(context) {
   );
 
   registerCommands();
-  // launchLanguageServer(context);
+  launchLanguageServer(context);
   registerProviders(context);
   context.subscriptions.push(disposable);
   global.treeExplorer = new TreeExplorer(context);

@@ -132,7 +132,7 @@ const createIndex = e => {
 
 const testLanguageServer = event => {
   let e;
-  openTextInEditor('db.test.createIndex()', 'javascript')
+  openTextInEditor('db.test.createIndex()', 'mongodbRunner')
     .then(({ editor }) => {
       e = editor;
       return openTextDocument('', 'json');

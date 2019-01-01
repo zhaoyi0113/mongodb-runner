@@ -28,6 +28,33 @@
   "icon": "images/mongo-runner.png",
   "main": "./client/src/extension",
   "contributes": {
+    "languages": [
+      {
+        "id": "mongodbRunner",
+        "aliases": [
+          "MongoDBRunner",
+          "MondoDB-Runner",
+          "mr"
+        ],
+        "extensions": [
+          ".mr"
+        ],
+        "configuration": "./server/lang/language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "mongodbRunner",
+        "scopeName": "source.mr",
+        "path": "./server/lang/mongodbRunner.tmLanguage.json",
+        "tokenTypes": {
+          "entity.name.type.instance.jsdoc": "other",
+          "entity.name.function.tagged-template": "other",
+          "meta.import string.quoted": "other",
+          "variable.other.jsdoc": "other"
+        }
+      }
+    ],
     "views": {
       "explorer": [
         {
@@ -112,6 +139,10 @@
       {
         "command": "mongoRunner.deleteIndex",
         "title": "Delete Index"
+      },
+      {
+        "command": "mongoRunner.testLanguageServer",
+        "title": "Test Language Server"
       }
     ],
     "menus": {
@@ -146,6 +177,10 @@
         },
         {
           "command": "mongoRunner.deleteDatabase",
+          "when": "viewItem == database"
+        },
+        {
+          "command": "mongoRunner.testLanguageServer",
           "when": "viewItem == database"
         },
         {

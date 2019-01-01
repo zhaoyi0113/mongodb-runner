@@ -16,16 +16,24 @@ const connection = createConnection(ProposedFeatures.all);
 const documents = new TextDocuments();
 
 connection.onInitialize(params => {
-  console.log('initialize ', params);
+  console.log('mongodb language initialize ');
   return {
     capabilities: {
-      hoverProvider: 'true'
+      textDocumentSync: documents.syncKind,
+      completionProvider: {
+				resolveProvider: true
+			}
     }
   };
 });
 
+connection.onDidChangeWatchedFiles(change => {
+	// Monitored files have change in VS Code
+	console.log('We received an file change event,', change);
+});
+
 documents.onDidChangeContent(change => {
-  console.log('changed:', change.document);
+  console.log('doc is changed:', change.document);
   const text = change.document.getText();
   console.log('text:', text);
   const diagnostic = {
@@ -36,10 +44,14 @@ documents.onDidChangeContent(change => {
     },
     message: ' this is a demo'
   };
-  // connection.sendDiagnostics({
-  //   uri: change.document.uri,
-  //   diagnostics: [diagnostic]
-  // });
+  connection.sendDiagnostics({
+    uri: change.document.uri,
+    diagnostics: [diagnostic]
+  });
+});
+
+documents.onDidClose(event => {
+  console.log('document closed:', event);
 });
 
 documents.listen(connection);
