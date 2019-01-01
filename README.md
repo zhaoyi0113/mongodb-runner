@@ -82,7 +82,7 @@ Please submit any issues you found or any suggestions on github issues.
 ## Support MongoDB Runner
 While MongoDB Runner is generously offered to everyone free of charge, if you find it useful, please consider supporting it.
 
-[**Donate via PayPal**](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=W75BXQ3XP6VUL&currency_code=USD&source=url)
+[**Donate via PayPal**](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=W75BXQ3XP6VUL&item_name=MongoDB+Runner&currency_code=USD&source=url)
 
 ## Release Notes
 
