@@ -1,0 +1,8 @@
+{
+	"Create_Index": {
+		"prefix": "createIndex",
+		"body": [
+			"createIndex({$0})"
+		]
+	}
+}

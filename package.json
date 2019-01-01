@@ -21,7 +21,10 @@
     "url": "https://github.com/zhaoyi0113/mongodb-runner.git"
   },
   "categories": [
-    "Other"
+    "Other",
+    "Themes",
+    "Snippets",
+    "Programming Languages"
   ],
   "activationEvents": [
     "onView:mongoRunner",
@@ -72,6 +75,12 @@
         "path": "./server/themes/mr-color-theme.json"
       }
     ],
+    "snippets": [
+			{
+				"language": "mongodbRunner",
+				"path": "./snippets.json"
+			}
+		],
     "views": {
       "explorer": [
         {
