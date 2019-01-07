@@ -21,15 +21,18 @@ connection.onInitialize(params => {
     capabilities: {
       textDocumentSync: documents.syncKind,
       completionProvider: {
-				resolveProvider: true
-			}
+        resolveProvider: true
+      },
+      codeLensProvider: {
+        resolveProvider: true
+      }
     }
   };
 });
 
 connection.onDidChangeWatchedFiles(change => {
-	// Monitored files have change in VS Code
-	console.log('We received an file change event,', change);
+  // Monitored files have change in VS Code
+  console.log('We received an file change event,', change);
 });
 
 documents.onDidChangeContent(change => {

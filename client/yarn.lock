@@ -3705,6 +3705,10 @@ vm2@^3.6.3:
   version "3.6.3"
   resolved "https://registry.yarnpkg.com/vm2/-/vm2-3.6.3.tgz#6dd426bb67a387d03055c5d276720f3f23203b72"
 
+vm2@^3.6.5:
+  version "3.6.5"
+  resolved "https://registry.yarnpkg.com/vm2/-/vm2-3.6.5.tgz#bef404bfe6fe8a96f65d3b69de20c440df2dc397"
+
 vscode-jsonrpc@^3.6.2:
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/vscode-jsonrpc/-/vscode-jsonrpc-3.6.2.tgz#3b5eef691159a15556ecc500e9a8a0dd143470c8"

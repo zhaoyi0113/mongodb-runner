@@ -1,9 +1,14 @@
 const vscode = require('vscode');
-const { getMongoInspector, connectMongoDB, ConnectStatus, getConnectionConfig } = require('./connection');
+const { VM } = require('vm2');
+const {
+  getMongoInspector,
+  connectMongoDB,
+  ConnectStatus,
+  getConnectionConfig
+} = require('./connection');
 const { eventDispatcher, EventType } = require('./event-dispatcher');
 const { convertToTreeData } = require('./tree-data-converter');
 const { getMongoConfiguration } = require('./config');
-
 
 const openTextDocument = (text, language) => {
   return vscode.workspace.openTextDocument({ content: text, language });
@@ -45,10 +50,7 @@ const disconnectDatabase = db => {
       .close()
       .then(() => {
         vscode.window.showInformationMessage('MongoDB Connection Closed.');
-        eventDispatcher.emit(
-          EventType.Disconnect,
-          db.uuid
-        );
+        eventDispatcher.emit(EventType.Disconnect, db.uuid);
       })
       .catch(err => {
         console.error(err);
@@ -57,7 +59,7 @@ const disconnectDatabase = db => {
   }
 };
 
-const serverStatusHandler = (e) => {
+const serverStatusHandler = e => {
   const inspector = getMongoInspector(e.uuid);
   inspector
     .serverStats()
@@ -67,7 +69,7 @@ const serverStatusHandler = (e) => {
     .catch(err => console.error(err));
 };
 
-const serverBuildInfoHandler = (e) => {
+const serverBuildInfoHandler = e => {
   const inspector = getMongoInspector(e.uuid);
   inspector
     .buildInfo()
@@ -113,7 +115,11 @@ const createIndex = e => {
       if (result) {
         try {
           const idxParam = JSON.parse(result);
-          return getMongoInspector(e.uuid).createIndex(e.dbName, e.colName, idxParam);
+          return getMongoInspector(e.uuid).createIndex(
+            e.dbName,
+            e.colName,
+            idxParam
+          );
         } catch (err) {
           vscode.window.showErrorMessage(err.message);
         }
@@ -123,7 +129,7 @@ const createIndex = e => {
       if (ret) {
         vscode.window.showInformationMessage('Create index: ' + ret);
         const config = getConnectionConfig(e.uuid);
-        if(config) {
+        if (config) {
           refreshConnection(config);
         }
       }
@@ -198,11 +204,27 @@ const refreshAllConnections = () => {
   const treeData = global.treeExplorer.provider.treeData;
   console.log('config:', config, 'treeData:', treeData);
   if (treeData) {
-    treeData.forEach((data) => {
+    treeData.forEach(data => {
       if (data.status === ConnectStatus.CONNECTED) {
         refreshConnection(data);
       }
     });
+  }
+};
+
+const runCommand = e => {
+  console.log('run command:', e);
+  const inspector = getMongoInspector(e.uuid);
+  console.log('inspector:', inspector);
+  const db = inspector.driver.db(e.dbName);
+  const code = 'db \
+    .collections()';
+  try {
+    const vm = new VM({ sandbox: { db } });
+    const result = vm.run(code);
+    result.then(cols => console.log('cols:', cols));
+  } catch (err) {
+    console.error(err);
   }
 };
 
@@ -252,6 +274,8 @@ const registerCommands = () => {
     'mongoRunner.testLanguageServer',
     testLanguageServer
   );
+
+  vscode.commands.registerCommand('mongoRunner.testRunCmd', runCommand);
 };
 
 module.exports = {

@@ -76,11 +76,11 @@
       }
     ],
     "snippets": [
-			{
-				"language": "mongodbRunner",
-				"path": "./snippets.json"
-			}
-		],
+      {
+        "language": "mongodbRunner",
+        "path": "./snippets.json"
+      }
+    ],
     "views": {
       "explorer": [
         {
@@ -169,6 +169,10 @@
       {
         "command": "mongoRunner.testLanguageServer",
         "title": "Test Language Server"
+      },
+      {
+        "command": "mongoRunner.testRunCmd",
+        "title": "Test Run Cmd"
       }
     ],
     "menus": {
@@ -210,6 +214,10 @@
           "when": "viewItem == database"
         },
         {
+          "command": "mongoRunner.testRunCmd",
+          "when": "viewItem == database"
+        },
+        {
           "command": "mongoRunner.deleteCollection",
           "when": "viewItem == collection",
           "group": "colGropu@5"
@@ -247,6 +255,12 @@
         {
           "command": "mongoRunner.simpleQuery",
           "when": "viewItem == collection"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "mongoRunner.testRunCmd",
+          "when": "resourceLangId == mongodbRunner"
         }
       ]
     },
