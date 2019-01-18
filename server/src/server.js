@@ -39,6 +39,18 @@ connection.onDidChangeWatchedFiles(change => {
 connection.onRequest(new RequestType('textDocument/codeLens'), (event, token) => {
   console.log('code lens:', event.textDocument);
   console.log('text:', documents.get(event.textDocument.uri).getText());
+  return [
+    {
+      command: {command: 'mongoRunner.selectRunConnection', title: 'run', tooltip: 'tooltip', arguments: [1,2,3]},
+      isResolved: true,
+      range: {
+        start: {line: 1},
+        end: {line: 1},
+        isSingleLine: true,
+        isEmpty: false
+      }
+    }
+  ];
 });
 
 documents.onDidChangeContent(change => {

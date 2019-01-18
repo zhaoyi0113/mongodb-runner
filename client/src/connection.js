@@ -13,6 +13,8 @@ const getConnectionConfig = (uuid) => {
   }
 };
 
+const getAllConnectionConfigs = () => global.treeExplorer ? global.treeExplorer.provider.treeData : [];
+
 const readFromFile = file => {
   if (file) {
     try {
@@ -61,8 +63,9 @@ const connect = (mongoConfig, user, password) => {
           return reject(err);
         }
         const inspector = new TreeInspector(driver);
-        inspectors[mongoConfig.uuid] = inspector;
         const parsedUri = mongodbUri.parse(mongoConfig.url);
+        
+        inspectors[mongoConfig.uuid] = inspector;
         const inspectOptions = {};
         if (parsedUri && parsedUri.database) {
           inspectOptions.currentDb = parsedUri.database;
@@ -129,4 +132,4 @@ const ConnectStatus = {
   CLOSED: 'closed'
 }
 
-module.exports = { connectMongoDB, getMongoInspector, ConnectStatus, getConnectionConfig };
+module.exports = { getAllConnectionConfigs, connectMongoDB, getMongoInspector, ConnectStatus, getConnectionConfig };

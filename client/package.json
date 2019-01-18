@@ -16,6 +16,7 @@
     "mongodb": "^3.1.4",
     "mongodb-topology": "^0.0.22",
     "mongodb-uri": "^0.9.7",
+    "short-unique-id": "^1.1.1",
     "uuid": "^3.3.2",
     "vm2": "^3.6.5",
     "vscode": "^1.1.21",

@@ -4,7 +4,8 @@ const {
   getMongoInspector,
   connectMongoDB,
   ConnectStatus,
-  getConnectionConfig
+  getConnectionConfig,
+  getAllConnectionConfigs
 } = require('./connection');
 const { eventDispatcher, EventType } = require('./event-dispatcher');
 const { convertToTreeData } = require('./tree-data-converter');
@@ -228,6 +229,22 @@ const runCommand = e => {
   }
 };
 
+const runCommandOnConnection = event => {
+  console.log('run:', event);
+  const configs = getAllConnectionConfigs();
+  if (!configs || configs.length === 0) {
+    return;
+  }
+  const connectedName = configs
+    .filter(c => c.status === ConnectStatus.CONNECTED)
+    .map(c => `${c.name}:${c.uuid}`);
+
+  vscode.window.showQuickPick(connectedName)
+  .then(d => {
+    console.log('select:', d);
+  });
+};
+
 const registerCommands = () => {
   vscode.commands.registerCommand('mongoRunner.refresh', refreshAllConnections);
   // server command
@@ -276,6 +293,11 @@ const registerCommands = () => {
   );
 
   vscode.commands.registerCommand('mongoRunner.testRunCmd', runCommand);
+
+  vscode.commands.registerCommand(
+    'mongoRunner.selectRunConnection',
+    runCommandOnConnection
+  );
 };
 
 module.exports = {

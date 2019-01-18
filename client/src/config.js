@@ -1,30 +1,35 @@
 const vscode = require('vscode');
 const mongodbUri = require('mongodb-uri');
-const uuid = require('uuid');
+const ShortUniqueId = require('short-unique-id')
+
 const { ConnectStatus } = require('./connection');
+
+const uid = new ShortUniqueId();
 
 const getConnectionName = config => {
   const uriObject = mongodbUri.parse(config.url);
+  let name = 'MongoServer';
   if (uriObject.options && uriObject.options.replicaSet) {
-    return uriObject.options.replicaSet;
+    name = uriObject.options.replicaSet;
   }
   if (uriObject.hosts && uriObject.hosts.length > 0) {
-    return uriObject.hosts[0].host;
+    name = uriObject.hosts[0].host;
   }
-  return 'MongoServer';
+  return name;
 };
 
 const getSingleConfiguration = config => {
   const { url, activeOnStartUp, user, options } = config;
+  const id = uid.randomUUID(6);
   return {
     type: `host:${ConnectStatus.CLOSED}`,
     url,
     user,
     options,
     activeOnStartUp,
-    name: getConnectionName(config),
+    name: `${getConnectionName(config)} : ${id}`,
     status: ConnectStatus.CLOSED,
-    uuid: uuid.v4(),
+    uuid: id, 
     id: TreeType.host,
     children: []
   };
