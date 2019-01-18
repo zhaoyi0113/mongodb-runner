@@ -5,7 +5,12 @@ const path = require('path');
 const { LanguageClient, TransportKind } = require('vscode-languageclient');
 const TreeExplorer = require('./tree');
 const { registerCommands } = require('./commands');
-const hoverProvider = require('./providers/hover-provider');
+const { MongoCodeLensProvider, hoverProvider } = require('./providers');
+
+const mongodbLangSchemas = [
+  { scheme: 'untitled', language: 'mongodbRunner' },
+  { scheme: 'file', language: 'mongodbRunner' }
+];
 
 const launchLanguageServer = context => {
   // The server is implemented in node
@@ -24,12 +29,7 @@ const launchLanguageServer = context => {
   };
   const clientOptions = {
     // Register the server for plain text documents
-    documentSelector: [
-      // { scheme: 'file', language: 'plaintext' },
-      // { scheme: 'file', language: 'javascript' },
-      // { scheme: 'untitled', language: 'javascript' },
-      { scheme: 'untitled', language: 'mongodbRunner' },
-    ],
+    documentSelector: mongodbLangSchemas[0],
     synchronize: {
       // Notify the server about file changes to '.clientrc files contain in the workspace
       fileEvents: vscode.workspace.createFileSystemWatcher('**/*')
@@ -46,8 +46,11 @@ const launchLanguageServer = context => {
   client.start();
 };
 
-const registerProviders = (ctx) => {
+const registerProviders = ctx => {
   vscode.languages.registerHoverProvider('javascript', hoverProvider);
+  ctx.subscriptions.push(
+    vscode.languages.registerCodeLensProvider(mongodbLangSchemas, new MongoCodeLensProvider())
+  );
 };
 
 // this method is called when your extension is activated

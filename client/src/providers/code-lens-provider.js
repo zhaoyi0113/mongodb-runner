@@ -1,17 +1,38 @@
-const provideCodeLenses = (document, token) => {
-  return [
-    {
-      command:  {
-        title: 'text',
-        command: ''
-      }
-    }
-  ]
-};
+const esprima = require('esprima');
 
-const resolveCodeLens = (codeLens, token) => {};
+class MongoCodeLensProvider {
+  provideCodeLenses(document, token) {
+    
+    return [
+      {
+        command: {command: 'mongoRunner.testLanguageServer', title: 'title', tooltip: 'tooltip'},
+        isResolved: true,
+        range: {
+          start: {line: 1},
+          end: {line: 1},
+          isSingleLine: true,
+          isEmpty: false
+        }
+      }
+    ];
+  }
+
+  resolveCodeLens(codeLens, token) {
+    return [
+      {
+        command: {command: '', title: 'title', tooltip: 'tooltip'},
+        isResolved: true,
+        range: {
+          start: {line: 1},
+          end: {line: 1},
+          isSingleLine: true,
+          isEmpty: false
+        }
+      }
+    ]
+  }
+}
 
 module.exports = {
-  provideCodeLenses,
-  resolveCodeLens
+  MongoCodeLensProvider,
 };

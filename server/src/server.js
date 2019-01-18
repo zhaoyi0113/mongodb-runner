@@ -9,7 +9,8 @@ const {
   DidChangeConfigurationNotification,
   CompletionItem,
   CompletionItemKind,
-  TextDocumentPositionParams
+  TextDocumentPositionParams,
+  RequestType
 } = require('vscode-languageserver');
 
 const connection = createConnection(ProposedFeatures.all);
@@ -33,6 +34,11 @@ connection.onInitialize(params => {
 connection.onDidChangeWatchedFiles(change => {
   // Monitored files have change in VS Code
   console.log('We received an file change event,', change);
+});
+
+connection.onRequest(new RequestType('textDocument/codeLens'), (event, token) => {
+  console.log('code lens:', event.textDocument);
+  console.log('text:', documents.get(event.textDocument.uri).getText());
 });
 
 documents.onDidChangeContent(change => {

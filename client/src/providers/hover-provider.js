@@ -26,7 +26,7 @@ const findStatementByLineNumber = (statements, line) => {
   return found;
 };
 
-const provideHover = (document, position) => {
+const hoverProvider = (document, position) => {
   const line = document.lineAt(position);
   console.log('line text:', line.text, position);
   console.log('all text:', document.getText());
@@ -45,4 +45,4 @@ const provideHover = (document, position) => {
   return new Hover('Hello World');
 };
 
-module.exports = { provideHover };
+module.exports = { hoverProvider };

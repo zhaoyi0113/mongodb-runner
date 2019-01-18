@@ -78,7 +78,7 @@
     "snippets": [
       {
         "language": "mongodbRunner",
-        "path": "./snippets.json"
+        "path": "./server/lang/snippets.json"
       }
     ],
     "views": {
