@@ -10,6 +10,9 @@ const {
 const { eventDispatcher, EventType } = require('./event-dispatcher');
 const { convertToTreeData } = require('./tree-data-converter');
 const { getMongoConfiguration } = require('./config');
+const { pushEditor, getActivateEditorWrapper } = require('./editor-mgr');
+
+const LanguageID = 'mongodbRunner';
 
 const openTextDocument = (text, language) => {
   return vscode.workspace.openTextDocument({ content: text, language });
@@ -26,6 +29,13 @@ const openTextInEditor = (text, language = 'json') => {
       vscode.commands.executeCommand('editor.action.formatDocument');
       return { doc, editor };
     });
+};
+
+const openMongoRunnerEditor = (text, uuid, dbName) => {
+  return openTextInEditor(text, LanguageID).then(({ editor }) => {
+    pushEditor(editor, uuid, dbName);
+    return { editor };
+  });
 };
 
 const connectDatabase = config => {
@@ -139,12 +149,14 @@ const createIndex = e => {
 
 const testLanguageServer = event => {
   let e;
-  openTextInEditor('db.test.createIndex()', 'mongodbRunner')
+  openMongoRunnerEditor('db.test.createIndex()', event.uuid, event.dbName)
     .then(({ editor }) => {
       e = editor;
-      return openTextDocument('', 'json');
+      return openTextDocument('', LanguageID);
     }) // split the view for output
-    .then(doc => vscode.window.showTextDocument(doc, e.viewColumn + 1));
+    .then(doc => {
+      return vscode.window.showTextDocument(doc, e.viewColumn + 1);
+    });
 };
 
 const getIndex = e => {
@@ -213,36 +225,41 @@ const refreshAllConnections = () => {
   }
 };
 
-const runCommand = e => {
-  console.log('run command:', e);
-  const inspector = getMongoInspector(e.uuid);
-  console.log('inspector:', inspector);
-  const db = inspector.driver.db(e.dbName);
-  const code = 'db \
-    .collections()';
-  try {
-    const vm = new VM({ sandbox: { db } });
-    const result = vm.run(code);
-    result.then(cols => console.log('cols:', cols));
-  } catch (err) {
-    console.error(err);
-  }
+const runCommand = (uuid, command, dbName) => {
+  return new Promise((resolve, reject) => {
+    const inspector = getMongoInspector(uuid);
+    const db = inspector.driver.db(dbName);
+    try {
+      const vm = new VM({ sandbox: { db } });
+      const result = vm.run(command);
+      if (result && typeof result.then === 'function') {
+        result.then(ret => resolve(ret)).catch(err => reject(err));
+      } else {
+        console.log('return value:', result);
+      }
+    } catch (err) {
+      console.error(err);
+      reject(err);
+    }
+  });
 };
 
+/**
+ * The command is triggered by code lens.
+ * TODO: whether need to select different server
+ * @param {*} event
+ */
 const runCommandOnConnection = event => {
-  console.log('run:', event);
+  console.log('run:', event, vscode.window.activeTextEditor);
   const configs = getAllConnectionConfigs();
   if (!configs || configs.length === 0) {
     return;
   }
-  const connectedName = configs
-    .filter(c => c.status === ConnectStatus.CONNECTED)
-    .map(c => `${c.name}:${c.uuid}`);
-
-  vscode.window.showQuickPick(connectedName)
-  .then(d => {
-    console.log('select:', d);
-  });
+  const editorWrapper = getActivateEditorWrapper();
+  if (!editorWrapper) {
+    return;
+  }
+  runCommand(editorWrapper.uuid, event, editorWrapper.dbName);
 };
 
 const registerCommands = () => {

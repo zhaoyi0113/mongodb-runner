@@ -1,19 +1,27 @@
-const { TreeInspector } = require("mongodb-topology");
-const { MongoClient } = require("mongodb");
-const fs = require("fs");
-const vscode = require("vscode");
+const { TreeInspector } = require('mongodb-topology');
+const { MongoClient } = require('mongodb');
+const fs = require('fs');
+const vscode = require('vscode');
 const mongodbUri = require('mongodb-uri');
 
 const inspectors = {};
 
-const getConnectionConfig = (uuid) => {
+const getConnectionConfig = uuid => {
   const treeData = global.treeExplorer.provider.treeData;
   if (treeData) {
     return treeData.find(d => d.uuid === uuid);
   }
 };
 
-const getAllConnectionConfigs = () => global.treeExplorer ? global.treeExplorer.provider.treeData : [];
+const getConnectionConfigByName = name => {
+  const treeData = global.treeExplorer.provider.treeData;
+  if (treeData) {
+    return treeData.find(d => d.name === name);
+  }
+};
+
+const getAllConnectionConfigs = () =>
+  global.treeExplorer ? global.treeExplorer.provider.treeData : [];
 
 const readFromFile = file => {
   if (file) {
@@ -36,7 +44,7 @@ const readSSLCert = mongoConfig => {
     if (sslKey) {
       options.sslKey = readFromFile(sslKey);
     }
-    if(sslCA) options.sslCA = sslCA;
+    if (sslCA) options.sslCA = sslCA;
     if (sslPass) options.sslPass = sslPass;
   }
   return options;
@@ -59,12 +67,12 @@ const connect = (mongoConfig, user, password) => {
       (err, driver) => {
         if (err) {
           console.error(err);
-          vscode.window.showErrorMessage("Failed to connect MongoDB.");
+          vscode.window.showErrorMessage('Failed to connect MongoDB.');
           return reject(err);
         }
         const inspector = new TreeInspector(driver);
         const parsedUri = mongodbUri.parse(mongoConfig.url);
-        
+
         inspectors[mongoConfig.uuid] = inspector;
         const inspectOptions = {};
         if (parsedUri && parsedUri.database) {
@@ -73,11 +81,11 @@ const connect = (mongoConfig, user, password) => {
         inspector
           .inspect(inspectOptions)
           .then(tree => {
-            resolve({tree, mongoConfig, driver});
+            resolve({ tree, mongoConfig, driver });
           })
           .catch(err => {
             reject(err);
-            vscode.window.showErrorMessage("Failed to connect MongoDB.");
+            vscode.window.showErrorMessage('Failed to connect MongoDB.');
           });
       }
     );
@@ -124,12 +132,19 @@ const connectMongoDB = mongoConfig => {
   });
 };
 
-const getMongoInspector = (uuid) => inspectors[uuid];
+const getMongoInspector = uuid => inspectors[uuid];
 
 const ConnectStatus = {
   CONNECTED: 'connected',
   DISCONNECTED: 'disconnected',
   CLOSED: 'closed'
-}
+};
 
-module.exports = { getAllConnectionConfigs, connectMongoDB, getMongoInspector, ConnectStatus, getConnectionConfig };
+module.exports = {
+  getAllConnectionConfigs,
+  connectMongoDB,
+  getMongoInspector,
+  ConnectStatus,
+  getConnectionConfig,
+  getConnectionConfigByName
+};
