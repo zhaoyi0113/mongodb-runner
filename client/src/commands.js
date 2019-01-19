@@ -1,5 +1,6 @@
 const vscode = require('vscode');
 const { VM } = require('vm2');
+const os = require('os');
 const {
   getMongoInspector,
   connectMongoDB,
@@ -10,7 +11,11 @@ const {
 const { eventDispatcher, EventType } = require('./event-dispatcher');
 const { convertToTreeData } = require('./tree-data-converter');
 const { getMongoConfiguration } = require('./config');
-const { pushEditor, getActivateEditorWrapper } = require('./editor-mgr');
+const {
+  pushEditor,
+  getActivateEditorWrapper,
+  connectOutputEditor
+} = require('./editor-mgr');
 
 const LanguageID = 'mongodbRunner';
 
@@ -32,10 +37,17 @@ const openTextInEditor = (text, language = 'json') => {
 };
 
 const openMongoRunnerEditor = (text, uuid, dbName) => {
-  return openTextInEditor(text, LanguageID).then(({ editor }) => {
-    pushEditor(editor, uuid, dbName);
-    return { editor };
-  });
+  let viewColumn;
+  let wrapper;
+  return openTextInEditor(text, LanguageID)
+    .then(({ doc, editor }) => {
+      wrapper = pushEditor(editor, uuid, dbName);
+      viewColumn = editor.viewColumn + 1;
+      // open output document
+      return openTextDocument('', 'json');
+    })
+    .then(doc => vscode.window.showTextDocument(doc, viewColumn))
+    .then(editor => connectOutputEditor(wrapper, editor));
 };
 
 const connectDatabase = config => {
@@ -148,15 +160,11 @@ const createIndex = e => {
 };
 
 const testLanguageServer = event => {
-  let e;
-  openMongoRunnerEditor('db.test.createIndex()', event.uuid, event.dbName)
-    .then(({ editor }) => {
-      e = editor;
-      return openTextDocument('', LanguageID);
-    }) // split the view for output
-    .then(doc => {
-      return vscode.window.showTextDocument(doc, e.viewColumn + 1);
-    });
+  return openMongoRunnerEditor(
+    'db.collection("test").count()',
+    event.uuid,
+    event.dbName
+  );
 };
 
 const getIndex = e => {
@@ -236,6 +244,7 @@ const runCommand = (uuid, command, dbName) => {
         result.then(ret => resolve(ret)).catch(err => reject(err));
       } else {
         console.log('return value:', result);
+        resolve(result);
       }
     } catch (err) {
       console.error(err);
@@ -250,7 +259,6 @@ const runCommand = (uuid, command, dbName) => {
  * @param {*} event
  */
 const runCommandOnConnection = event => {
-  console.log('run:', event, vscode.window.activeTextEditor);
   const configs = getAllConnectionConfigs();
   if (!configs || configs.length === 0) {
     return;
@@ -259,7 +267,67 @@ const runCommandOnConnection = event => {
   if (!editorWrapper) {
     return;
   }
-  runCommand(editorWrapper.uuid, event, editorWrapper.dbName);
+  runCommand(editorWrapper.uuid, event, editorWrapper.dbName)
+    .then(result => {
+      let jsonData;
+      try {
+        jsonData = JSON.stringify(result, null, 4);
+      } catch (err) {}
+      if (!jsonData) {
+        jsonData = result;
+      }
+      if (editorWrapper.outputEditor) {
+        // append output on exsited editor
+        const { outputEditor } = editorWrapper;
+        const lastLine = editorWrapper.outputEditor.document.lineAt(
+          outputEditor.document.lineCount - 1
+        );
+        const position = new vscode.Position(
+          lastLine.lineNumber,
+          lastLine.range.end.character
+        );
+        console.log('visible editors:', vscode.window.visibleTextEditors);
+        if (
+          !vscode.window.visibleTextEditors.find(
+            editor => editor.id === outputEditor.id
+          )
+        ) {
+          // the editor is not shown
+          return openTextDocument(jsonData + '', 'json');
+        } else {
+          editorWrapper.outputEditor
+            .edit(editBuilder => {
+              editBuilder.insert(
+                position,
+                position.character === 0 ? jsonData + '' : os.EOL + jsonData
+              );
+            })
+            .catch(err => {
+              console.error(err);
+            });
+        }
+        return null;
+      } else {
+        return openTextDocument(result + '', 'json');
+      }
+    })
+    .then(doc => {
+      if (doc) {
+        let viewColumn = editorWrapper.editor.viewColumn + 1;
+        if (editorWrapper.outputEditor) {
+          viewColumn = editorWrapper.outputEditor.viewColumn;
+        }
+        return vscode.window.showTextDocument(doc, viewColumn);
+      }
+    })
+    .then(editor => {
+      if (editor) {
+        connectOutputEditor(editorWrapper, editor);
+      }
+    })
+    .catch(err => {
+      console.error(err);
+    });
 };
 
 const registerCommands = () => {

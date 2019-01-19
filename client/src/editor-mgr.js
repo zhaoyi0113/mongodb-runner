@@ -11,9 +11,7 @@ class EditorWrapper {
 }
 
 const pushEditor = (editor, uuid, dbName) => {
-  let editorwraper = editors.find(
-    editor => editor.uuid === uuid && editor.dbName === dbName
-  );
+  let editorwraper = editors.find(e => e.id === editor.id);
   if (editorwraper) {
     return editorwraper;
   }
@@ -24,9 +22,18 @@ const pushEditor = (editor, uuid, dbName) => {
 
 const getActivateEditorWrapper = () => {
   const activateEditor = vscode.window.activeTextEditor;
-  return editors.find(
-    wrapper => wrapper.editor._id === activateEditor._id
-  );
+  return editors.find(wrapper => wrapper.editor.id === activateEditor.id);
 };
 
-module.exports = { pushEditor, getActivateEditorWrapper };
+const connectOutputEditor = (wrapper, outputEditor) => {
+  wrapper.outputEditor = outputEditor;
+};
+
+const disconnectOutputEditor = wrapper => (wrapper.outputEditor = null);
+
+module.exports = {
+  pushEditor,
+  getActivateEditorWrapper,
+  connectOutputEditor,
+  disconnectOutputEditor
+};
