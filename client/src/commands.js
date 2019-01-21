@@ -258,7 +258,7 @@ const runCommand = (uuid, command, dbName) => {
  * TODO: whether need to select different server
  * @param {*} event
  */
-const runCommandOnConnection = event => {
+const executeCommand = event => {
   const configs = getAllConnectionConfigs();
   if (!configs || configs.length === 0) {
     return;
@@ -378,8 +378,8 @@ const registerCommands = () => {
   vscode.commands.registerCommand('mongoRunner.testRunCmd', runCommand);
 
   vscode.commands.registerCommand(
-    'mongoRunner.selectRunConnection',
-    runCommandOnConnection
+    'mongoRunner.executeCommand',
+    executeCommand
   );
 };
 

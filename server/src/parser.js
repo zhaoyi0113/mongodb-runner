@@ -29,7 +29,7 @@ const generateCommand = expression => {
 const whetherDBCOmmand = exp => {
   const match = escodegen.generate(exp).match(/^db/);
   return match;
-}
+};
 
 const parseCallExpression = callExps => {
   return callExps
@@ -40,7 +40,7 @@ const parseCallExpression = callExps => {
 
 const parseDocument = txt => {
   try {
-    const ast = esprima.parseScript(txt);
+    const ast = esprima.parseScript(txt, { range: true, loc: true });
     const callExps = getAllCallExpressions(ast.body);
     return parseCallExpression(callExps);
   } catch (err) {

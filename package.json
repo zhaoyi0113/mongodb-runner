@@ -175,8 +175,8 @@
         "title": "Test Run Cmd"
       },
       {
-        "command": "mongoRunner.selectRunConnection",
-        "title": "Select Connection"
+        "command": "mongoRunner.executeCommand",
+        "title": "Execute Command"
       }
     ],
     "menus": {

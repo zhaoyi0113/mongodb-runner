@@ -44,23 +44,24 @@ connection.onRequest(
     const text = documents.get(event.textDocument.uri).getText();
     const parsed = parseDocument(text);
     console.log('parsed:', parsed);
-    return [
-      {
-        command: {
-          command: 'mongoRunner.selectRunConnection',
-          title: 'run',
-          tooltip: 'tooltip',
-          arguments: [text]
-        },
-        isResolved: true,
-        range: {
-          start: { line: 1 },
-          end: { line: 1 },
-          isSingleLine: true,
-          isEmpty: false
-        }
-      }
-    ];
+    return parsed;
+    // return [
+    //   {
+    //     command: {
+    //       command: 'mongoRunner.selectRunConnection',
+    //       title: 'run',
+    //       tooltip: 'tooltip',
+    //       arguments: [text]
+    //     },
+    //     isResolved: true,
+    //     range: {
+    //       start: { line: 1 },
+    //       end: { line: 1 },
+    //       isSingleLine: true,
+    //       isEmpty: false
+    //     }
+    //   }
+    // ];
   }
 );
 

@@ -9,5 +9,7 @@ describe('parser test suite', () => {
     expect(parsed).not.toBeUndefined();
     expect(parsed.length).toBe(1);
     expect(parsed[0].command.command).toBe(CommandType.execution);
+    expect(parsed[0].range.start.line).toBe(0);
+    expect(parsed[0].range.end.line).toBe(0);
   });
 });
