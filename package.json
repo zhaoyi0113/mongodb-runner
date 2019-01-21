@@ -321,7 +321,9 @@
   "scripts": {
     "postinstall": "node ./node_modules/vscode/bin/install",
     "vscode:test": "node ./node_modules/vscode/bin/test",
-    "test": "cd client && yarn test",
+    "test:client": "cd client && yarn test",
+    "test:server": "cd server && yarn test",
+    "test": "npm run test:client && npm run test:server",
     "publish": "vsce publish",
     "login": "vsce login JoeyYiZhao",
     "package": "vsce package"
