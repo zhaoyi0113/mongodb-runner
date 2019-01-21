@@ -9,7 +9,7 @@ const MethodType = {
 };
 
 const CommandType = {
-  execution: 'mongoRunner.selectRunConnection',
+  execution: 'mongoRunner.executeCommand',
 };
 
 const createCommand = (methodType, ast, script) => {
