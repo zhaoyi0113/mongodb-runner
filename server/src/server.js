@@ -12,6 +12,7 @@ const {
   TextDocumentPositionParams,
   RequestType
 } = require('vscode-languageserver');
+const { parseDocument } = require('./parser');
 
 const connection = createConnection(ProposedFeatures.all);
 const documents = new TextDocuments();
@@ -39,9 +40,10 @@ connection.onDidChangeWatchedFiles(change => {
 connection.onRequest(
   new RequestType('textDocument/codeLens'),
   (event, token) => {
-    console.log('code lens:', event.textDocument, token);
     const { textDocument } = event;
     const text = documents.get(event.textDocument.uri).getText();
+    const parsed = parseDocument(text);
+    console.log('parsed:', parsed);
     return [
       {
         command: {

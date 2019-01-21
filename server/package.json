@@ -4,12 +4,16 @@
   "description": "MongoDB Runner Server",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest test/"
   },
   "author": "Joey Yi Zhao",
   "license": "MIT",
   "dependencies": {
+    "escodegen": "^1.11.0",
     "esprima": "^4.0.1",
     "vscode-languageserver": "^5.0.3"
+  },
+  "devDependencies": {
+    "jest": "^23.6.0"
   }
 }

@@ -8,8 +8,11 @@
         {
             "type": "node",
             "request": "attach",
-            "name": "Attach by Process ID",
-            "processId": "${command:PickProcess}"
+            "name": "Attach to Server",
+            "address": "localhost",
+            "port": 6009,
+            "localRoot": "${workspaceFolder}",
+            "remoteRoot": "Absolute path to the remote directory containing the program"
         },
         {
             "name": "Extension",

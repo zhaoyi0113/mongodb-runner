@@ -294,6 +294,7 @@ const runCommandOnConnection = event => {
         ) {
           // the editor is not shown
           return openTextDocument(jsonData + '', 'json');
+          // outputEditor.show();
         } else {
           editorWrapper.outputEditor
             .edit(editBuilder => {
@@ -301,9 +302,6 @@ const runCommandOnConnection = event => {
                 position,
                 position.character === 0 ? jsonData + '' : os.EOL + jsonData
               );
-            })
-            .catch(err => {
-              console.error(err);
             });
         }
         return null;
