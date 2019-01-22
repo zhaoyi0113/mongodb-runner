@@ -266,10 +266,6 @@
         }
       ],
       "editor/context": [
-        {
-          "command": "mongoRunner.testRunCmd",
-          "when": "resourceLangId == mongodbRunner"
-        }
       ]
     },
     "configuration": [

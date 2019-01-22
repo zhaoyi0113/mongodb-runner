@@ -34,7 +34,6 @@ const getAllCallExpressionsFromBody = body => {
           expressionStatement.expression &&
           expressionStatement.expression.type === esprima.Syntax.CallExpression
         ) {
-          // getCallExpression(expressionStatement, accumulate);
           accumulate.push(expressionStatement);
         }
         break;

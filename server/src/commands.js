@@ -13,7 +13,7 @@ const CommandType = {
   execution: 'mongoRunner.executeCommand',
   queryPlanner: 'mongoRunner.queryPlanner',
   executionStats: 'mongoRunner.executionStats',
-  allPlansExecution: 'mongoRunner.allPlansExecution'
+  allPlansExecution: 'mongoRunner.allPlansExecution',
 };
 
 const getExplanMethodType = calls => {
@@ -49,18 +49,25 @@ const getExplanMethodType = calls => {
       ast: calls[0]
     };
   }
-  if (calls.find(call => call.callee.property.name === MethodType.distinct)) {
-    return {
-      type: MethodType.distinct,
-      ast: calls[0]
-    };
+  // if (calls.find(call => call.callee.property.name === MethodType.distinct)) {
+  //   return {
+  //     type: MethodType.distinct,
+  //     ast: calls[0]
+  //   };
+  // }
+  // if (calls.find(call => call.callee.property.name === MethodType.group)) {
+  //   return {
+  //     type: MethodType.group,
+  //     ast: calls[0]
+  //   };
+  // }
+};
+
+const whetherSupportCount = methodCalls => {
+  if (methodCalls && methodCalls.length > 0) {
+    return methodCalls[0].callee.property.name === MethodType.find;
   }
-  if (calls.find(call => call.callee.property.name === MethodType.group)) {
-    return {
-      type: MethodType.group,
-      ast: calls[0]
-    };
-  }
+  return false;
 };
 
 const whetherDBCommand = exp => {
@@ -100,6 +107,11 @@ const createCommand = (ast, calls) => {
         'Query Planner',
         `${source}.explain()`
       )
+    );
+  }
+  if (whetherSupportCount(calls)) {
+    commands.push(
+      getBasicCmd(CommandType.execution, 'Count', 'Count', `${source}.count()`)
     );
   }
   return commands;
