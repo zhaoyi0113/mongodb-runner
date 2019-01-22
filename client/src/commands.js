@@ -257,6 +257,64 @@ const runCommand = (uuid, command, dbName) => {
   });
 };
 
+const showResult = (originCmd, result, editorWrapper) => {
+  let jsonData;
+  let prom;
+  try {
+    jsonData = JSON.stringify(result, null, 4);
+  } catch (err) {}
+  if (!jsonData) {
+    jsonData = result;
+  }
+  const output = `mongoRunner> ${originCmd}${os.EOL}${jsonData}`;
+  if (editorWrapper.outputEditor) {
+    // append output on exsited editor
+    const { outputEditor } = editorWrapper;
+    const lastLine = editorWrapper.outputEditor.document.lineAt(
+      outputEditor.document.lineCount - 1
+    );
+    const position = new vscode.Position(
+      lastLine.lineNumber,
+      lastLine.range.end.character
+    );
+    console.log('visible editors:', vscode.window.visibleTextEditors);
+    if (
+      !vscode.window.visibleTextEditors.find(
+        editor => editor.id === outputEditor.id
+      )
+    ) {
+      // the editor is not shown
+      prom = openTextDocument(output + '', 'json');
+    } else {
+      editorWrapper.outputEditor.edit(editBuilder => {
+        editBuilder.insert(
+          position,
+          position.character === 0 ? output + '' : os.EOL + output
+        );
+      });
+    }
+  } else {
+    // there is no editor output
+    prom = openTextDocument(result + '', 'json');
+  }
+  if (!prom || !prom.then) return;
+  prom
+    .then(doc => {
+      if (doc) {
+        let viewColumn = editorWrapper.editor.viewColumn + 1;
+        if (editorWrapper.outputEditor) {
+          viewColumn = editorWrapper.outputEditor.viewColumn;
+        }
+        return vscode.window.showTextDocument(doc, viewColumn);
+      }
+    })
+    .then(editor => {
+      if (editor) {
+        connectOutputEditor(editorWrapper, editor);
+      }
+    });
+};
+
 /**
  * The command is triggered by code lens.
  * TODO: whether need to select different server
@@ -273,61 +331,11 @@ const executeCommand = event => {
   }
   runCommand(editorWrapper.uuid, event, editorWrapper.dbName)
     .then(result => {
-      let jsonData;
-      try {
-        jsonData = JSON.stringify(result, null, 4);
-      } catch (err) {}
-      if (!jsonData) {
-        jsonData = result;
-      }
-      if (editorWrapper.outputEditor) {
-        // append output on exsited editor
-        const { outputEditor } = editorWrapper;
-        const lastLine = editorWrapper.outputEditor.document.lineAt(
-          outputEditor.document.lineCount - 1
-        );
-        const position = new vscode.Position(
-          lastLine.lineNumber,
-          lastLine.range.end.character
-        );
-        console.log('visible editors:', vscode.window.visibleTextEditors);
-        if (
-          !vscode.window.visibleTextEditors.find(
-            editor => editor.id === outputEditor.id
-          )
-        ) {
-          // the editor is not shown
-          return openTextDocument(jsonData + '', 'json');
-          // outputEditor.show();
-        } else {
-          editorWrapper.outputEditor.edit(editBuilder => {
-            editBuilder.insert(
-              position,
-              position.character === 0 ? jsonData + '' : os.EOL + jsonData
-            );
-          });
-        }
-        return null;
-      } else {
-        return openTextDocument(result + '', 'json');
-      }
-    })
-    .then(doc => {
-      if (doc) {
-        let viewColumn = editorWrapper.editor.viewColumn + 1;
-        if (editorWrapper.outputEditor) {
-          viewColumn = editorWrapper.outputEditor.viewColumn;
-        }
-        return vscode.window.showTextDocument(doc, viewColumn);
-      }
-    })
-    .then(editor => {
-      if (editor) {
-        connectOutputEditor(editorWrapper, editor);
-      }
+      showResult(event, result, editorWrapper);
     })
     .catch(err => {
       console.error(err);
+      showResult(event, err.message, editorWrapper);
     });
 };
 
@@ -373,10 +381,7 @@ const registerCommands = () => {
   vscode.commands.registerCommand('mongoRunner.deleteIndex', deleteIndex);
 
   // test launge server
-  vscode.commands.registerCommand(
-    'mongoRunner.launchEditor',
-    launchMREditor
-  );
+  vscode.commands.registerCommand('mongoRunner.launchEditor', launchMREditor);
 
   vscode.commands.registerCommand('mongoRunner.executeCommand', executeCommand);
   vscode.commands.registerCommand('mongoRunner.queryPlanner', executeCommand);
