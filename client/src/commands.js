@@ -184,7 +184,12 @@ const deleteIndex = e => {
   console.log('deleteIndex:', e);
   getMongoInspector(e.uuid)
     .deleteIndex(e.dbName, e.colName, e.name)
-    .then(() => eventDispatcher.emit(EventType.Refresh))
+    .then(() => {
+      const config = getConnectionConfig(e.uuid);
+        if(config) {
+          refreshConnection(config);
+        }
+    })
     .catch(err => vscode.window.showErrorMessage(err));
 };
 

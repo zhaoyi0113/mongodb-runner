@@ -91,7 +91,8 @@ class MongoTreeProvider {
           children: element.indexes,
           type: TreeNodeTypes.INDEXES,
           dbName: element.indexes[0].dbName,
-          colName: element.indexes[0].colName
+          colName: element.indexes[0].colName,
+          uuid: element.uuid,
         });
       }
       if (element.attributes && element.attributes.length > 0) {
