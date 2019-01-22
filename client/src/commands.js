@@ -202,13 +202,11 @@ const refreshConnection = e => {
 };
 
 const refreshAllConnections = () => {
-  const config = getMongoConfiguration();
   const treeData = global.treeExplorer.provider.treeData;
-  console.log('config:', config, 'treeData:', treeData);
   if (treeData) {
     treeData.forEach((data) => {
       if (data.status === ConnectStatus.CONNECTED) {
-        refreshConnection(data);
+        refreshConnectionUUID(data.uuid);
       }
     });
   }

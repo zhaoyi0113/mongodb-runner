@@ -126,6 +126,7 @@ class MongoTreeProvider {
         data.children = conn.tree;
         data.driver = conn.driver;
         data.type = `host:${ConnectStatus.CONNECTED}`;
+        data.status = ConnectStatus.CONNECTED;
       }
     });
     this._onDidChangeTreeData.fire();
@@ -136,6 +137,7 @@ class MongoTreeProvider {
       if(data.uuid === uuid) {
         data.type = `host:${ConnectStatus.CLOSED}`;
         data.children = null;
+        data.status = ConnectStatus.CLOSED;
       }
       return data;
     });
