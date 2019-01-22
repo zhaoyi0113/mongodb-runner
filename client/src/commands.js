@@ -112,9 +112,7 @@ const deleteDatabase = e => {
 const deleteCollection = e => {
   getMongoInspector(e.uuid)
     .deleteCollection(e.dbName, e.colName)
-    .then(() => 
-      refreshConnectionUUID(e.uuid)
-    )
+    .then(() => refreshConnectionUUID(e.uuid))
     .catch(err => vscode.window.showErrorMessage(err));
 };
 
@@ -216,12 +214,12 @@ const deleteIndex = e => {
     .catch(err => vscode.window.showErrorMessage(err));
 };
 
-const refreshConnectionUUID = (uuid) => {
+const refreshConnectionUUID = uuid => {
   const config = getConnectionConfig(uuid);
-        if(config) {
-          refreshConnection(config);
-        }
-}
+  if (config) {
+    refreshConnection(config);
+  }
+};
 
 const refreshConnection = e => {
   console.log('refresh ', e);
@@ -302,13 +300,12 @@ const executeCommand = event => {
           return openTextDocument(jsonData + '', 'json');
           // outputEditor.show();
         } else {
-          editorWrapper.outputEditor
-            .edit(editBuilder => {
-              editBuilder.insert(
-                position,
-                position.character === 0 ? jsonData + '' : os.EOL + jsonData
-              );
-            });
+          editorWrapper.outputEditor.edit(editBuilder => {
+            editBuilder.insert(
+              position,
+              position.character === 0 ? jsonData + '' : os.EOL + jsonData
+            );
+          });
         }
         return null;
       } else {
@@ -383,10 +380,7 @@ const registerCommands = () => {
 
   vscode.commands.registerCommand('mongoRunner.testRunCmd', runCommand);
 
-  vscode.commands.registerCommand(
-    'mongoRunner.executeCommand',
-    executeCommand
-  );
+  vscode.commands.registerCommand('mongoRunner.executeCommand', executeCommand);
 };
 
 module.exports = {
