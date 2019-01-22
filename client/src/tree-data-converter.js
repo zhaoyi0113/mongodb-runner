@@ -41,6 +41,7 @@ const convertDatabaseChildren = (dbChildren, uuid) => {
           col.indexes = col.indexes.map(index => {
             index.dbName = db.name;
             index.colName = col.name;
+            index.uuid = uuid;
             return index;
           });
         }

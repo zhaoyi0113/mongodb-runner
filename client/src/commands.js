@@ -105,14 +105,16 @@ const serverBuildInfoHandler = e => {
 const deleteDatabase = e => {
   getMongoInspector(e.uuid)
     .deleteDatabase(e.dbName)
-    .then(() => eventDispatcher.emit(EventType.Refresh))
+    .then(() => refreshConnectionUUID(e.uuid))
     .catch(err => vscode.window.showErrorMessage(err));
 };
 
 const deleteCollection = e => {
   getMongoInspector(e.uuid)
     .deleteCollection(e.dbName, e.colName)
-    .then(() => eventDispatcher.emit(EventType.Refresh))
+    .then(() => 
+      refreshConnectionUUID(e.uuid)
+    )
     .catch(err => vscode.window.showErrorMessage(err));
 };
 
@@ -151,10 +153,7 @@ const createIndex = e => {
     .then(ret => {
       if (ret) {
         vscode.window.showInformationMessage('Create index: ' + ret);
-        const config = getConnectionConfig(e.uuid);
-        if (config) {
-          refreshConnection(config);
-        }
+        refreshConnectionUUID(e.uuid);
       }
     });
 };
@@ -211,9 +210,18 @@ const deleteIndex = e => {
   console.log('deleteIndex:', e);
   getMongoInspector(e.uuid)
     .deleteIndex(e.dbName, e.colName, e.name)
-    .then(() => eventDispatcher.emit(EventType.Refresh))
+    .then(() => {
+      refreshConnectionUUID(e.uuid);
+    })
     .catch(err => vscode.window.showErrorMessage(err));
 };
+
+const refreshConnectionUUID = (uuid) => {
+  const config = getConnectionConfig(uuid);
+        if(config) {
+          refreshConnection(config);
+        }
+}
 
 const refreshConnection = e => {
   console.log('refresh ', e);
@@ -221,13 +229,11 @@ const refreshConnection = e => {
 };
 
 const refreshAllConnections = () => {
-  const config = getMongoConfiguration();
   const treeData = global.treeExplorer.provider.treeData;
-  console.log('config:', config, 'treeData:', treeData);
   if (treeData) {
     treeData.forEach(data => {
       if (data.status === ConnectStatus.CONNECTED) {
-        refreshConnection(data);
+        refreshConnectionUUID(data.uuid);
       }
     });
   }
