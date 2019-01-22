@@ -381,6 +381,7 @@ const registerCommands = () => {
   vscode.commands.registerCommand('mongoRunner.testRunCmd', runCommand);
 
   vscode.commands.registerCommand('mongoRunner.executeCommand', executeCommand);
+  vscode.commands.registerCommand('mongoRunner.queryPlanner', executeCommand);
 };
 
 module.exports = {

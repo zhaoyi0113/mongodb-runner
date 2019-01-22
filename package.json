@@ -177,6 +177,18 @@
       {
         "command": "mongoRunner.executeCommand",
         "title": "Execute Command"
+      },
+      {
+        "command": "mongoRunner.queryPlanner",
+        "title": "Query Planner"
+      },
+      {
+        "command": "mongoRunner.executionStats",
+        "title": "executionStats"
+      },
+      {
+        "command": "mongoRunner.allPlansExecution",
+        "title": "allPlansExecution"
       }
     ],
     "menus": {
