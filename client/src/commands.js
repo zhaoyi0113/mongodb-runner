@@ -156,9 +156,9 @@ const createIndex = e => {
     });
 };
 
-const testLanguageServer = event => {
+const launchMREditor = event => {
   return openMongoRunnerEditor(
-    'db.collection("test").count()',
+    `db.collection("${event.colName}").count()`,
     event.uuid,
     event.dbName
   );
@@ -374,11 +374,9 @@ const registerCommands = () => {
 
   // test launge server
   vscode.commands.registerCommand(
-    'mongoRunner.testLanguageServer',
-    testLanguageServer
+    'mongoRunner.launchEditor',
+    launchMREditor
   );
-
-  vscode.commands.registerCommand('mongoRunner.testRunCmd', runCommand);
 
   vscode.commands.registerCommand('mongoRunner.executeCommand', executeCommand);
   vscode.commands.registerCommand('mongoRunner.queryPlanner', executeCommand);

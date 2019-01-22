@@ -167,12 +167,8 @@
         "title": "Delete Index"
       },
       {
-        "command": "mongoRunner.testLanguageServer",
-        "title": "Test Language Server"
-      },
-      {
-        "command": "mongoRunner.testRunCmd",
-        "title": "Test Run Cmd"
+        "command": "mongoRunner.launchEditor",
+        "title": "MongoRunner Editor"
       },
       {
         "command": "mongoRunner.executeCommand",
@@ -226,12 +222,8 @@
           "when": "viewItem == database"
         },
         {
-          "command": "mongoRunner.testLanguageServer",
-          "when": "viewItem == database"
-        },
-        {
-          "command": "mongoRunner.testRunCmd",
-          "when": "viewItem == database"
+          "command": "mongoRunner.launchEditor",
+          "when": "viewItem == collection"
         },
         {
           "command": "mongoRunner.deleteCollection",
