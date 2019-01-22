@@ -1,5 +1,4 @@
 const esprima = require('esprima');
-const escodegen = require('escodegen');
 const {createCommand, whetherDBCommand} = require('./commands');
 
 const getCallExpression = (ast, callExps = []) => {

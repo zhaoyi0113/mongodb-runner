@@ -8,13 +8,11 @@ describe('parser test suite', () => {
     const parsed = parseDocument('db.test.find()');
     expect(parsed).not.toBeNull();
     expect(parsed).not.toBeUndefined();
-    expect(parsed.length).toBe(4);
+    expect(parsed.length).toBe(2);
     expect(parsed[0].command.command).toBe(CommandType.execution);
     expect(parsed[0].range.start.line).toBe(0);
     expect(parsed[0].range.end.line).toBe(0);
     expect(parsed[1].command.command).toBe(CommandType.queryPlanner);
-    expect(parsed[2].command.command).toBe(CommandType.executionStats);
-    expect(parsed[3].command.command).toBe(CommandType.allPlansExecution);
   });
 
   test('test getAllCallExpressionsFromBody for find', () => {

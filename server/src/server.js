@@ -77,10 +77,10 @@ documents.onDidChangeContent(change => {
     },
     message: ' this is a demo'
   };
-  connection.sendDiagnostics({
-    uri: change.document.uri,
-    diagnostics: [diagnostic]
-  });
+  // connection.sendDiagnostics({
+  //   uri: change.document.uri,
+  //   diagnostics: [diagnostic]
+  // });
 });
 
 documents.onDidClose(event => {

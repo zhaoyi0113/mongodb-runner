@@ -44,7 +44,7 @@ const openMongoRunnerEditor = (text, uuid, dbName) => {
       wrapper = pushEditor(editor, uuid, dbName);
       viewColumn = editor.viewColumn + 1;
       // open output document
-      return openTextDocument('', 'json');
+      return openTextDocument('', 'jsonc');
     })
     .then(doc => vscode.window.showTextDocument(doc, viewColumn))
     .then(editor => connectOutputEditor(wrapper, editor));
@@ -266,7 +266,7 @@ const showResult = (originCmd, result, editorWrapper) => {
   if (!jsonData) {
     jsonData = result;
   }
-  const output = `mongoRunner> ${originCmd}${os.EOL}${jsonData}`;
+  const output = `// mongoRunner> ${originCmd}${os.EOL}${jsonData}`;
   if (editorWrapper.outputEditor) {
     // append output on exsited editor
     const { outputEditor } = editorWrapper;
@@ -284,7 +284,7 @@ const showResult = (originCmd, result, editorWrapper) => {
       )
     ) {
       // the editor is not shown
-      prom = openTextDocument(output + '', 'json');
+      prom = openTextDocument(output + '', 'jsonc');
     } else {
       editorWrapper.outputEditor.edit(editBuilder => {
         editBuilder.insert(
@@ -295,7 +295,7 @@ const showResult = (originCmd, result, editorWrapper) => {
     }
   } else {
     // there is no editor output
-    prom = openTextDocument(result + '', 'json');
+    prom = openTextDocument(result + '', 'jsonc');
   }
   if (!prom || !prom.then) return;
   prom
