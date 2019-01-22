@@ -25,7 +25,7 @@ const createCommand = (methodType, ast, script) => {
           command: CommandType.execution,
           title: 'Execution',
           tooltip: 'Execution',
-          arguments: [escodegen.generate(ast)]
+          arguments: [script],
         },
         isResolved: true,
         range: {
