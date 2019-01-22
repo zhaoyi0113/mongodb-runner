@@ -96,28 +96,13 @@ Update plugin icon.
 Support all mongodb connection options.
 Update replicatset tree icon.
 
-### 0.0.6
+### 0.0.10 - 0.0.18
 
-Enable private key connection
-Enable setting password in the configuration
-
-### 0.0.7
-
-Fix configuration schema warning errors
-
-### 0.0.8
-
-Add support for query ObjectID
-
-### 0.0.9
-
-Add refresh button
-
-### 0.0.10 - 0.0.12
-
-Support manually input database password
-Order menu items
-
-### 0.0.17
-
-Support loading mutiple MongoDB connections
+- Enable private key connection
+- Enable setting password in the configuration
+- Fix configuration schema warning errors
+- Add support for query ObjectID
+- Add refresh button
+- Support manually input database password
+- Order menu items
+- Support loading mutiple MongoDB connections
