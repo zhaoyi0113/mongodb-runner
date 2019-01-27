@@ -56,7 +56,7 @@ describe('parser test suite', () => {
 
     parsed = parseDocument('db.test.find({limit: 10}).toArray()');
     executeCmd = parsed.find(p => p.command.command === CommandType.execution);
-    expect(executeCmd.command.arguments[0]).toBe('db.test.find({limit:10}).toArray()');
+    expect(executeCmd.command.arguments[0]).toBe('db.test.find({ limit: 10 }).toArray()');
   });
 
   test('test getCallExpression for find', () => {
