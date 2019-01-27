@@ -5,23 +5,24 @@ const getCallExpression = (ast, callExps = []) => {
   if (!ast) return;
   switch (ast.type) {
     case esprima.Syntax.CallExpression:
+      callExps.push(ast);
       if (ast.callee && ast.callee.type === esprima.Syntax.MemberExpression) {
         getCallExpression(ast.callee, callExps);
       }
       break;
     case esprima.Syntax.MemberExpression:
       if (ast.object && ast.object.type === esprima.Syntax.CallExpression) {
+        ast.object.parent = ast;
         callExps.push(ast.object);
         getCallExpression(ast.object.callee, callExps);
       }
       break;
-
-    case esprima.Syntax.ExpressionStatement:
-      if (ast.expression && ast.expression.type === esprima.Syntax.CallExpression) {
-        callExps.push(ast.expression);
-        getCallExpression(ast.expression, callExps);
-      }
-      break;
+    // case esprima.Syntax.ExpressionStatement:
+    //   if (ast.expression && ast.expression.type === esprima.Syntax.CallExpression) {
+    //     callExps.push(ast.expression);
+    //     getCallExpression(ast.expression, callExps);
+    //   }
+    //   break;
   }
 };
 
@@ -34,7 +35,8 @@ const getAllCallExpressionsFromBody = body => {
           expressionStatement.expression &&
           expressionStatement.expression.type === esprima.Syntax.CallExpression
         ) {
-          accumulate.push(expressionStatement);
+          expressionStatement.expression.parent = expressionStatement;
+          accumulate.push(expressionStatement.expression);
         }
         break;
     }

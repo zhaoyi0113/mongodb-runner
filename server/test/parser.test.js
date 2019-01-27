@@ -17,23 +17,55 @@ describe('parser test suite', () => {
     expect(parsed[2].command.arguments[0].indexOf('count()') > 0).toBeTruthy();
   });
 
-  test('test getAllCallExpressionsFromBody for find', () => {
+  test('test find add limit and toArray method', () => {
+    const parsed = parseDocument('db.test.find()');
+    const executeCmd = parsed.find(p => p.command.command === CommandType.execution);
+    expect(executeCmd).not.toBeNull();
+    expect(executeCmd.command.arguments[0]).toBe('db.test.find().limit(20).toArray()');
+  });
+
+  test('test find add toArray method', () => {
+    let parsed = parseDocument('db.test.find({limit: 30})');
+    let executeCmd = parsed.find(p => p.command.command === CommandType.execution);
+    expect(executeCmd).not.toBeNull();
+    expect(executeCmd.command.arguments[0]).toBe('db.test.find({ limit: 30 }).toArray()');
+
+    parsed = parseDocument('db.test.find().limit(30)');
+    executeCmd = parsed.find(p => p.command.command === CommandType.execution);
+    expect(executeCmd).not.toBeNull();
+    expect(executeCmd.command.arguments[0]).toBe('db.test.find().limit(30).toArray()');
+  });
+
+  test('test find all limit method', () => {
+    let parsed = parseDocument('db.test.find()');
+    let executeCmd = parsed.find(p => p.command.command === CommandType.execution);
+    expect(executeCmd.command.arguments[0]).toBe('db.test.find().limit(20).toArray()');
+  });
+
+  test('test find not add toArray method', () => {
+    const parsed = parseDocument('db.test.find({limit: 10}).toArray()');
+    const executeCmd = parsed.find(p => p.command.command === CommandType.execution);
+    expect(executeCmd).not.toBeNull();
+    expect(executeCmd.command.arguments[0]).toBe('db.test.find({ limit: 10 }).toArray()');
+  });
+
+  test('test getCallExpression for find', () => {
     let ast = esprima.parseScript('db.test.find()', {range: true, loc: true});
     let calls = [];
-    getCallExpression(ast.body[0], calls);
+    getCallExpression(ast.body[0].expression, calls);
     expect(calls).not.toBe(null);
     expect(calls.length).toBe(1);
 
     ast = esprima.parseScript('db.test.find({a: true})', {range: true, loc: true});
     calls = [];
-    getCallExpression(ast.body[0], calls);
+    getCallExpression(ast.body[0].expression, calls);
     expect(calls).not.toBe(null);
     expect(calls.length).toBe(1);
     expect(calls[0].callee.property.name).toBe('find');
 
     ast = esprima.parseScript('db.test.find({a: true}).toArray()', {range: true, loc: true});
     calls = [];
-    getCallExpression(ast.body[0], calls);
+    getCallExpression(ast.body[0].expression, calls);
     expect(calls).not.toBe(null);
     expect(calls.length).toBe(2);
     expect(calls[0].callee.property.name).toBe('toArray');
@@ -41,11 +73,12 @@ describe('parser test suite', () => {
 
     ast = esprima.parseScript('db.test.find({a: true, b: {$ne: ""}}).limit(20).sort({})', {range: true, loc: true});
     calls = [];
-    getCallExpression(ast.body[0], calls);
+    getCallExpression(ast.body[0].expression, calls);
     expect(calls).not.toBe(null);
     expect(calls.length).toBe(3);
     expect(calls[0].callee.property.name).toBe('sort');
     expect(calls[1].callee.property.name).toBe('limit');
     expect(calls[2].callee.property.name).toBe('find');
+
   });
 });

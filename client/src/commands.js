@@ -266,7 +266,7 @@ const showResult = (originCmd, result, editorWrapper) => {
   if (!jsonData) {
     jsonData = result;
   }
-  const output = `// mongoRunner> ${originCmd}${os.EOL}${jsonData}`;
+  const output = `// MongoRunner> ${originCmd}${os.EOL}${jsonData}`;
   if (editorWrapper.outputEditor) {
     // append output on exsited editor
     const { outputEditor } = editorWrapper;
@@ -295,7 +295,7 @@ const showResult = (originCmd, result, editorWrapper) => {
     }
   } else {
     // there is no editor output
-    prom = openTextDocument(result + '', 'jsonc');
+    prom = openTextDocument(output+ '', 'jsonc');
   }
   if (!prom || !prom.then) return;
   prom
