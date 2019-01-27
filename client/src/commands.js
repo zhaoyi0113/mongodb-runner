@@ -10,7 +10,7 @@ const {
 } = require('./connection');
 const { eventDispatcher, EventType } = require('./event-dispatcher');
 const { convertToTreeData } = require('./tree-data-converter');
-const { getMongoConfiguration } = require('./config');
+const { editorComments } = require('./license');
 const {
   pushEditor,
   getActivateEditorWrapper,
@@ -159,7 +159,7 @@ const createIndex = e => {
 const launchMREditor = event => {
   const colName = event.colName ? event.colName : '$COLLECTION_NAME';
   return openMongoRunnerEditor(
-    `db.collection("${colName}").count()`,
+    `${editorComments}${os.EOL}db.collection("${colName}").find()`,
     event.uuid,
     event.dbName
   );
