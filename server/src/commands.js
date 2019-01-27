@@ -107,6 +107,16 @@ const attachAdditionalToFind = (methodCalls, source) => {
     const toArray = findCallMethodName(methodCalls, 'toArray');
     const hasToArray = toArray !== undefined;
     const lastCall = methodCalls[0]; //findCallMethodName(methodCalls, 'find');
+    let prevToArrayIdx = -1;
+    methodCalls.forEach((method, i) => {
+      if (method.callee.property.name === 'toArray') {
+        prevToArrayIdx = i + 1;
+      }
+    });
+    let prevToArrayCall;
+    if (prevToArrayIdx >= 0 && prevToArrayIdx < methodCalls.length) {
+      prevToArrayCall = methodCalls[prevToArrayIdx];
+    }
     if (!hasLimit && !hasToArray) {
       newSource += `.limit(${DEFAULT_LIMIT}).toArray()`;
     } else {
@@ -117,11 +127,12 @@ const attachAdditionalToFind = (methodCalls, source) => {
             type: esprima.Syntax.Literal,
             value: DEFAULT_LIMIT,
             row: `${DEFAULT_LIMIT}`,
-          }]
-          if (parent.type === esprima.Syntax.ExpressionStatement) {
-            parent.expression = insertMethod(parent.expression, 'limit', limitArgument);
+          }];
+          const inserted = prevToArrayCall ? prevToArrayCall.parent : parent;
+          if (inserted.type === esprima.Syntax.ExpressionStatement) {
+            inserted.expression = insertMethod(inserted.expression, 'limit', limitArgument);
           } else {
-            parent.expression = insertMethod(parent.object, 'limit', limitArgument);
+            inserted.object = insertMethod(inserted.object, 'limit', limitArgument);
           }
         }
         if (!hasToArray) {
