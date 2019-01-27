@@ -18,10 +18,15 @@ describe('parser test suite', () => {
   });
 
   test('test find add limit and toArray method', () => {
-    const parsed = parseDocument('db.test.find()');
-    const executeCmd = parsed.find(p => p.command.command === CommandType.execution);
+    let parsed = parseDocument('db.test.find()');
+    let executeCmd = parsed.find(p => p.command.command === CommandType.execution);
     expect(executeCmd).not.toBeNull();
     expect(executeCmd.command.arguments[0]).toBe('db.test.find().limit(20).toArray()');
+
+    parsed = parseDocument('db.collection("test").find()');
+    executeCmd = parsed.find(p => p.command.command === CommandType.execution);
+    expect(executeCmd).not.toBeNull();
+    expect(executeCmd.command.arguments[0]).toBe('db.collection(\'test\').find().limit(20).toArray()');
   });
 
   test('test find add toArray method', () => {
@@ -35,10 +40,15 @@ describe('parser test suite', () => {
     expect(executeCmd).not.toBeNull();
     expect(executeCmd.command.arguments[0]).toBe('db.test.find().limit(30).toArray()');
 
-    parsed = parseDocument('db.test.find({limit: 10}).toArray()');
+    parsed = parseDocument('db.collection("test").find({limit: 10}).toArray()');
     executeCmd = parsed.find(p => p.command.command === CommandType.execution);
     expect(executeCmd).not.toBeNull();
-    expect(executeCmd.command.arguments[0]).toBe('db.test.find({ limit: 10 }).toArray()');
+    expect(executeCmd.command.arguments[0]).toBe('db.collection(\'test\').find({ limit: 10 }).toArray()');
+
+    parsed = parseDocument('db.collection("test").find({limit: 10}).toArray()');
+    executeCmd = parsed.find(p => p.command.command === CommandType.execution);
+    expect(executeCmd).not.toBeNull();
+    expect(executeCmd.command.arguments[0]).toBe('db.collection(\'test\').find({ limit: 10 }).toArray()');
   });
 
   test('test find add limit method', () => {
@@ -57,6 +67,14 @@ describe('parser test suite', () => {
     parsed = parseDocument('db.test.find({limit: 10}).toArray()');
     executeCmd = parsed.find(p => p.command.command === CommandType.execution);
     expect(executeCmd.command.arguments[0]).toBe('db.test.find({ limit: 10 }).toArray()');
+
+    parsed = parseDocument('db.collection("test").find().limit(10).toArray()');
+    executeCmd = parsed.find(p => p.command.command === CommandType.execution);
+    expect(executeCmd.command.arguments[0]).toBe('db.collection(\'test\').find().limit(10).toArray()');
+
+    parsed = parseDocument('db.collection("test").find({limit: 10}).toArray()');
+    executeCmd = parsed.find(p => p.command.command === CommandType.execution);
+    expect(executeCmd.command.arguments[0]).toBe('db.collection(\'test\').find({ limit: 10 }).toArray()');
   });
 
   test('test getCallExpression for find', () => {

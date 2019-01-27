@@ -101,7 +101,7 @@ const attachAdditionalToFind = (methodCalls, source) => {
   if (
     methodCalls &&
     methodCalls.length > 0 &&
-    methodCalls[methodCalls.length - 1].callee.property.name === MethodType.find
+    methodCalls.find(m => m.callee.property.name === MethodType.find)
   ) {
     const hasLimit = findCallMethodName(methodCalls, 'limit') !== undefined || source.indexOf('limit') >= 0;
     const toArray = findCallMethodName(methodCalls, 'toArray');
