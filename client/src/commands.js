@@ -157,8 +157,9 @@ const createIndex = e => {
 };
 
 const launchMREditor = event => {
+  const colName = event.colName ? event.colName : '$COLLECTION_NAME';
   return openMongoRunnerEditor(
-    `db.collection("${event.colName}").count()`,
+    `db.collection("${colName}").count()`,
     event.uuid,
     event.dbName
   );

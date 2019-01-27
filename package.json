@@ -219,36 +219,53 @@
         },
         {
           "command": "mongoRunner.deleteDatabase",
-          "when": "viewItem == database"
+          "when": "viewItem == database",
+          "group": "dbGroup@2"
         },
         {
           "command": "mongoRunner.launchEditor",
-          "when": "viewItem == collection"
+          "when": "viewItem == database",
+          "group": "dbGroup@1"
+        },
+        {
+          "command": "mongoRunner.launchEditor",
+          "when": "viewItem == collection",
+          "group": "colGroup1@1"
         },
         {
           "command": "mongoRunner.deleteCollection",
           "when": "viewItem == collection",
-          "group": "colGropu@5"
+          "group": "colGroup2@6"
         },
         {
           "command": "mongoRunner.getCollectionAttributes",
           "when": "viewItem == collection",
-          "group": "colGropu@1"
+          "group": "colGroup2@2"
         },
         {
           "command": "mongoRunner.getIndex",
           "when": "viewItem == collection",
-          "group": "colGropu@3"
+          "group": "colGroup2@4"
         },
         {
           "command": "mongoRunner.createIndex",
           "when": "viewItem == collection",
-          "group": "colGropu@4"
+          "group": "colGroup2@5"
         },
         {
           "command": "mongoRunner.findFirst20Docs",
           "when": "viewItem == collection",
-          "group": "colGropu@2"
+          "group": "colGroup2@3"
+        },
+        {
+          "command": "mongoRunner.simpleQuery",
+          "when": "viewItem == collection",
+          "group": "colGroup2@6"
+        },
+        {
+          "command": "mongoRunner.launchEditor",
+          "when": "viewItem == index",
+          "group": "idxGroup@1"
         },
         {
           "command": "mongoRunner.deleteIndex",
@@ -258,11 +275,12 @@
         {
           "command": "mongoRunner.createIndex",
           "when": "viewItem == indexes",
-          "group": "idxGroup@1"
+          "group": "idxGroup2@1"
         },
         {
-          "command": "mongoRunner.simpleQuery",
-          "when": "viewItem == collection"
+          "command": "mongoRunner.launchEditor",
+          "when": "viewItem == indexes",
+          "group": "idxGroup1@1"
         }
       ],
       "editor/context": [
