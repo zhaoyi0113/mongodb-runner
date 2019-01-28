@@ -103,17 +103,37 @@ const serverBuildInfoHandler = e => {
 };
 
 const deleteDatabase = e => {
-  getMongoInspector(e.uuid)
-    .deleteDatabase(e.dbName)
-    .then(() => refreshConnectionUUID(e.uuid))
-    .catch(err => vscode.window.showErrorMessage(err));
+  vscode.window
+    .showInformationMessage(
+      `Are you sure to delete database ${e.dbName}?`,
+      { modal: true },
+      'Yes'
+    )
+    .then(res => {
+      if (res === 'Yes') {
+        getMongoInspector(e.uuid)
+          .deleteDatabase(e.dbName)
+          .then(() => refreshConnectionUUID(e.uuid))
+          .catch(err => vscode.window.showErrorMessage(err));
+      }
+    });
 };
 
 const deleteCollection = e => {
-  getMongoInspector(e.uuid)
-    .deleteCollection(e.dbName, e.colName)
-    .then(() => refreshConnectionUUID(e.uuid))
-    .catch(err => vscode.window.showErrorMessage(err));
+  vscode.window
+    .showInformationMessage(
+      `Are you sure to delete collection ${e.colName} in ${e.dbName} database?`,
+      { modal: true },
+      'Yes'
+    )
+    .then(res => {
+      if (res === 'Yes') {
+        getMongoInspector(e.uuid)
+          .deleteCollection(e.dbName, e.colName)
+          .then(() => refreshConnectionUUID(e.uuid))
+          .catch(err => vscode.window.showErrorMessage(err));
+      }
+    });
 };
 
 const getCollectionAttributes = e => {
@@ -206,13 +226,22 @@ const findFirst20Docs = e => {
 };
 
 const deleteIndex = e => {
-  console.log('deleteIndex:', e);
-  getMongoInspector(e.uuid)
-    .deleteIndex(e.dbName, e.colName, e.name)
-    .then(() => {
-      refreshConnectionUUID(e.uuid);
-    })
-    .catch(err => vscode.window.showErrorMessage(err));
+  vscode.window
+    .showInformationMessage(
+      `Are you sure to delete index ${e.name} in collection ${e.dbName}.${e.colName}?`,
+      { modal: true },
+      'Yes'
+    )
+    .then(res => {
+      if (res === 'Yes') {
+        getMongoInspector(e.uuid)
+          .deleteIndex(e.dbName, e.colName, e.name)
+          .then(() => {
+            refreshConnectionUUID(e.uuid);
+          })
+          .catch(err => vscode.window.showErrorMessage(err));
+      }
+    });
 };
 
 const refreshConnectionUUID = uuid => {
@@ -296,7 +325,7 @@ const showResult = (originCmd, result, editorWrapper) => {
     }
   } else {
     // there is no editor output
-    prom = openTextDocument(output+ '', 'jsonc');
+    prom = openTextDocument(output + '', 'jsonc');
   }
   if (!prom || !prom.then) return;
   prom

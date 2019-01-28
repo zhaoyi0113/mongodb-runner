@@ -168,7 +168,11 @@
       },
       {
         "command": "mongoRunner.launchEditor",
-        "title": "MongoRunner Editor"
+        "title": "MongoRunner Editor",
+        "icon":{
+          "dark": "./client/resources/dark/close.svg",
+          "light": "./client/resources/light/refresh.png"
+        }
       },
       {
         "command": "mongoRunner.executeCommand",
@@ -283,7 +287,11 @@
           "group": "idxGroup1@1"
         }
       ],
-      "editor/context": [
+      "editor/title": [
+        {
+          "when": "resourceLangId == mongodbRunner",
+          "command": "mongoRunner.launchEditor"
+        }
       ]
     },
     "configuration": [
