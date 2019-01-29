@@ -12,7 +12,9 @@ const {
   TextDocumentPositionParams,
   RequestType
 } = require('vscode-languageserver');
+const os = require('os');
 const { parseDocument } = require('./parser');
+const { CommandIdentifier } = require('./commands');
 
 const connection = createConnection(ProposedFeatures.all);
 const documents = new TextDocuments();
@@ -47,8 +49,15 @@ connection.onRequest(
   }
 );
 
-connection.onRequest('executeAll', (event) => {
-  return 'received';
+connection.onRequest('executeAll', event => {
+  const commands = parseDocument(event);
+  if (commands) {
+    return commands
+      .filter(c => c.identifier === CommandIdentifier.original)
+      .map(c => c.command.arguments[0])
+      .join(os.EOL);
+  }
+  return '';
 });
 
 documents.onDidChangeContent(change => {

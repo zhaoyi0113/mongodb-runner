@@ -46,7 +46,7 @@ const openMongoRunnerEditor = (text, uuid, dbName) => {
       // open output document
       return openTextDocument('', 'jsonc');
     })
-    .then(doc => vscode.window.showTextDocument(doc, viewColumn))
+    .then(doc => vscode.window.showTextDocument(doc, viewColumn, true))
     .then(editor => connectOutputEditor(wrapper, editor));
 };
 
@@ -316,7 +316,6 @@ const showResult = (originCmd, result, editorWrapper) => {
       lastLine.lineNumber,
       lastLine.range.end.character
     );
-    console.log('visible editors:', vscode.window.visibleTextEditors);
     if (
       !vscode.window.visibleTextEditors.find(
         editor => editor.id === outputEditor.id
@@ -325,7 +324,7 @@ const showResult = (originCmd, result, editorWrapper) => {
       // the editor is not shown
       prom = openTextDocument(output + '', 'jsonc');
     } else {
-      editorWrapper.outputEditor.edit(editBuilder => {
+      return editorWrapper.outputEditor.edit(editBuilder => {
         editBuilder.insert(
           position,
           position.character === 0 ? output + '' : os.EOL + output
@@ -336,15 +335,15 @@ const showResult = (originCmd, result, editorWrapper) => {
     // there is no editor output
     prom = openTextDocument(output + '', 'jsonc');
   }
-  if (!prom || !prom.then) return;
-  prom
+  if (!prom || !prom.then) return Promise.resolve();
+  return prom
     .then(doc => {
       if (doc) {
         let viewColumn = editorWrapper.editor.viewColumn + 1;
         if (editorWrapper.outputEditor) {
           viewColumn = editorWrapper.outputEditor.viewColumn;
         }
-        return vscode.window.showTextDocument(doc, viewColumn);
+        return vscode.window.showTextDocument(doc, viewColumn, true);
       }
     })
     .then(editor => {
@@ -372,19 +371,36 @@ const executeCommand = event => {
     vscode.window.showErrorMessage('Connection is closed.');
     return;
   }
-  runCommand(editorWrapper.uuid, event, editorWrapper.dbName)
+  return runCommand(editorWrapper.uuid, event, editorWrapper.dbName)
     .then(result => {
-      showResult(event, result, editorWrapper);
+      return showResult(event, result, editorWrapper);
     })
     .catch(err => {
       console.error(err);
-      showResult(event, err.message, editorWrapper);
+      return showResult(event, err.message, editorWrapper);
     });
 };
 
-const executeAllCommands = (event) => {
-  global.client.sendRequest('executeAll', event)
-  .then(res => console.log('res:', res))
+const getActiveEditorText = () => {
+  const wrapper = getActivateEditorWrapper();
+  if(wrapper) {
+    return wrapper.editor.document.getText();
+  }
+};
+
+const executeAllCommands = () => {
+  const text = getActiveEditorText();
+  global.client.sendRequest('executeAll', text)
+  .then(res => {
+    console.log('res:', res);
+    if (res) {
+      const cmds = res.split(os.EOL);
+      cmds.reduce((accu, current) => {
+        return accu.then(() => executeCommand(current));
+      }, Promise.resolve());
+      executeCommand(res);
+    }
+  })
   .catch(err => console.error(err));
 };
 
