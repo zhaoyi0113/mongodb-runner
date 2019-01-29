@@ -43,27 +43,13 @@ connection.onRequest(
     const { textDocument } = event;
     const text = documents.get(event.textDocument.uri).getText();
     const parsed = parseDocument(text);
-    console.log('parsed:', parsed);
     return parsed;
-    // return [
-    //   {
-    //     command: {
-    //       command: 'mongoRunner.selectRunConnection',
-    //       title: 'run',
-    //       tooltip: 'tooltip',
-    //       arguments: [text]
-    //     },
-    //     isResolved: true,
-    //     range: {
-    //       start: { line: 1 },
-    //       end: { line: 1 },
-    //       isSingleLine: true,
-    //       isEmpty: false
-    //     }
-    //   }
-    // ];
   }
 );
+
+connection.onRequest('executeAll', (event) => {
+  return 'received';
+});
 
 documents.onDidChangeContent(change => {
   console.log('doc is changed:', change.document);

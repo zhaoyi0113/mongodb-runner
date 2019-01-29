@@ -44,6 +44,7 @@ const launchLanguageServer = context => {
     clientOptions
   );
   client.start();
+  global.client = client;
 };
 
 const registerProviders = ctx => {

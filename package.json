@@ -168,10 +168,14 @@
       },
       {
         "command": "mongoRunner.launchEditor",
-        "title": "MongoRunner Editor",
+        "title": "MongoRunner Editor"
+      },
+      {
+        "command": "mongoRunner.executeAllCommands",
+        "title": "Execute All Commands",
         "icon":{
-          "dark": "./client/resources/dark/close.svg",
-          "light": "./client/resources/light/refresh.png"
+          "dark": "./client/resources/dark/play-button.svg",
+          "light": "./client/resources/light/play-button.png"
         }
       },
       {
@@ -289,8 +293,9 @@
       ],
       "editor/title": [
         {
-          "when": "resourceLangId == mongodbRunner",
-          "command": "mongoRunner.launchEditor"
+          "when": "editorLangId == mongodbRunner",
+          "command": "mongoRunner.executeAllCommands",
+          "group": "navigation"
         }
       ]
     },

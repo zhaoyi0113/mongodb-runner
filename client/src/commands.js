@@ -177,9 +177,9 @@ const createIndex = e => {
 };
 
 const launchMREditor = event => {
-  const colName = event.colName ? event.colName : '$COLLECTION_NAME';
+  const colName = event.colName ? event.colName : 'COLLECTION_NAME';
   return openMongoRunnerEditor(
-    `${editorComments}${os.EOL}db.collection("${colName}").find()`,
+    `${editorComments}${os.EOL}db.collection('${colName}').find()`,
     event.uuid,
     event.dbName
   );
@@ -265,6 +265,15 @@ const refreshAllConnections = () => {
       }
     });
   }
+};
+
+const isUUIDActivate = (uuid) => {
+  const treeData = global.treeExplorer.provider.treeData;
+  if (treeData) {
+    const matched = treeData.find(data => data.uuid === uuid);
+    return matched && matched.status === ConnectStatus.CONNECTED
+  }
+  return false;
 };
 
 const runCommand = (uuid, command, dbName) => {
@@ -359,6 +368,10 @@ const executeCommand = event => {
   if (!editorWrapper) {
     return;
   }
+  if(!isUUIDActivate(editorWrapper.uuid)){
+    vscode.window.showErrorMessage('Connection is closed.');
+    return;
+  }
   runCommand(editorWrapper.uuid, event, editorWrapper.dbName)
     .then(result => {
       showResult(event, result, editorWrapper);
@@ -367,6 +380,12 @@ const executeCommand = event => {
       console.error(err);
       showResult(event, err.message, editorWrapper);
     });
+};
+
+const executeAllCommands = (event) => {
+  global.client.sendRequest('executeAll', event)
+  .then(res => console.log('res:', res))
+  .catch(err => console.error(err));
 };
 
 const registerCommands = () => {
@@ -410,8 +429,8 @@ const registerCommands = () => {
   // index commands
   vscode.commands.registerCommand('mongoRunner.deleteIndex', deleteIndex);
 
-  // test launge server
   vscode.commands.registerCommand('mongoRunner.launchEditor', launchMREditor);
+  vscode.commands.registerCommand('mongoRunner.executeAllCommands', executeAllCommands);
 
   vscode.commands.registerCommand('mongoRunner.executeCommand', executeCommand);
   vscode.commands.registerCommand('mongoRunner.queryPlanner', executeCommand);
