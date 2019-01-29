@@ -329,6 +329,8 @@ const showResult = (originCmd, result, editorWrapper) => {
           position,
           position.character === 0 ? output + '' : os.EOL + output
         );
+        const range = new vscode.Range(position, position);
+        editorWrapper.outputEditor.revealRange(range, vscode.TextEditorRevealType.AtTop);
       });
     }
   } else {
