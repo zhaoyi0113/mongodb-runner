@@ -1,6 +1,6 @@
 const esprima = require('esprima');
 const {parseDocument, getCallExpression} = require('../src/parser');
-const {CommandType} = require('../src/commands');
+const {CommandType, CommandIdentifier} = require('../src/commands');
 
 describe('parser test suite', () => {
 
@@ -108,5 +108,19 @@ describe('parser test suite', () => {
     expect(calls[1].callee.property.name).toBe('limit');
     expect(calls[2].callee.property.name).toBe('find');
 
+  });
+
+  test('parse multiple lines commands', () => {
+    let parsed = parseDocument('db.test.find({limit: 30})\n db.test.find()');
+    let executeCmds = parsed.filter(p => p.identifier === CommandIdentifier.original);
+    expect(executeCmds.length).toBe(2);
+    expect(executeCmds[0].command.arguments[0]).toBe('db.test.find({ limit: 30 }).toArray()');
+    expect(executeCmds[1].command.arguments[0]).toBe('db.test.find().limit(20).toArray()');
+
+    parsed = parseDocument('db.collection("test").findOne() \n db.collection("test1").findOne()');
+    executeCmds = parsed.filter(p => p.identifier === CommandIdentifier.original);
+    expect(executeCmds.length).toBe(2);
+    expect(executeCmds[0].command.arguments[0]).toBe('db.collection(\'test\').findOne()');
+    expect(executeCmds[1].command.arguments[0]).toBe('db.collection(\'test1\').findOne()');
   });
 });

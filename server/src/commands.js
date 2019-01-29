@@ -17,6 +17,12 @@ const CommandType = {
   allPlansExecution: 'mongoRunner.allPlansExecution'
 };
 
+const CommandIdentifier = {
+  original: 1,
+  count: 2,
+  explain: 3
+};
+
 const DEFAULT_LIMIT = 20;
 
 const getExplanMethodType = calls => {
@@ -158,7 +164,7 @@ const createCommand = (ast, calls) => {
   const endLine = loc.end.line;
   const explainCmds = getExplanMethodType(calls);
   const source = escodegen.generate(ast).replace(/;$/, '');
-  const getBasicCmd = (commandName, title, tooltip, script) => ({
+  const getBasicCmd = (commandName, title, tooltip, script, identifier) => ({
     command: {
       command: commandName,
       title,
@@ -166,6 +172,7 @@ const createCommand = (ast, calls) => {
       arguments: [script]
     },
     isResolved: true,
+    identifier,
     range: {
       start: {line: startLine - 1},
       end: {line: endLine - 1},
@@ -178,7 +185,8 @@ const createCommand = (ast, calls) => {
       CommandType.execution,
       'Execute',
       'Execute',
-      attachAdditionalToFind(calls, source)
+      attachAdditionalToFind(calls, source),
+      CommandIdentifier.original
     )
   ];
   if (explainCmds) {
@@ -187,16 +195,17 @@ const createCommand = (ast, calls) => {
         CommandType.queryPlanner,
         'Explain',
         'Query Planner',
-        `${source}.explain()`
+        `${source}.explain()`,
+        CommandIdentifier.explain
       )
     );
   }
   if (whetherSupportCount(calls)) {
     commands.push(
-      getBasicCmd(CommandType.execution, 'Count', 'Count', `${source}.count()`)
+      getBasicCmd(CommandType.execution, 'Count', 'Count', `${source}.count()`, CommandIdentifier.count)
     );
   }
   return commands;
 };
 
-module.exports = {createCommand, CommandType, whetherDBCommand};
+module.exports = {createCommand, CommandType, whetherDBCommand, CommandIdentifier};
