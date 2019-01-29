@@ -1,26 +1,18 @@
 const {
   createConnection,
   TextDocuments,
-  TextDocument,
-  Diagnostic,
-  DiagnosticSeverity,
   ProposedFeatures,
-  InitializeParams,
-  DidChangeConfigurationNotification,
-  CompletionItem,
-  CompletionItemKind,
-  TextDocumentPositionParams,
   RequestType
 } = require('vscode-languageserver');
 const os = require('os');
 const { parseDocument } = require('./parser');
 const { CommandIdentifier } = require('./commands');
+const { getTextDiagnostics } = require('./diagnostic');
 
 const connection = createConnection(ProposedFeatures.all);
 const documents = new TextDocuments();
 
 connection.onInitialize(params => {
-  console.log('mongodb language initialize ');
   return {
     capabilities: {
       textDocumentSync: documents.syncKind,
@@ -36,13 +28,11 @@ connection.onInitialize(params => {
 
 connection.onDidChangeWatchedFiles(change => {
   // Monitored files have change in VS Code
-  console.log('We received an file change event,', change);
 });
 
 connection.onRequest(
   new RequestType('textDocument/codeLens'),
-  (event, token) => {
-    const { textDocument } = event;
+  (event) => {
     const text = documents.get(event.textDocument.uri).getText();
     const parsed = parseDocument(text);
     return parsed;
@@ -61,21 +51,12 @@ connection.onRequest('executeAll', event => {
 });
 
 documents.onDidChangeContent(change => {
-  console.log('doc is changed:', change.document);
   const text = change.document.getText();
-  console.log('text:', text);
-  const diagnostic = {
-    severity: DiagnosticSeverity.Warning,
-    range: {
-      start: change.document.positionAt(0),
-      end: change.document.positionAt(change.document.getText().length)
-    },
-    message: ' this is a demo'
-  };
-  // connection.sendDiagnostics({
-  //   uri: change.document.uri,
-  //   diagnostics: [diagnostic]
-  // });
+  const diagnostics = getTextDiagnostics(text);
+  connection.sendDiagnostics({
+    uri: change.document.uri,
+    diagnostics: [diagnostics]
+  });
 });
 
 documents.onDidClose(event => {

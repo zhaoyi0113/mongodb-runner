@@ -61,7 +61,6 @@ const parseDocument = txt => {
     const callExps = getAllCallExpressionsFromBody(ast.body);
     return createCodeLens(callExps);
   } catch (err) {
-    console.error('parse error.', err);
   }
 };
 

@@ -713,6 +713,10 @@ escodegen@^1.11.0, escodegen@^1.9.1:
   optionalDependencies:
     source-map "~0.6.1"
 
+esprima@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/esprima/-/esprima-1.2.1.tgz#201bdf4dfa8595f72f43936c7634674b54f4734f"
+
 esprima@^3.1.3:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/esprima/-/esprima-3.1.3.tgz#fdca51cee6133895e3c88d535ce49dbff62a4633"
@@ -728,6 +732,12 @@ estraverse@^4.2.0:
 esutils@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.2.tgz#0abf4f1caa5bcb1f7a9d8acc6dea4faaa04bac9b"
+
+esvalidate@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/esvalidate/-/esvalidate-0.1.3.tgz#8dff93e007fefe1b7e8cafb37951cf6f34b07f9e"
+  dependencies:
+    esprima "1.2.1"
 
 exec-sh@^0.2.0:
   version "0.2.2"
