@@ -54,7 +54,6 @@ const connectDatabase = config => {
   return connectMongoDB(config)
     .then(data => {
       const treeData = convertToTreeData(data);
-      console.log('tree data:', treeData);
       eventDispatcher.emit(
         EventType.Connect,
         Object.assign(treeData, { uuid: config.uuid, driver: data.driver })
@@ -67,7 +66,6 @@ const connectDatabase = config => {
 };
 
 const disconnectDatabase = db => {
-  console.log('disconnect db ', db);
   if (db && db.driver) {
     db.driver
       .close()
@@ -189,7 +187,6 @@ const getIndex = e => {
   getMongoInspector(e.uuid)
     .getCollectionIndexes(e.dbName, e.name)
     .then(indexes => {
-      console.log('get indexes ', indexes);
       openTextInEditor(JSON.stringify(indexes), 'json');
     })
     .catch(err => console.error(err));
@@ -252,7 +249,6 @@ const refreshConnectionUUID = uuid => {
 };
 
 const refreshConnection = e => {
-  console.log('refresh ', e);
   return connectDatabase(e);
 };
 
@@ -286,7 +282,6 @@ const runCommand = (uuid, command, dbName) => {
       if (result && typeof result.then === 'function') {
         result.then(ret => resolve(ret)).catch(err => reject(err));
       } else {
-        console.log('return value:', result);
         resolve(result);
       }
     } catch (err) {
@@ -394,7 +389,6 @@ const executeAllCommands = () => {
   const text = getActiveEditorText();
   global.client.sendRequest('executeAll', text)
   .then(res => {
-    console.log('res:', res);
     if (res) {
       const cmds = res.split(os.EOL);
       cmds.reduce((accu, current) => {
