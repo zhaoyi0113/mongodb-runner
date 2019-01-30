@@ -94,8 +94,8 @@
         "command": "mongoRunner.hostRefresh",
         "title": "Refresh",
         "icon": {
-          "light": "resources/light/refresh.svg",
-          "dark": "resources/dark/refresh.svg"
+          "light": "client/resources/light/refresh.svg",
+          "dark": "client/resources/dark/refresh.svg"
         }
       },
       {
@@ -114,16 +114,16 @@
         "command": "mongoRunner.refresh",
         "title": "Refresh",
         "icon": {
-          "light": "resources/light/refresh.svg",
-          "dark": "resources/dark/refresh.svg"
+          "light": "client/resources/light/refresh.svg",
+          "dark": "client/resources/dark/refresh.svg"
         }
       },
       {
         "command": "mongoRunner.serverStatus",
         "title": "Server Status",
         "icon": {
-          "light": "resources/light/refresh.png",
-          "dark": "resources/dark/refresh.png"
+          "light": "client/resources/light/refresh.png",
+          "dark": "client/resources/dark/refresh.png"
         }
       },
       {
@@ -175,7 +175,15 @@
         "title": "Execute All Commands",
         "icon":{
           "dark": "./client/resources/dark/play-button.svg",
-          "light": "./client/resources/light/play-button.png"
+          "light": "./client/resources/light/play-button.svg"
+        }
+      },
+      {
+        "command": "mongoRunner.clearOutput",
+        "title": "Clear Output",
+        "icon":{
+          "dark": "./client/resources/dark/trash.svg",
+          "light": "./client/resources/light/trash.svg"
         }
       },
       {
@@ -295,6 +303,11 @@
         {
           "when": "editorLangId == mongodbRunner",
           "command": "mongoRunner.executeAllCommands",
+          "group": "navigation"
+        },
+        {
+          "when": "editorLangId == mongodbRunner",
+          "command": "mongoRunner.clearOutput",
           "group": "navigation"
         }
       ]

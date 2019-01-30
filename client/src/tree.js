@@ -120,7 +120,6 @@ class MongoTreeProvider {
   }
 
   onConnect(conn) {
-    console.log('con:', conn);
     this.treeData.forEach(data => {
       if (data.uuid === conn.uuid) {
         data.children = conn.tree;

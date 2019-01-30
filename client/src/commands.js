@@ -406,6 +406,17 @@ const executeAllCommands = () => {
   .catch(err => console.error(err));
 };
 
+const clearOutputCommand = () => {
+  const wrapper = getActivateEditorWrapper();
+  if (wrapper && wrapper.outputEditor) {
+    wrapper.outputEditor.edit(editBuilder => {
+      const document = wrapper.outputEditor.document;
+      const range = new vscode.Range(new vscode.Position(0, 0), new vscode.Position(document.lineCount, 0));
+      editBuilder.delete(range);
+    });
+  }
+};
+
 const registerCommands = () => {
   vscode.commands.registerCommand('mongoRunner.refresh', refreshAllConnections);
   // server command
@@ -452,6 +463,7 @@ const registerCommands = () => {
 
   vscode.commands.registerCommand('mongoRunner.executeCommand', executeCommand);
   vscode.commands.registerCommand('mongoRunner.queryPlanner', executeCommand);
+  vscode.commands.registerCommand('mongoRunner.clearOutput', clearOutputCommand);
 };
 
 module.exports = {

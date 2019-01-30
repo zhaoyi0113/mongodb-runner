@@ -14,7 +14,7 @@
     "esprima": "^4.0.1",
     "lodash": "^4.17.10",
     "mongodb": "^3.1.4",
-    "mongodb-topology": "^0.0.22",
+    "mongodb-topology": "^0.0.23",
     "mongodb-uri": "^0.9.7",
     "short-unique-id": "^1.1.1",
     "uuid": "^3.3.2",
