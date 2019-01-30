@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const mongodbUri = require('mongodb-uri');
+const { getConnectionName } = require('./config');
 
 /**
  * convert database to tree structure
@@ -60,19 +60,7 @@ const convertDatabaseChildren = (dbChildren, uuid) => {
   return children;
 };
 
-const getConnectionName = config => {
-  const uriObject = mongodbUri.parse(config.url);
-  if (uriObject.options && uriObject.options.replicaSet) {
-    return uriObject.options.replicaSet;
-  }
-  if (uriObject.hosts && uriObject.hosts.length > 0) {
-    return uriObject.hosts[0].host;
-  }
-  return 'MongoServer';
-};
-
 const convertToTreeData = alldata => {
-  console.log('convert tree data ', alldata);
   const treeData = [];
   const {uuid} = alldata.mongoConfig;
   _.forOwn(alldata.tree, (v, k) => {
