@@ -70,6 +70,10 @@ connection.onRequest('textDocument/formatting', (event) => {
   return formatted;
 });
 
+connection.onRequest('textDocument/completion', (event) => {
+
+});
+
 documents.onDidChangeContent(change => {
   const text = change.document.getText();
   const diagnostics = getTextDiagnostics(text);

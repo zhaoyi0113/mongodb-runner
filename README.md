@@ -96,7 +96,7 @@ Update plugin icon.
 Support all mongodb connection options.
 Update replicatset tree icon.
 
-### 0.0.10 - 0.0.18
+### 0.0.18
 
 - Enable private key connection
 - Enable setting password in the configuration
@@ -106,3 +106,11 @@ Update replicatset tree icon.
 - Support manually input database password
 - Order menu items
 - Support loading mutiple MongoDB connections
+
+### 0.5.0
+- MongoDB Runner Language Server
+
+  - With MongoDB Runner language server, you can use MongoDB NodeJS driver to operate database. It supports run all script on the editor or run each statement. It will render `explain` command on the selected commands.
+  - Support syntax diagnostic as you typing.
+  - Support format code.
+  - Auto attach `toArray` and `limit` on `find` commands.

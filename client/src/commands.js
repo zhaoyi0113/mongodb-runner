@@ -300,7 +300,8 @@ const showResult = (originCmd, result, editorWrapper) => {
   if (!jsonData) {
     jsonData = result;
   }
-  const output = `// MongoRunner> ${originCmd}${os.EOL}${jsonData}`;
+  const removeLineCmd = originCmd.replace(/(\n|\r)+/g, '');
+  const output = `// MongoRunner> ${removeLineCmd}${os.EOL}${jsonData}`;
   if (editorWrapper.outputEditor) {
     // append output on exsited editor
     const { outputEditor } = editorWrapper;
