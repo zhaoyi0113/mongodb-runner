@@ -55,7 +55,7 @@ connection.onRequest('executeAll', event => {
 
 connection.onRequest('textDocument/rangeFormatting', (event) => {
   console.log('range format:', event);
-  const text = documents.get(event.textDocument.uri).getText();
+  const text = documents.get(event.textDocument.uri).getText(event.range);
   const formatted = format(text, event.options, event.range);
   console.log('formatted:', formatted);
   return formatted;
