@@ -23,7 +23,7 @@ const openTextDocument = (text, language) => {
   return vscode.workspace.openTextDocument({ content: text, language });
 };
 
-const openTextInEditor = (text, language = 'json') => {
+const openTextInEditor = (text, language = 'json', format=true) => {
   let doc;
   return openTextDocument(text, language)
     .then(d => {
@@ -31,7 +31,7 @@ const openTextInEditor = (text, language = 'json') => {
       return vscode.window.showTextDocument(doc, 1, true);
     })
     .then(editor => {
-      vscode.commands.executeCommand('editor.action.formatDocument');
+      format && vscode.commands.executeCommand('editor.action.formatDocument');
       return { doc, editor };
     });
 };
@@ -39,7 +39,7 @@ const openTextInEditor = (text, language = 'json') => {
 const openMongoRunnerEditor = (text, uuid, dbName) => {
   let viewColumn;
   let wrapper;
-  return openTextInEditor(text, LanguageID)
+  return openTextInEditor(text, LanguageID, false)
     .then(({ doc, editor }) => {
       wrapper = pushEditor(editor, uuid, dbName);
       viewColumn = editor.viewColumn + 1;
