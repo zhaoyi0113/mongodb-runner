@@ -10,6 +10,12 @@ For example below is a sceenshot of Mongo Shard Cluster Topology:
 
 ![MongoDB Shard Cluster Topology](https://raw.githubusercontent.com/zhaoyi0113/mongodb-runner/master/images/shard-ss.png)
 
+### MongoDB Runner Editor
+
+By open MongoDB Runner editor, you can running MongoDB NodeJS driver inside VSCode and get the output on the right view. 
+
+![MongoDB Runner Editor](https://raw.githubusercontent.com/zhaoyi0113/mongodb-runner/master/images/mr-editor.png)
+
 ## Requirements
 
 NA
