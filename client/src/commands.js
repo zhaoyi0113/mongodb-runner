@@ -18,7 +18,10 @@ const {
   getActivateEditorWrapper,
   connectOutputEditor
 } = require('./editor-mgr');
-const { getConfiguration, getRawMongoRunnerConfigurations } = require('./config');
+const {
+  getConfiguration,
+  getRawMongoRunnerConfigurations
+} = require('./config');
 
 const LanguageID = 'mongodbRunner';
 
@@ -280,8 +283,8 @@ const refreshAllConnections = () => {
           const oConfig = _.cloneDeep(c);
           const treeConfig = _.cloneDeep(tree.originConfig);
           return _.isEqual(oConfig, treeConfig);
-        })
-        && tree.status !== ConnectStatus.CONNECTED
+        }) &&
+        tree.status !== ConnectStatus.CONNECTED
       ) {
         // the connection doesn't exist in tree
         provider.deleteRootItem(tree.uuid);
@@ -307,7 +310,39 @@ const runCommand = (uuid, command, dbName) => {
       const vm = new VM({ sandbox: { db } });
       const result = vm.run(command);
       if (result && typeof result.then === 'function') {
-        result.then(ret => resolve(ret)).catch(err => reject(err));
+        result
+          .then(ret => {
+            try {
+              resolve(JSON.parse(JSON.stringify(ret)));
+            } catch (error) {
+              if (
+                error.message &&
+                error.message.indexOf('circular structure')
+              ) {
+                const cache = [];
+                const newRet = JSON.stringify(ret, function(key, value) {
+                  if (typeof value === 'object' && value !== null) {
+                    if (cache.indexOf(value) !== -1) {
+                      // Duplicate reference found
+                      try {
+                        // If this value does not reference a parent it can be deduped
+                        return JSON.parse(JSON.stringify(value));
+                      } catch (error) {
+                        // discard key if value cannot be deduped
+                        return;
+                      }
+                    }
+                    // Store value in our collection
+                    cache.push(value);
+                  }
+                  return value;
+                });
+                return resolve(JSON.parse(newRet));
+              }
+              resolve(ret);
+            }
+          })
+          .catch(err => reject(err));
       } else {
         resolve(result);
       }
@@ -450,7 +485,7 @@ const onDidChangeConfiguration = () => {
   refreshAllConnections();
 };
 
-const registerCommands = (context) => {
+const registerCommands = context => {
   vscode.commands.registerCommand('mongoRunner.refresh', refreshAllConnections);
   // server command
   vscode.commands.registerCommand('mongoRunner.hostConnect', connectDatabase);
@@ -503,7 +538,9 @@ const registerCommands = (context) => {
     'mongoRunner.clearOutput',
     clearOutputCommand
   );
-  context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration));
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration)
+  );
 };
 
 module.exports = {
