@@ -2,7 +2,7 @@
   "name": "mongo-runner",
   "displayName": "Mongo Runner",
   "description": "MongoDB Runner is a VSCode extension to connect MongoDB instance.",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "publisher": "JoeyYiZhao",
   "keywords": [
     "MongoDB",
@@ -169,7 +169,7 @@
       {
         "command": "mongoRunner.executeAllCommands",
         "title": "Execute All Commands",
-        "icon":{
+        "icon": {
           "dark": "./client/resources/dark/play-button.svg",
           "light": "./client/resources/light/play-button.svg"
         }
@@ -177,7 +177,7 @@
       {
         "command": "mongoRunner.clearOutput",
         "title": "Clear Output",
-        "icon":{
+        "icon": {
           "dark": "./client/resources/dark/trash.svg",
           "light": "./client/resources/light/trash.svg"
         }
@@ -327,6 +327,9 @@
                     "default": "mongodb://",
                     "description": "MongoDB URI"
                   },
+                  "name": {
+                    "type": "string"
+                  },
                   "activeOnStartUp": {
                     "type": "boolean",
                     "default": false,
@@ -343,6 +346,9 @@
                       "type": "string",
                       "default": "mongodb://",
                       "description": "MongoDB URI"
+                    },
+                    "name": {
+                      "type": "string"
                     },
                     "activeOnStartUp": {
                       "type": "boolean",

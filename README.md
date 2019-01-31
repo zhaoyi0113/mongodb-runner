@@ -22,15 +22,17 @@ NA
 
 ## Extension Settings
 
-Setup MongoDB Connection in your workspace setting.
+Setup MongoDB Connection in your workspace setting. Be aware that the name for each connection need to be unique.
 
 ```json
 "mongoRunner": {
         "connections": [
             {
+                "name": "connection1",
                 "url": "mongodb://localhost:27017/test"
             },
             {
+                "name": "connection2",
                 "url": "mongodb://localhost:27018/test"
             }
         ]
@@ -46,6 +48,7 @@ For SSl connection, please use `options` configuration. You can also put all oth
 ```json
 "mongoRunner": {
         "connection": [{
+            "name": "connectionName",
             "url": "mongodb://localhost:27017",
             "user": "username",
             "options": {
@@ -60,6 +63,7 @@ For SSl connection, please use `options` configuration. You can also put all oth
 ```json
 "mongoRunner": {
         "connection": [{
+            "name": "connectionName",
             "url": "mongodb://localhost:27017",
             "user": "username",
             "options": {
@@ -113,7 +117,7 @@ Update replicatset tree icon.
 - Order menu items
 - Support loading mutiple MongoDB connections
 
-### 0.5.0
+### 0.5.1
 - MongoDB Runner Language Server
 
   - With MongoDB Runner language server, you can use MongoDB NodeJS driver to operate database. It supports run all script on the editor or run each statement. It will render `explain` command on the selected commands.
