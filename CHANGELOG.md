@@ -21,7 +21,7 @@ Update replicatset tree icon.
 - Order menu items
 - Support loading mutiple MongoDB connections
 
-## 0.5.1
+## 0.5.2
 - MongoDB Runner Language Server
 
   - With MongoDB Runner language server, you can use MongoDB NodeJS driver to operate database. It supports run all script on the editor or run each statement. It will render `explain` command on the selected commands.
