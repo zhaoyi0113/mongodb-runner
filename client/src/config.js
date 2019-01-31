@@ -1,8 +1,7 @@
-const vscode = require('vscode');
 const mongodbUri = require('mongodb-uri');
 const ShortUniqueId = require('short-unique-id');
 
-const { ConnectStatus } = require('./connection');
+const { ConnectStatus } = require('./types');
 
 const uid = new ShortUniqueId();
 
@@ -38,7 +37,7 @@ const getConfiguration = config => {
   };
 };
 
-const getRawMongoRunnerConfigurations = () => {
+const getRawMongoRunnerConfigurations = (vscode) => {
   const wsConfiguration = vscode.workspace.getConfiguration();
   const connectsConfig = wsConfiguration.get('mongoRunner.connections');
   const connectConfig = wsConfiguration.get('mongoRunner.connection');
@@ -48,8 +47,8 @@ const getRawMongoRunnerConfigurations = () => {
   return [connectConfig];
 };
 
-const getMongoConfigurations = () => {
-  const rawConfigs = getRawMongoRunnerConfigurations();
+const getMongoConfigurations = (vscode) => {
+  const rawConfigs = getRawMongoRunnerConfigurations(vscode);
   return rawConfigs.map(config => getConfiguration(config));
 };
 

@@ -3,6 +3,7 @@ const { MongoClient } = require('mongodb');
 const fs = require('fs');
 const vscode = require('vscode');
 const mongodbUri = require('mongodb-uri');
+const { ConnectStatus } = require('./types');
 
 const inspectors = {};
 
@@ -134,17 +135,10 @@ const connectMongoDB = mongoConfig => {
 
 const getMongoInspector = uuid => inspectors[uuid];
 
-const ConnectStatus = {
-  CONNECTED: 'connected',
-  DISCONNECTED: 'disconnected',
-  CLOSED: 'closed'
-};
-
 module.exports = {
   getAllConnectionConfigs,
   connectMongoDB,
   getMongoInspector,
-  ConnectStatus,
   getConnectionConfig,
   getConnectionConfigByName
 };

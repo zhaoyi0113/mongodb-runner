@@ -160,7 +160,7 @@ class MongoTreeProvider {
   }
 
   loadData() {
-    const configData = getMongoConfigurations();
+    const configData = getMongoConfigurations(vscode);
     this.loadTree(configData);
   }
 
