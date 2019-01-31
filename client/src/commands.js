@@ -1,6 +1,8 @@
 const vscode = require('vscode');
 const { VM } = require('vm2');
 const os = require('os');
+const mongodbUri = require('mongodb-uri');
+const _ = require('lodash');
 const {
   getMongoInspector,
   connectMongoDB,
@@ -16,6 +18,7 @@ const {
   getActivateEditorWrapper,
   connectOutputEditor
 } = require('./editor-mgr');
+const { getConfiguration, getRawMongoRunnerConfigurations } = require('./config');
 
 const LanguageID = 'mongodbRunner';
 
@@ -23,7 +26,7 @@ const openTextDocument = (text, language) => {
   return vscode.workspace.openTextDocument({ content: text, language });
 };
 
-const openTextInEditor = (text, language = 'json', format=true) => {
+const openTextInEditor = (text, language = 'json', format = true) => {
   let doc;
   return openTextDocument(text, language)
     .then(d => {
@@ -225,7 +228,9 @@ const findFirst20Docs = e => {
 const deleteIndex = e => {
   vscode.window
     .showInformationMessage(
-      `Are you sure to delete index ${e.name} in collection ${e.dbName}.${e.colName}?`,
+      `Are you sure to delete index ${e.name} in collection ${e.dbName}.${
+        e.colName
+      }?`,
       { modal: true },
       'Yes'
     )
@@ -253,21 +258,43 @@ const refreshConnection = e => {
 };
 
 const refreshAllConnections = () => {
-  const treeData = global.treeExplorer.provider.treeData;
+  const configs = getRawMongoRunnerConfigurations();
+  const provider = global.treeExplorer.provider;
+  const treeData = provider.treeData;
   if (treeData) {
-    treeData.forEach(data => {
-      if (data.status === ConnectStatus.CONNECTED) {
-        refreshConnectionUUID(data.uuid);
+    configs.forEach(config => {
+      if (
+        !treeData.find(tree => {
+          const treeConfig = _.cloneDeep(tree.originConfig);
+          const oConfig = _.cloneDeep(config);
+          return _.isEqual(treeConfig, oConfig);
+        })
+      ) {
+        // the config is new, add on tree
+        provider.addRootItem(getConfiguration(config));
+      }
+    });
+    treeData.forEach(tree => {
+      if (
+        !configs.find(c => {
+          const oConfig = _.cloneDeep(c);
+          const treeConfig = _.cloneDeep(tree.originConfig);
+          return _.isEqual(oConfig, treeConfig);
+        })
+        && tree.status !== ConnectStatus.CONNECTED
+      ) {
+        // the connection doesn't exist in tree
+        provider.deleteRootItem(tree.uuid);
       }
     });
   }
 };
 
-const isUUIDActivate = (uuid) => {
+const isUUIDActivate = uuid => {
   const treeData = global.treeExplorer.provider.treeData;
   if (treeData) {
     const matched = treeData.find(data => data.uuid === uuid);
-    return matched && matched.status === ConnectStatus.CONNECTED
+    return matched && matched.status === ConnectStatus.CONNECTED;
   }
   return false;
 };
@@ -326,7 +353,10 @@ const showResult = (originCmd, result, editorWrapper) => {
           position.character === 0 ? output + '' : os.EOL + output
         );
         const range = new vscode.Range(position, position);
-        editorWrapper.outputEditor.revealRange(range, vscode.TextEditorRevealType.AtTop);
+        editorWrapper.outputEditor.revealRange(
+          range,
+          vscode.TextEditorRevealType.AtTop
+        );
       });
     }
   } else {
@@ -365,7 +395,7 @@ const executeCommand = event => {
   if (!editorWrapper) {
     return;
   }
-  if(!isUUIDActivate(editorWrapper.uuid)){
+  if (!isUUIDActivate(editorWrapper.uuid)) {
     vscode.window.showErrorMessage('Connection is closed.');
     return;
   }
@@ -381,24 +411,25 @@ const executeCommand = event => {
 
 const getActiveEditorText = () => {
   const wrapper = getActivateEditorWrapper();
-  if(wrapper) {
+  if (wrapper) {
     return wrapper.editor.document.getText();
   }
 };
 
 const executeAllCommands = () => {
   const text = getActiveEditorText();
-  global.client.sendRequest('executeAll', text)
-  .then(res => {
-    if (res) {
-      const cmds = res.split(os.EOL);
-      cmds.reduce((accu, current) => {
-        return accu.then(() => executeCommand(current));
-      }, Promise.resolve());
-      executeCommand(res);
-    }
-  })
-  .catch(err => console.error(err));
+  global.client
+    .sendRequest('executeAll', text)
+    .then(res => {
+      if (res) {
+        const cmds = res.split(os.EOL);
+        cmds.reduce((accu, current) => {
+          return accu.then(() => executeCommand(current));
+        }, Promise.resolve());
+        executeCommand(res);
+      }
+    })
+    .catch(err => console.error(err));
 };
 
 const clearOutputCommand = () => {
@@ -406,7 +437,10 @@ const clearOutputCommand = () => {
   if (wrapper && wrapper.outputEditor) {
     wrapper.outputEditor.edit(editBuilder => {
       const document = wrapper.outputEditor.document;
-      const range = new vscode.Range(new vscode.Position(0, 0), new vscode.Position(document.lineCount, 0));
+      const range = new vscode.Range(
+        new vscode.Position(0, 0),
+        new vscode.Position(document.lineCount, 0)
+      );
       editBuilder.delete(range);
     });
   }
@@ -454,11 +488,17 @@ const registerCommands = () => {
   vscode.commands.registerCommand('mongoRunner.deleteIndex', deleteIndex);
 
   vscode.commands.registerCommand('mongoRunner.launchEditor', launchMREditor);
-  vscode.commands.registerCommand('mongoRunner.executeAllCommands', executeAllCommands);
+  vscode.commands.registerCommand(
+    'mongoRunner.executeAllCommands',
+    executeAllCommands
+  );
 
   vscode.commands.registerCommand('mongoRunner.executeCommand', executeCommand);
   vscode.commands.registerCommand('mongoRunner.queryPlanner', executeCommand);
-  vscode.commands.registerCommand('mongoRunner.clearOutput', clearOutputCommand);
+  vscode.commands.registerCommand(
+    'mongoRunner.clearOutput',
+    clearOutputCommand
+  );
 };
 
 module.exports = {

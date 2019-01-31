@@ -1,12 +1,13 @@
 const vscode = require('vscode');
 const { TreeItemCollapsibleState, EventEmitter, Uri } = require('vscode');
 const { TreeNodeTypes } = require('mongodb-topology');
+const _ = require('lodash');
 const { ConnectStatus } = require('./connection');
 
 const { eventDispatcher, EventType } = require('./event-dispatcher');
 const TreeItem = require('./tree-item');
 
-const { TreeType, getMongoConfiguration } = require('./config');
+const { TreeType, getMongoConfigurations } = require('./config');
 
 let context;
 class MongoTreeProvider {
@@ -33,8 +34,23 @@ class MongoTreeProvider {
       return;
     }
     this.treeData = data;
+    this.treeData.forEach(tree => {
+      tree.originConfig = _.cloneDeep(tree.rawValue);
+    });
     this._onDidChangeTreeData.fire();
     this.loaded = true;
+  }
+
+  deleteRootItem(uuid) {
+    this.treeData = this.treeData.filter(t => t.uuid !== uuid);
+    this._onDidChangeTreeData.fire();
+  }
+
+  addRootItem(config) {
+    const newTreeData = config;
+    newTreeData.originConfig = _.cloneDeep(config.rawValue);
+    this.treeData.push(newTreeData);
+    this._onDidChangeTreeData.fire();
   }
 
   addCollectionAttributes(event) {
@@ -144,7 +160,7 @@ class MongoTreeProvider {
   }
 
   loadData() {
-    const configData = getMongoConfiguration();
+    const configData = getMongoConfigurations();
     this.loadTree(configData);
   }
 

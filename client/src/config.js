@@ -7,6 +7,9 @@ const { ConnectStatus } = require('./connection');
 const uid = new ShortUniqueId();
 
 const getConnectionName = config => {
+  if (config.name) {
+    return config.name;
+  }
   const uriObject = mongodbUri.parse(config.url);
   let name = 'MongoServer';
   if (uriObject.options && uriObject.options.replicaSet) {
@@ -17,7 +20,7 @@ const getConnectionName = config => {
   return name;
 };
 
-const getSingleConfiguration = config => {
+const getConfiguration = config => {
   const { url, activeOnStartUp, user, options } = config;
   const id = uid.randomUUID(6);
   return {
@@ -30,22 +33,24 @@ const getSingleConfiguration = config => {
     status: ConnectStatus.CLOSED,
     uuid: id,
     id: TreeType.host,
-    children: []
+    children: [],
+    rawValue: config
   };
 };
 
-const getMongoConfiguration = () => {
-  const connectsConfig = vscode.workspace
-    .getConfiguration()
-    .get('mongoRunner.connections');
-  const connectConfig = vscode.workspace
-    .getConfiguration()
-    .get('mongoRunner.connection');
+const getRawMongoRunnerConfigurations = () => {
+  const wsConfiguration = vscode.workspace.getConfiguration();
+  const connectsConfig = wsConfiguration.get('mongoRunner.connections');
+  const connectConfig = wsConfiguration.get('mongoRunner.connection');
   if (Array.isArray(connectsConfig)) {
-    return connectsConfig.map(config => getSingleConfiguration(config));
-  } else if (connectConfig) {
-    return [getSingleConfiguration(connectConfig)];
+    return connectsConfig;
   }
+  return [connectConfig];
+};
+
+const getMongoConfigurations = () => {
+  const rawConfigs = getRawMongoRunnerConfigurations();
+  return rawConfigs.map(config => getConfiguration(config));
 };
 
 const TreeType = {
@@ -56,7 +61,9 @@ const TreeType = {
 };
 
 module.exports = {
-  getMongoConfiguration,
+  getMongoConfigurations,
   TreeType,
-  getConnectionName
+  getConfiguration,
+  getConnectionName,
+  getRawMongoRunnerConfigurations
 };
