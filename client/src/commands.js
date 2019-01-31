@@ -446,7 +446,11 @@ const clearOutputCommand = () => {
   }
 };
 
-const registerCommands = () => {
+const onDidChangeConfiguration = () => {
+  refreshAllConnections();
+};
+
+const registerCommands = (context) => {
   vscode.commands.registerCommand('mongoRunner.refresh', refreshAllConnections);
   // server command
   vscode.commands.registerCommand('mongoRunner.hostConnect', connectDatabase);
@@ -499,6 +503,7 @@ const registerCommands = () => {
     'mongoRunner.clearOutput',
     clearOutputCommand
   );
+  context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration));
 };
 
 module.exports = {

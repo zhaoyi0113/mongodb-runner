@@ -107,10 +107,6 @@
         "title": "Disconnect"
       },
       {
-        "command": "extension.numberOfChars",
-        "title": "Number Of Chars"
-      },
-      {
         "command": "mongoRunner.refresh",
         "title": "Refresh",
         "icon": {
