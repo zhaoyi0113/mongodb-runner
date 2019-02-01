@@ -1,7 +1,6 @@
 const vscode = require('vscode');
 const { VM } = require('vm2');
 const os = require('os');
-const mongodbUri = require('mongodb-uri');
 const _ = require('lodash');
 const {
   getMongoInspector,
