@@ -1,14 +1,13 @@
 # Change Log
 
-## 0.0.1
+## 0.5.2
 
-Initial release.
+- MongoDB Runner Language Server
 
-## 0.0.5
-
-Update plugin icon.
-Support all mongodb connection options.
-Update replicatset tree icon.
+  - With MongoDB Runner language server, you can use MongoDB NodeJS driver to operate database. It supports run all script on the editor or run each statement. It will render `explain` command on the selected commands.
+  - Support syntax diagnostic as you typing.
+  - Support format code.
+  - Auto attach `toArray` and `limit` on `find` commands.
 
 ## 0.0.18
 
@@ -21,10 +20,12 @@ Update replicatset tree icon.
 - Order menu items
 - Support loading mutiple MongoDB connections
 
-## 0.5.2
-- MongoDB Runner Language Server
+## 0.0.5
 
-  - With MongoDB Runner language server, you can use MongoDB NodeJS driver to operate database. It supports run all script on the editor or run each statement. It will render `explain` command on the selected commands.
-  - Support syntax diagnostic as you typing.
-  - Support format code.
-  - Auto attach `toArray` and `limit` on `find` commands.
+Update plugin icon.
+Support all mongodb connection options.
+Update replicatset tree icon.
+
+## 0.0.1
+
+Initial release.
