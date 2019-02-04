@@ -5,10 +5,10 @@ const _ = require('lodash');
 const {
   getMongoInspector,
   connectMongoDB,
-  ConnectStatus,
   getConnectionConfig,
   getAllConnectionConfigs
 } = require('./connection');
+const { ConnectStatus } = require('./types');
 const { eventDispatcher, EventType } = require('./event-dispatcher');
 const { convertToTreeData } = require('./tree-data-converter');
 const { editorComments } = require('./license');

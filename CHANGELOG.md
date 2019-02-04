@@ -1,8 +1,9 @@
 # Change Log
 
-## 0.5.3
+## 0.5.4
 
 - Fix a defect about initial load on MongoDB Runner configuration.
+- Fix failed to connect database issue.
 
 ## 0.5.2
 

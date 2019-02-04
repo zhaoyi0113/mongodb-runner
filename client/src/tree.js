@@ -2,7 +2,7 @@ const vscode = require('vscode');
 const { TreeItemCollapsibleState, EventEmitter, Uri } = require('vscode');
 const { TreeNodeTypes } = require('mongodb-topology');
 const _ = require('lodash');
-const { ConnectStatus } = require('./connection');
+const { ConnectStatus } = require('./types');
 
 const { eventDispatcher, EventType } = require('./event-dispatcher');
 const TreeItem = require('./tree-item');
