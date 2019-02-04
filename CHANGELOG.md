@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.5.3
+
+- Fix a defect about initial load on MongoDB Runner configuration.
+
 ## 0.5.2
 
 - MongoDB Runner Language Server
