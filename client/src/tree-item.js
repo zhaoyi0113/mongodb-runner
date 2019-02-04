@@ -1,6 +1,6 @@
 const path = require('path');
 const { TreeNodeTypes } = require('mongodb-topology');
-const { ConnectStatus } = require('./connection');
+const { ConnectStatus } = require('./types');
 
 const getFilePath = (name, theme) => {
   return path.join(__filename, '..', '..', `resources/${theme}/${name}`);

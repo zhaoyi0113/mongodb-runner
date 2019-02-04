@@ -3,7 +3,6 @@ const { MongoClient } = require('mongodb');
 const fs = require('fs');
 const vscode = require('vscode');
 const mongodbUri = require('mongodb-uri');
-const { ConnectStatus } = require('./types');
 
 const inspectors = {};
 
