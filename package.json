@@ -372,7 +372,7 @@
     "test": "npm run test:client && npm run test:server",
     "publish": "vsce publish",
     "login": "vsce login JoeyYiZhao",
-    "package": "vsce package"
+    "package": "vsce package && git tag `cat package.json |grep version |head -n 1|awk -F: '{print$2}' |sed 's/[\",]//g'|tr -d '[[:space:]]'` && git push --tags"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.42",
