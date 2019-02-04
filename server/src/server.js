@@ -77,7 +77,6 @@ connection.onRequest('textDocument/completion', (event) => {
 documents.onDidChangeContent(change => {
   const text = change.document.getText();
   const diagnostics = getTextDiagnostics(text);
-  if (!diagnostics || diagnostics.length === 0) return;
   connection.sendDiagnostics({
     uri: change.document.uri,
     diagnostics: [diagnostics]

@@ -42,7 +42,7 @@ const hoverProvider = (document, position) => {
   } catch (err) {
     return null;
   }
-  return new Hover('Hello World');
+  // return new Hover('Hello World');
 };
 
 module.exports = { hoverProvider };

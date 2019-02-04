@@ -22,14 +22,14 @@ const getTextDiagnostics = text => {
     }
   } catch (err) {
     if (err) {
-      return {
+      return [{
         range: {
           start: {line: err.lineNumber, character: 0},
           end: {line: err.lineNumber, character: 0}
         },
         message: err.description,
         severity: DiagnosticSeverity.Error
-      };
+      }];
     }
   }
   return [];

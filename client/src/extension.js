@@ -66,7 +66,7 @@ function activate(context) {
   // The commandId parameter must match the command field in package.json
   registerCommands(context);
   launchLanguageServer(context);
-  registerProviders(context);
+  // registerProviders(context);
   global.treeExplorer = new TreeExplorer(context);
 }
 exports.activate = activate;
