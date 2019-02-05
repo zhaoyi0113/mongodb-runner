@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.5.5
+
+- fix #30 that last line is alway showing error on mongo runner editor
+
 ## 0.5.4
 
 - Fix a defect about initial load on MongoDB Runner configuration.
