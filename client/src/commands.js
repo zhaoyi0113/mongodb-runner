@@ -180,7 +180,11 @@ const createIndex = e => {
 };
 
 const launchMREditor = event => {
-  const colName = event && event.colName ? event.colName : 'COLLECTION_NAME';
+  if (!event) {
+    vscode.window.showInformationMessage('MongoDB Runner Editor can be open from explorer content menu.');
+    return;
+  }
+  const colName = event.colName ? event.colName : 'COLLECTION_NAME';
   return openMongoRunnerEditor(
     `${editorComments}${os.EOL}db.collection('${colName}').find()`,
     event.uuid,
