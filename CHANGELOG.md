@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.5.6
+
+- cannot run command: MongoRunner Editor #31
+
 ## 0.5.5
 
 - fix #30 that last line is alway showing error on mongo runner editor

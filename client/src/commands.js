@@ -180,7 +180,7 @@ const createIndex = e => {
 };
 
 const launchMREditor = event => {
-  const colName = event.colName ? event.colName : 'COLLECTION_NAME';
+  const colName = event && event.colName ? event.colName : 'COLLECTION_NAME';
   return openMongoRunnerEditor(
     `${editorComments}${os.EOL}db.collection('${colName}').find()`,
     event.uuid,
