@@ -199,13 +199,101 @@
         "title": "allPlansExecution"
       }
     ],
-    "commandPalette": [
-      {
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "mongoRunner.hostRefresh",
+          "when": "false"
+        },
+        {
+          "command": "mongoRunner.hostConnect",
+          "when": "false"
+        },
+        {
+          "command": "mongoRunner.hostDisconnect",
+          "when": "false"
+        },
+        {
+          "command": "mongoRunner.refresh",
+          "when": "false"
+        },
+        {
+          "command": "mongoRunner.serverStatus",
+          "when": "false"
+        },
+        {
+          "command": "mongoRunner.serverBuildInfo",
+          "when": "false"
+        },
+        {
+          "command": "mongoRunner.deleteDatabase",
+          "when": "false"
+        },
+        {
+          "command": "mongoRunner.deleteCollection",
+          "when": "false"
+        },
+        {
+          "command": "mongoRunner.createCollection",
+          "when": "false"
+        },
+        {
+          "command": "mongoRunner.getCollectionAttributes",
+          "when": "false"
+        },
+        {
+          "command": "mongoRunner.getIndex",
+          "when": "false"
+        },
+        {
+          "command": "mongoRunner.createIndex",
+          "when": "false"
+        },
+        {
+          "command": "mongoRunner.simpleQuery",
+          "when": "false"
+        },
+        {
+          "command": "mongoRunner.findFirst20Docs",
+          "when": "false"
+        },
+        {
+          "command": "mongoRunner.deleteIndex",
+          "when": "false"
+        },
+        {
           "command": "mongoRunner.launchEditor",
           "when": "false"
-      }
-    ],
-    "menus": {
+        },
+        {
+          "command": "mongoRunner.executeAllCommands",
+          "when": "false"
+        },
+        {
+          "command": "mongoRunner.clearOutput",
+          "when": "false"
+        },
+        {
+          "command": "mongoRunner.executeCommand",
+          "when": "false"
+        },
+        {
+          "command": "mongoRunner.queryPlanner",
+          "when": "false"
+        },
+        {
+          "command": "mongoRunner.executionStats",
+          "when": "false"
+        },
+        {
+          "command": "mongoRunner.allPlansExecution",
+          "when": "false"
+        },
+        {
+          "command": "mongoRunner.clearOutput",
+          "when": "false"
+        }
+      ],
       "view/title": [
         {
           "command": "mongoRunner.refresh",
