@@ -425,6 +425,7 @@ const showResult = (originCmd, result, editorWrapper) => {
  * @param {*} event
  */
 const executeCommand = event => {
+  console.debug(`execute command ${event}`);
   const configs = getAllConnectionConfigs();
   if (!configs || configs.length === 0) {
     return;

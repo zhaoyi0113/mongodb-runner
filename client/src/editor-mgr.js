@@ -22,7 +22,11 @@ const pushEditor = (editor, uuid, dbName) => {
 
 const getActivateEditorWrapper = () => {
   const activateEditor = vscode.window.activeTextEditor;
-  return editors.find(wrapper => wrapper.editor.id === activateEditor.id);
+  let wrapper = editors.find(wrapper => wrapper.editor.id === activateEditor.id);
+  if (!wrapper && editors.length > 0) {
+    wrapper = editors[0];
+  }
+  return wrapper;
 };
 
 const connectOutputEditor = (wrapper, outputEditor) => {

@@ -9,7 +9,8 @@ const { MongoCodeLensProvider, hoverProvider } = require('./providers');
 
 const mongodbLangSchemas = [
   { scheme: 'untitled', language: 'mongodbRunner' },
-  { scheme: 'file', language: 'mongodbRunner' }
+  { scheme: 'file', language: 'mongodbRunner' },
+  { scheme: 'mr', language: 'mongodbRunner' },
 ];
 
 const launchLanguageServer = context => {
@@ -29,7 +30,7 @@ const launchLanguageServer = context => {
   };
   const clientOptions = {
     // Register the server for plain text documents
-    documentSelector: mongodbLangSchemas[0],
+    documentSelector: mongodbLangSchemas,
     synchronize: {
       // Notify the server about file changes to '.clientrc files contain in the workspace
       fileEvents: vscode.workspace.createFileSystemWatcher('**/*')
