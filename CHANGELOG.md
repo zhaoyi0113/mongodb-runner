@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.5.7
+
+- Bug fix #32 Cannot execute after saving editor file
+
 ## 0.5.6
 
 - cannot run command: MongoRunner Editor #31
