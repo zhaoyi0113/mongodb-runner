@@ -123,4 +123,9 @@ describe('parser test suite', () => {
     expect(executeCmds[0].command.arguments[0]).toBe('db.collection(\'test\').findOne()');
     expect(executeCmds[1].command.arguments[0]).toBe('db.collection(\'test1\').findOne()');
   });
+
+  test('parse object id command', () => {
+    let parsed = parseDocument('db.collection("test").find({"_id": new ObjectId("5ba2bfcf6d2a0312c7ec12c6")})');
+    expect(parsed.length).toBe(3);
+  });
 });

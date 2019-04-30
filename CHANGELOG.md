@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.5.8
+
+- Bug fix #33 failed to query with ObjectId 
+
 ## 0.5.7
 
 - Bug fix #32 Cannot execute after saving editor file

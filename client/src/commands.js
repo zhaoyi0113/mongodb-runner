@@ -2,6 +2,7 @@ const vscode = require('vscode');
 const { VM } = require('vm2');
 const os = require('os');
 const _ = require('lodash');
+const ObjectID = require('mongodb').ObjectID;
 const {
   getMongoInspector,
   connectMongoDB,
@@ -310,7 +311,7 @@ const runCommand = (uuid, command, dbName) => {
     const inspector = getMongoInspector(uuid);
     const db = inspector.driver.db(dbName);
     try {
-      const vm = new VM({ sandbox: { db } });
+      const vm = new VM({ sandbox: { db, ObjectID } });
       const result = vm.run(command);
       if (result && typeof result.then === 'function') {
         result

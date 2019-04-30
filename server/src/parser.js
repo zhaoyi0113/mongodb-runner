@@ -17,12 +17,6 @@ const getCallExpression = (ast, callExps = []) => {
         getCallExpression(ast.object.callee, callExps);
       }
       break;
-    // case esprima.Syntax.ExpressionStatement:
-    //   if (ast.expression && ast.expression.type === esprima.Syntax.CallExpression) {
-    //     callExps.push(ast.expression);
-    //     getCallExpression(ast.expression, callExps);
-    //   }
-    //   break;
   }
 };
 

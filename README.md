@@ -81,8 +81,8 @@ For SSl connection, please use `options` configuration. You can also put all oth
 
 User below format for querying `ObjectId`:
 
-```json
-{ "_id": "ObjectId(5ba2bfcf6d2a0312c7ec12c6)" }
+```javascript
+{ "_id": new ObjectID("5ba2bfcf6d2a0312c7ec12c6") }
 ```
 
 ## Known Issues
