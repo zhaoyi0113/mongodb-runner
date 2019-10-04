@@ -470,10 +470,10 @@
     "clean": "rimraf client/node_modules && rimraf server/node_modules && rimraf node_modules"
   },
   "devDependencies": {
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^7.0.43",
-    "eslint": "^6.5.1",
-    "jest": "^23.4.1",
+    "@types/mocha": "^2.2.42",
+    "@types/node": "^12.7.11",\
+    "eslint": "^4.11.0",
+    "jest": "^24.9.0",
     "rimraf": "^3.0.0",
     "typescript": "^2.6.1",
     "vscode": "^1.1.28"
