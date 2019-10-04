@@ -473,7 +473,7 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^7.0.43",
     "eslint": "^4.11.0",
-    "jest": "^23.4.1",
+    "jest": "^24.9.0",
     "rimraf": "^3.0.0",
     "typescript": "^2.6.1",
     "vscode": "^1.1.28"
