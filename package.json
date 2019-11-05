@@ -475,7 +475,7 @@
     "eslint": "^4.11.0",
     "jest": "^24.9.0",
     "rimraf": "^3.0.0",
-    "typescript": "^2.6.1",
+    "typescript": "^3.7.2",
     "vscode": "^1.1.28"
   }
 }
