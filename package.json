@@ -471,7 +471,7 @@
   },
   "devDependencies": {
     "@types/mocha": "^2.2.42",
-    "@types/node": "^12.7.12",
+    "@types/node": "^13.9.1",
     "eslint": "^4.11.0",
     "jest": "^24.9.0",
     "rimraf": "^3.0.0",
