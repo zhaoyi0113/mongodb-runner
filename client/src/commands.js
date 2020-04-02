@@ -7,7 +7,7 @@ const {
   getMongoInspector,
   connectMongoDB,
   getConnectionConfig,
-  getAllConnectionConfigs
+  getAllConnectionConfigs,
 } = require('./connection');
 const { ConnectStatus } = require('./types');
 const { eventDispatcher, EventType } = require('./event-dispatcher');
@@ -16,11 +16,11 @@ const { editorComments } = require('./license');
 const {
   pushEditor,
   getActivateEditorWrapper,
-  connectOutputEditor
+  connectOutputEditor,
 } = require('./editor-mgr');
 const {
   getConfiguration,
-  getRawMongoRunnerConfigurations
+  getRawMongoRunnerConfigurations,
 } = require('./config');
 
 const LanguageID = 'mongodbRunner';
@@ -32,11 +32,11 @@ const openTextDocument = (text, language) => {
 const openTextInEditor = (text, language = 'json', format = true) => {
   let doc;
   return openTextDocument(text, language)
-    .then(d => {
+    .then((d) => {
       doc = d;
       return vscode.window.showTextDocument(doc, 1, true);
     })
-    .then(editor => {
+    .then((editor) => {
       format && vscode.commands.executeCommand('editor.action.formatDocument');
       return { doc, editor };
     });
@@ -52,26 +52,34 @@ const openMongoRunnerEditor = (text, uuid, dbName) => {
       // open output document
       return openTextDocument('', 'jsonc');
     })
-    .then(doc => vscode.window.showTextDocument(doc, viewColumn, true))
-    .then(editor => connectOutputEditor(wrapper, editor));
+    .then((doc) => vscode.window.showTextDocument(doc, viewColumn, true))
+    .then((editor) => connectOutputEditor(wrapper, editor));
 };
 
-const connectDatabase = config => {
-  return connectMongoDB(config)
-    .then(data => {
-      const treeData = convertToTreeData(data);
-      eventDispatcher.emit(
-        EventType.Connect,
-        Object.assign(treeData, { uuid: config.uuid, driver: data.driver })
-      );
-    })
-    .catch(err => {
-      console.error(err);
-      vscode.window.showErrorMessage('Failed to connect!');
-    });
+const connectDatabase = (config) => {
+  vscode.window.withProgress(
+    {
+      title: 'Connecting to database',
+      location: vscode.ProgressLocation.Notification,
+    },
+    (progress, token) => {
+      return connectMongoDB(config)
+        .then((data) => {
+          const treeData = convertToTreeData(data);
+          eventDispatcher.emit(
+            EventType.Connect,
+            Object.assign(treeData, { uuid: config.uuid, driver: data.driver }),
+          );
+        })
+        .catch((err) => {
+          console.error(err);
+          // vscode.window.showErrorMessage('Failed to connect!');
+        });
+    },
+  );
 };
 
-const disconnectDatabase = db => {
+const disconnectDatabase = (db) => {
   if (db && db.driver) {
     db.driver
       .close()
@@ -79,100 +87,100 @@ const disconnectDatabase = db => {
         vscode.window.showInformationMessage('MongoDB Connection Closed.');
         eventDispatcher.emit(EventType.Disconnect, db.uuid);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
         vscode.window.showErrorMessage('Failed to close connection.');
       });
   }
 };
 
-const serverStatusHandler = e => {
+const serverStatusHandler = (e) => {
   const inspector = getMongoInspector(e.uuid);
   inspector
     .serverStats()
-    .then(stats => {
+    .then((stats) => {
       return openTextInEditor(JSON.stringify(stats, undefined, 4));
     })
-    .catch(err => console.error(err));
+    .catch((err) => console.error(err));
 };
 
-const serverBuildInfoHandler = e => {
+const serverBuildInfoHandler = (e) => {
   const inspector = getMongoInspector(e.uuid);
   inspector
     .buildInfo()
-    .then(stats => {
+    .then((stats) => {
       return openTextInEditor(JSON.stringify(stats, undefined, 4));
     })
-    .catch(err => console.error(err));
+    .catch((err) => console.error(err));
 };
 
-const deleteDatabase = e => {
+const deleteDatabase = (e) => {
   vscode.window
     .showInformationMessage(
       `Are you sure to delete database ${e.dbName}?`,
       { modal: true },
-      'Yes'
+      'Yes',
     )
-    .then(res => {
+    .then((res) => {
       if (res === 'Yes') {
         getMongoInspector(e.uuid)
           .deleteDatabase(e.dbName)
           .then(() => refreshConnectionUUID(e.uuid))
-          .catch(err => vscode.window.showErrorMessage(err));
+          .catch((err) => vscode.window.showErrorMessage(err));
       }
     });
 };
 
-const deleteCollection = e => {
+const deleteCollection = (e) => {
   vscode.window
     .showInformationMessage(
       `Are you sure to delete collection ${e.colName} in ${e.dbName} database?`,
       { modal: true },
-      'Yes'
+      'Yes',
     )
-    .then(res => {
+    .then((res) => {
       if (res === 'Yes') {
         getMongoInspector(e.uuid)
           .deleteCollection(e.dbName, e.colName)
           .then(() => refreshConnectionUUID(e.uuid))
-          .catch(err => vscode.window.showErrorMessage(err));
+          .catch((err) => vscode.window.showErrorMessage(err));
       }
     });
 };
 
-const getCollectionAttributes = e => {
+const getCollectionAttributes = (e) => {
   const inspector = getMongoInspector(e.uuid);
   return inspector
     .getCollectionAttributes(e.dbName, e.name)
-    .then(attributes => {
+    .then((attributes) => {
       eventDispatcher.emit(EventType.FindCollectionAttributes, {
         dbName: e.dbName,
         colName: e.name,
         attributes,
-        uuid: e.uuid
+        uuid: e.uuid,
       });
     })
-    .catch(err => console.error(err));
+    .catch((err) => console.error(err));
 };
 
-const createIndex = e => {
+const createIndex = (e) => {
   vscode.window
     .showInputBox({ placeHolder: '{"fieldA": 1, "fieldB": -1}' })
-    .then(result => {
+    .then((result) => {
       if (result) {
         try {
           const idxParam = JSON.parse(result);
           return getMongoInspector(e.uuid).createIndex(
             e.dbName,
             e.colName,
-            idxParam
+            idxParam,
           );
         } catch (err) {
           vscode.window.showErrorMessage(err.message);
         }
       }
     })
-    .then(ret => {
+    .then((ret) => {
       if (ret) {
         vscode.window.showInformationMessage('Create index: ' + ret);
         refreshConnectionUUID(e.uuid);
@@ -180,87 +188,87 @@ const createIndex = e => {
     });
 };
 
-const launchMREditor = event => {
+const launchMREditor = (event) => {
   if (!event) {
-    vscode.window.showInformationMessage('MongoDB Runner Editor can be open from explorer content menu.');
+    vscode.window.showInformationMessage(
+      'MongoDB Runner Editor can be open from explorer content menu.',
+    );
     return;
   }
   const colName = event.colName ? event.colName : 'COLLECTION_NAME';
   return openMongoRunnerEditor(
     `${editorComments}${os.EOL}db.collection('${colName}').find()`,
     event.uuid,
-    event.dbName
+    event.dbName,
   );
 };
 
-const getIndex = e => {
+const getIndex = (e) => {
   getMongoInspector(e.uuid)
     .getCollectionIndexes(e.dbName, e.name)
-    .then(indexes => {
+    .then((indexes) => {
       openTextInEditor(JSON.stringify(indexes), 'json');
     })
-    .catch(err => console.error(err));
+    .catch((err) => console.error(err));
 };
 
-const simpleQuery = e => {
+const simpleQuery = (e) => {
   vscode.window
     .showInputBox({ placeHolder: 'query json condition' })
-    .then(res => {
+    .then((res) => {
       try {
         if (res) {
           return getMongoInspector(e.uuid).simpleQuery(
             e.dbName,
             e.name,
-            JSON.parse(res)
+            JSON.parse(res),
           );
         }
       } catch (err) {
         vscode.window.showErrorMessage(err.message);
       }
     })
-    .then(docs => {
+    .then((docs) => {
       if (docs) {
         openTextInEditor(JSON.stringify(docs), 'json');
       }
     });
 };
 
-const findFirst20Docs = e => {
+const findFirst20Docs = (e) => {
   return getMongoInspector(e.uuid)
     .simpleQuery(e.dbName, e.name)
-    .then(docs => openTextInEditor(JSON.stringify(docs), 'json'))
-    .catch(err => vscode.window.showErrorMessage(err));
+    .then((docs) => openTextInEditor(JSON.stringify(docs), 'json'))
+    .catch((err) => vscode.window.showErrorMessage(err));
 };
 
-const deleteIndex = e => {
+const deleteIndex = (e) => {
   vscode.window
     .showInformationMessage(
-      `Are you sure to delete index ${e.name} in collection ${e.dbName}.${
-        e.colName
-      }?`,
+      `Are you sure to delete index ${e.name} in collection ${e.dbName}.${e.colName}?`,
       { modal: true },
-      'Yes'
+      'Yes',
     )
-    .then(res => {
+    .then((res) => {
       if (res === 'Yes') {
         getMongoInspector(e.uuid)
           .deleteIndex(e.dbName, e.colName, e.name)
           .then(() => {
             refreshConnectionUUID(e.uuid);
           })
-          .catch(err => vscode.window.showErrorMessage(err));
+          .catch((err) => vscode.window.showErrorMessage(err));
       }
     });
 };
 
-const refreshConnectionUUID = uuid => {
+const refreshConnectionUUID = (uuid) => {
   const config = getConnectionConfig(uuid);
   if (config) {
     refreshConnection(config);
   }
 };
 
-const refreshConnection = e => {
+const refreshConnection = (e) => {
   return connectDatabase(e);
 };
 
@@ -269,9 +277,9 @@ const refreshAllConnections = () => {
   const provider = global.treeExplorer.provider;
   const treeData = provider.treeData;
   if (treeData) {
-    configs.forEach(config => {
+    configs.forEach((config) => {
       if (
-        !treeData.find(tree => {
+        !treeData.find((tree) => {
           const treeConfig = _.cloneDeep(tree.originConfig);
           const oConfig = _.cloneDeep(config);
           return _.isEqual(treeConfig, oConfig);
@@ -281,9 +289,9 @@ const refreshAllConnections = () => {
         provider.addRootItem(getConfiguration(config));
       }
     });
-    treeData.forEach(tree => {
+    treeData.forEach((tree) => {
       if (
-        !configs.find(c => {
+        !configs.find((c) => {
           const oConfig = _.cloneDeep(c);
           const treeConfig = _.cloneDeep(tree.originConfig);
           return _.isEqual(oConfig, treeConfig);
@@ -297,10 +305,10 @@ const refreshAllConnections = () => {
   }
 };
 
-const isUUIDActivate = uuid => {
+const isUUIDActivate = (uuid) => {
   const treeData = global.treeExplorer.provider.treeData;
   if (treeData) {
-    const matched = treeData.find(data => data.uuid === uuid);
+    const matched = treeData.find((data) => data.uuid === uuid);
     return matched && matched.status === ConnectStatus.CONNECTED;
   }
   return false;
@@ -315,7 +323,7 @@ const runCommand = (uuid, command, dbName) => {
       const result = vm.run(command);
       if (result && typeof result.then === 'function') {
         result
-          .then(ret => {
+          .then((ret) => {
             try {
               resolve(JSON.parse(JSON.stringify(ret)));
             } catch (error) {
@@ -346,7 +354,7 @@ const runCommand = (uuid, command, dbName) => {
               resolve(ret);
             }
           })
-          .catch(err => reject(err));
+          .catch((err) => reject(err));
       } else {
         resolve(result);
       }
@@ -372,29 +380,29 @@ const showResult = (originCmd, result, editorWrapper) => {
     // append output on exsited editor
     const { outputEditor } = editorWrapper;
     const lastLine = editorWrapper.outputEditor.document.lineAt(
-      outputEditor.document.lineCount - 1
+      outputEditor.document.lineCount - 1,
     );
     const position = new vscode.Position(
       lastLine.lineNumber,
-      lastLine.range.end.character
+      lastLine.range.end.character,
     );
     if (
       !vscode.window.visibleTextEditors.find(
-        editor => editor.id === outputEditor.id
+        (editor) => editor.id === outputEditor.id,
       )
     ) {
       // the editor is not shown
       prom = openTextDocument(output + '', 'jsonc');
     } else {
-      return editorWrapper.outputEditor.edit(editBuilder => {
+      return editorWrapper.outputEditor.edit((editBuilder) => {
         editBuilder.insert(
           position,
-          position.character === 0 ? output + '' : os.EOL + output
+          position.character === 0 ? output + '' : os.EOL + output,
         );
         const range = new vscode.Range(position, position);
         editorWrapper.outputEditor.revealRange(
           range,
-          vscode.TextEditorRevealType.AtTop
+          vscode.TextEditorRevealType.AtTop,
         );
       });
     }
@@ -404,7 +412,7 @@ const showResult = (originCmd, result, editorWrapper) => {
   }
   if (!prom || !prom.then) return Promise.resolve();
   return prom
-    .then(doc => {
+    .then((doc) => {
       if (doc) {
         let viewColumn = editorWrapper.editor.viewColumn + 1;
         if (editorWrapper.outputEditor) {
@@ -413,7 +421,7 @@ const showResult = (originCmd, result, editorWrapper) => {
         return vscode.window.showTextDocument(doc, viewColumn, true);
       }
     })
-    .then(editor => {
+    .then((editor) => {
       if (editor) {
         connectOutputEditor(editorWrapper, editor);
       }
@@ -425,7 +433,7 @@ const showResult = (originCmd, result, editorWrapper) => {
  * TODO: whether need to select different server
  * @param {*} event
  */
-const executeCommand = event => {
+const executeCommand = (event) => {
   console.debug(`execute command ${event}`);
   const configs = getAllConnectionConfigs();
   if (!configs || configs.length === 0) {
@@ -440,10 +448,10 @@ const executeCommand = event => {
     return;
   }
   return runCommand(editorWrapper.uuid, event, editorWrapper.dbName)
-    .then(result => {
+    .then((result) => {
       return showResult(event, result, editorWrapper);
     })
-    .catch(err => {
+    .catch((err) => {
       console.error(err);
       return showResult(event, err.message, editorWrapper);
     });
@@ -460,7 +468,7 @@ const executeAllCommands = () => {
   const text = getActiveEditorText();
   global.client
     .sendRequest('executeAll', text)
-    .then(res => {
+    .then((res) => {
       if (res) {
         const cmds = res.split(os.EOL);
         cmds.reduce((accu, current) => {
@@ -469,17 +477,17 @@ const executeAllCommands = () => {
         executeCommand(res);
       }
     })
-    .catch(err => console.error(err));
+    .catch((err) => console.error(err));
 };
 
 const clearOutputCommand = () => {
   const wrapper = getActivateEditorWrapper();
   if (wrapper && wrapper.outputEditor) {
-    wrapper.outputEditor.edit(editBuilder => {
+    wrapper.outputEditor.edit((editBuilder) => {
       const document = wrapper.outputEditor.document;
       const range = new vscode.Range(
         new vscode.Position(0, 0),
-        new vscode.Position(document.lineCount, 0)
+        new vscode.Position(document.lineCount, 0),
       );
       editBuilder.delete(range);
     });
@@ -490,22 +498,22 @@ const onDidChangeConfiguration = () => {
   refreshAllConnections();
 };
 
-const registerCommands = context => {
+const registerCommands = (context) => {
   vscode.commands.registerCommand('mongoRunner.refresh', refreshAllConnections);
   // server command
   vscode.commands.registerCommand('mongoRunner.hostConnect', connectDatabase);
   vscode.commands.registerCommand(
     'mongoRunner.hostDisconnect',
-    disconnectDatabase
+    disconnectDatabase,
   );
   vscode.commands.registerCommand('mongoRunner.hostRefresh', refreshConnection);
   vscode.commands.registerCommand(
     'mongoRunner.serverStatus',
-    serverStatusHandler
+    serverStatusHandler,
   );
   vscode.commands.registerCommand(
     'mongoRunner.serverBuildInfo',
-    serverBuildInfoHandler
+    serverBuildInfoHandler,
   );
 
   // database commands
@@ -514,18 +522,18 @@ const registerCommands = context => {
   //collection commands
   vscode.commands.registerCommand(
     'mongoRunner.getCollectionAttributes',
-    getCollectionAttributes
+    getCollectionAttributes,
   );
   vscode.commands.registerCommand('mongoRunner.getIndex', getIndex);
   vscode.commands.registerCommand('mongoRunner.createIndex', createIndex);
   vscode.commands.registerCommand('mongoRunner.simpleQuery', simpleQuery);
   vscode.commands.registerCommand(
     'mongoRunner.findFirst20Docs',
-    findFirst20Docs
+    findFirst20Docs,
   );
   vscode.commands.registerCommand(
     'mongoRunner.deleteCollection',
-    deleteCollection
+    deleteCollection,
   );
 
   // index commands
@@ -534,20 +542,20 @@ const registerCommands = context => {
   vscode.commands.registerCommand('mongoRunner.launchEditor', launchMREditor);
   vscode.commands.registerCommand(
     'mongoRunner.executeAllCommands',
-    executeAllCommands
+    executeAllCommands,
   );
 
   vscode.commands.registerCommand('mongoRunner.executeCommand', executeCommand);
   vscode.commands.registerCommand('mongoRunner.queryPlanner', executeCommand);
   vscode.commands.registerCommand(
     'mongoRunner.clearOutput',
-    clearOutputCommand
+    clearOutputCommand,
   );
   context.subscriptions.push(
-    vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration)
+    vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration),
   );
 };
 
 module.exports = {
-  registerCommands
+  registerCommands,
 };

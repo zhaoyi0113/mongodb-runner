@@ -67,7 +67,7 @@ const connect = (mongoConfig, user, password) => {
       (err, driver) => {
         if (err) {
           console.error(err);
-          vscode.window.showErrorMessage('Failed to connect MongoDB.');
+          vscode.window.showErrorMessage('Failed to connect to MongoDB.');
           return reject(err);
         }
         const inspector = new TreeInspector(driver);
@@ -107,7 +107,7 @@ const connectMongoDB = mongoConfig => {
           })
           .then(pwd => {
             if (!pwd) {
-              reject(null);
+              return reject(null);
             }
             resolve(
               connect(
