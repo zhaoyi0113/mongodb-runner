@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.5.9
+
+- Buf fix #12, add spinner when connecting to MongoDB
+
 ## 0.5.8
 
 - Bug fix #33 failed to query with ObjectId 
