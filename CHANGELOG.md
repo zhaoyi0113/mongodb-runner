@@ -1,6 +1,6 @@
 # Change Log
 
-## 0.5.9
+## 0.6.2
 
 - Buf fix #12, add spinner when connecting to MongoDB
 
