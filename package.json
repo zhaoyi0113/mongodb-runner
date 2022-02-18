@@ -14,7 +14,7 @@
     "url": "https://mongodb-runner.visualstudio.com/_projects"
   },
   "engines": {
-    "vscode": "^1.22.0"
+    "vscode": "^1.64.0"
   },
   "license": "MIT",
   "repository": {
@@ -459,7 +459,6 @@
     ]
   },
   "scripts": {
-    "postinstall": "node ./node_modules/vscode/bin/install",
     "vscode:test": "node ./node_modules/vscode/bin/test",
     "test:client": "cd client && yarn test",
     "test:server": "cd server && yarn test",
@@ -472,10 +471,11 @@
   "devDependencies": {
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.9.8",
+    "@types/vscode": "^1.64.0",
+    "@vscode/test-electron": "^2.1.2",
     "eslint": "^6.8.0",
     "jest": "^24.9.0",
     "rimraf": "^3.0.2",
-    "typescript": "^3.8.3",
-    "vscode": "^1.1.28"
+    "typescript": "^3.8.3"
   }
 }
