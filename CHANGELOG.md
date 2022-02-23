@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.6.3
+
+- Combine mutliple output window into one
+- Upgrade mongodb driver version to 4.4
 ## 0.6.2
 
 - Buf fix #12, add spinner when connecting to MongoDB

@@ -3,20 +3,23 @@ const {
   TextDocuments,
   ProposedFeatures,
   RequestType,
-} = require('vscode-languageserver');
+  TextDocumentSyncKind,
+} = require('vscode-languageserver/node');
 const os = require('os');
+const { TextDocument } = require('vscode-languageserver-textdocument');
+
 const { parseDocument } = require('./parser');
 const { CommandIdentifier } = require('./commands');
 const { getTextDiagnostics } = require('./diagnostic');
 const { format } = require('./formatter');
 
 const connection = createConnection(ProposedFeatures.all);
-const documents = new TextDocuments();
+const documents = new TextDocuments(TextDocument);
 
 connection.onInitialize(params => {
   return {
     capabilities: {
-      textDocumentSync: documents.syncKind,
+      textDocumentSync: TextDocumentSyncKind.Full,
       documentFormattingProvider: true,
       documentRangeFormattingProvider: true,
       completionProvider: {
@@ -36,6 +39,7 @@ connection.onDidChangeWatchedFiles(change => {
 connection.onRequest(
   new RequestType('textDocument/codeLens'),
   (event) => {
+    console.log('on request:', event);
     const text = documents.get(event.textDocument.uri).getText();
     const parsed = parseDocument(text);
     return parsed;
