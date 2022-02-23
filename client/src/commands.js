@@ -335,7 +335,8 @@ const showResult = (originCmd, result, editorWrapper) => {
   }
   const removeLineCmd = originCmd.replace(/(\n|\r)+/g, '');
   const output = `// MongoRunner> ${removeLineCmd}${os.EOL}${jsonData}`;
-  if (outputEditor) {
+  if (outputEditor && !outputEditor.document.isClosed) {
+    outputEditor.show(outputEditor.viewColumn);
     // append output on exsited editor
     const lastLine = outputEditor.document.lineAt(outputEditor.document.lineCount - 1);
     const position = new vscode.Position(lastLine.lineNumber, lastLine.range.end.character);

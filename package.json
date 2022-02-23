@@ -2,7 +2,7 @@
   "name": "mongo-runner",
   "displayName": "Mongo Runner",
   "description": "MongoDB Runner is a VSCode extension to connect MongoDB instance.",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "publisher": "JoeyYiZhao",
   "keywords": [
     "MongoDB",
@@ -463,7 +463,7 @@
     "test:client": "cd client && yarn test",
     "test:server": "cd server && yarn test",
     "test": "npm run test:client && npm run test:server",
-    "publish": "vsce publish && git tag `cat package.json |grep version |head -n 1|awk -F: '{print$2}' |sed 's/[\",]//g'|tr -d '[[:space:]]'` && git push --tags",
+    "publish:extension": "vsce publish && git tag `cat package.json |grep version |head -n 1|awk -F: '{print$2}' |sed 's/[\",]//g'|tr -d '[[:space:]]'` && git push --tags",
     "login": "vsce login JoeyYiZhao",
     "package": "vsce package",
     "clean": "rimraf client/node_modules && rimraf server/node_modules && rimraf node_modules"

@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.6.4
+
+- Reopen text editor if it is closed
+
 ## 0.6.3
 
 - Combine mutliple output window into one
