@@ -469,7 +469,7 @@
     "clean": "rimraf client/node_modules && rimraf server/node_modules && rimraf node_modules"
   },
   "devDependencies": {
-    "@types/mocha": "^7.0.2",
+    "@types/mocha": "^9.0.0",
     "@types/node": "^13.9.8",
     "@types/vscode": "^1.64.0",
     "@vscode/test-electron": "^2.1.2",
