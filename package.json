@@ -471,9 +471,8 @@
   "devDependencies": {
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.9.8",
-    "@types/vscode": "^1.64.0",
-    "@vscode/test-electron": "^2.1.2",
-    "eslint": "^6.8.0",
+    "eslint": "^7.32.0",
+
     "jest": "^24.9.0",
     "rimraf": "^3.0.2",
     "typescript": "^3.8.3",
