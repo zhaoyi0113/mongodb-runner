@@ -2,7 +2,7 @@
   "name": "mongo-runner",
   "displayName": "Mongo Runner",
   "description": "MongoDB Runner is a VSCode extension to connect MongoDB instance.",
-  "version": "0.6.2",
+  "version": "0.6.4",
   "publisher": "JoeyYiZhao",
   "keywords": [
     "MongoDB",
@@ -14,7 +14,7 @@
     "url": "https://mongodb-runner.visualstudio.com/_projects"
   },
   "engines": {
-    "vscode": "^1.22.0"
+    "vscode": "^1.64.0"
   },
   "license": "MIT",
   "repository": {
@@ -459,12 +459,11 @@
     ]
   },
   "scripts": {
-    "postinstall": "node ./node_modules/vscode/bin/install",
     "vscode:test": "node ./node_modules/vscode/bin/test",
     "test:client": "cd client && yarn test",
     "test:server": "cd server && yarn test",
     "test": "npm run test:client && npm run test:server",
-    "publish": "vsce publish && git tag `cat package.json |grep version |head -n 1|awk -F: '{print$2}' |sed 's/[\",]//g'|tr -d '[[:space:]]'` && git push --tags",
+    "publish:extension": "vsce publish && git tag `cat package.json |grep version |head -n 1|awk -F: '{print$2}' |sed 's/[\",]//g'|tr -d '[[:space:]]'` && git push --tags",
     "login": "vsce login JoeyYiZhao",
     "package": "vsce package",
     "clean": "rimraf client/node_modules && rimraf server/node_modules && rimraf node_modules"
@@ -472,10 +471,12 @@
   "devDependencies": {
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.9.8",
+    "@types/vscode": "^1.64.0",
+    "@vscode/test-electron": "^2.1.2",
     "eslint": "^6.8.0",
     "jest": "^24.9.0",
     "rimraf": "^3.0.2",
     "typescript": "^3.8.3",
-    "vscode": "^1.1.28"
+    "vsce": "^2.6.7"
   }
 }
