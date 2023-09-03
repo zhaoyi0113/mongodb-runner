@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
 const path = require('path');
-const { LanguageClient, TransportKind } = require('vscode-languageclient');
+const { LanguageClient, TransportKind } = require('vscode-languageclient/node');
 const TreeExplorer = require('./tree');
 const { registerCommands } = require('./commands');
 const { MongoCodeLensProvider, hoverProvider } = require('./providers');
@@ -48,12 +48,12 @@ const launchLanguageServer = context => {
   global.client = client;
 };
 
-const registerProviders = ctx => {
-  vscode.languages.registerHoverProvider('javascript', hoverProvider);
-  ctx.subscriptions.push(
-    vscode.languages.registerCodeLensProvider(mongodbLangSchemas, new MongoCodeLensProvider())
-  );
-};
+// const registerProviders = ctx => {
+//   vscode.languages.registerHoverProvider('javascript', hoverProvider);
+//   ctx.subscriptions.push(
+//     vscode.languages.registerCodeLensProvider(mongodbLangSchemas, new MongoCodeLensProvider())
+//   );
+// };
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
