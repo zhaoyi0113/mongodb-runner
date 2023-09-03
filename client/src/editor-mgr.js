@@ -1,6 +1,7 @@
 const vscode = require('vscode');
 
 const editors = [];
+let outputEditor;
 
 class EditorWrapper {
   constructor(editor, uuid, dbName) {
@@ -29,8 +30,10 @@ const getActivateEditorWrapper = () => {
   return wrapper;
 };
 
-const connectOutputEditor = (wrapper, outputEditor) => {
-  wrapper.outputEditor = outputEditor;
+const getOutputEditor = () => outputEditor;
+
+const connectOutputEditor = (editor) => {
+  outputEditor = editor;
 };
 
 const disconnectOutputEditor = wrapper => (wrapper.outputEditor = null);
@@ -39,5 +42,6 @@ module.exports = {
   pushEditor,
   getActivateEditorWrapper,
   connectOutputEditor,
-  disconnectOutputEditor
+  disconnectOutputEditor,
+  getOutputEditor,
 };
