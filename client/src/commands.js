@@ -235,6 +235,9 @@ const refreshConnection = (e) => {
 
 const refreshAllConnections = () => {
   const configs = getRawMongoRunnerConfigurations(vscode);
+  if (!global.treeExplorer || !global.treeExplorer.provider) {
+    return;
+  }
   const provider = global.treeExplorer.provider;
   const treeData = provider.treeData;
   if (treeData) {
